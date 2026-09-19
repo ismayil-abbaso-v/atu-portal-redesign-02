@@ -3,6 +3,7 @@ import {
   CheckCheck,
   ChevronRight,
   LogOut,
+  Menu,
   Moon,
   Search,
   Sun,
@@ -26,9 +27,13 @@ import "@/notification-panel.css";
 export function AppHeader({
   name,
   avatarUrl,
+  onMenuClick,
+  mobileMenuOpen = false,
 }: {
   name: string;
   avatarUrl?: string | null;
+  onMenuClick?: () => void;
+  mobileMenuOpen?: boolean;
 }) {
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead } = useNotifications();
   const { t, intlLocale, locale } = useI18n();
@@ -140,7 +145,17 @@ export function AppHeader({
   return (
     <header className="portal-header">
       <div className="portal-header__inner">
-        <div className="portal-header__leading flex min-w-0 items-center">
+        <div className="portal-header__leading flex min-w-0 items-center gap-2.5">
+          <button
+            type="button"
+            aria-label={mobileMenuOpen ? `${t("nav.menu")} — ${t("common.close")}` : t("nav.menu")}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => onMenuClick?.()}
+            className="portal-header__icon-button portal-header__mobile-menu-button shrink-0 md:hidden"
+          >
+            {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+
           <Link
             to="/ev"
             aria-label={t("app.name")}
