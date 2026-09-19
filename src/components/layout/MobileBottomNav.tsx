@@ -73,6 +73,17 @@ export function MobileBottomNav() {
   }, []);
 
   useEffect(() => {
+    const resetMenu = () => setMenuOpen(false);
+
+    resetMenu();
+    window.addEventListener("pageshow", resetMenu);
+
+    return () => {
+      window.removeEventListener("pageshow", resetMenu);
+    };
+  }, []);
+
+  useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
@@ -154,62 +165,72 @@ export function MobileBottomNav() {
       data-mobile-app-nav
       data-menu-open={menuOpen || undefined}
     >
-      <button
-        type="button"
-        className={cn("portal-mobile-bottom-nav__backdrop", menuOpen && "is-open")}
-        aria-hidden
-        tabIndex={-1}
-        onClick={closeAndRestoreFocus}
-      />
-
-      <section
-        ref={panelRef}
-        id={MENU_ID}
-        role="dialog"
-        aria-modal="false"
-        aria-labelledby={MENU_TITLE_ID}
-        aria-hidden={!menuOpen}
-        inert={!menuOpen}
-        className={cn("portal-mobile-secondary-menu", menuOpen && "is-open")}
-      >
-        <div className="portal-mobile-secondary-menu__header">
-          <div className="min-w-0">
-            <p className="portal-mobile-secondary-menu__eyebrow">{t("nav.more")}</p>
-            <h2 id={MENU_TITLE_ID}>{t("nav.additionalServices")}</h2>
-          </div>
+      {menuOpen ? (
+        <>
           <button
             type="button"
-            className="portal-mobile-secondary-menu__close"
-            aria-label={t("nav.closeAdditionalMenu")}
+            className="portal-mobile-bottom-nav__backdrop is-open"
+            aria-hidden
+            tabIndex={-1}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              closeAndRestoreFocus();
+            }}
             onClick={closeAndRestoreFocus}
+          />
+
+          <section
+            ref={panelRef}
+            id={MENU_ID}
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby={MENU_TITLE_ID}
+            className="portal-mobile-secondary-menu is-open"
           >
-            <X aria-hidden />
-          </button>
-        </div>
-
-        <div className="portal-mobile-secondary-menu__grid">
-          {model.secondary.map((item, index) => {
-            const Icon = iconByName[item.icon];
-            const active = routeMatchesMobileNavItem(pathname, item);
-
-            return (
-              <Link
-                ref={index === 0 ? firstSecondaryRef : undefined}
-                key={item.to}
-                to={item.to}
-                aria-current={active ? "page" : undefined}
-                onClick={() => setMenuOpen(false)}
-                className={cn("portal-mobile-secondary-menu__item", active && "is-active")}
+            <div className="portal-mobile-secondary-menu__header">
+              <div className="min-w-0">
+                <p className="portal-mobile-secondary-menu__eyebrow">{t("nav.more")}</p>
+                <h2 id={MENU_TITLE_ID}>{t("nav.additionalServices")}</h2>
+              </div>
+              <button
+                type="button"
+                className="portal-mobile-secondary-menu__close"
+                aria-label={t("nav.closeAdditionalMenu")}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  closeAndRestoreFocus();
+                }}
+                onClick={closeAndRestoreFocus}
               >
-                <span className="portal-mobile-secondary-menu__icon" aria-hidden>
-                  <Icon />
-                </span>
-                <span>{t(item.labelKey)}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
+                <X aria-hidden />
+              </button>
+            </div>
+
+            <div className="portal-mobile-secondary-menu__grid">
+              {model.secondary.map((item, index) => {
+                const Icon = iconByName[item.icon];
+                const active = routeMatchesMobileNavItem(pathname, item);
+
+                return (
+                  <Link
+                    ref={index === 0 ? firstSecondaryRef : undefined}
+                    key={item.to}
+                    to={item.to}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setMenuOpen(false)}
+                    className={cn("portal-mobile-secondary-menu__item", active && "is-active")}
+                  >
+                    <span className="portal-mobile-secondary-menu__icon" aria-hidden>
+                      <Icon />
+                    </span>
+                    <span>{t(item.labelKey)}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        </>
+      ) : null}
 
       <div className="portal-mobile-bottom-nav__inner">
         {renderPrimaryItem(model.primary[0])}
@@ -219,7 +240,7 @@ export function MobileBottomNav() {
           ref={triggerRef}
           type="button"
           aria-expanded={menuOpen}
-          aria-controls={MENU_ID}
+          aria-controls={menuOpen ? MENU_ID : undefined}
           aria-haspopup="dialog"
           aria-label={menuOpen ? t("nav.closeAdditionalMenu") : t("nav.openAdditionalMenu")}
           onClick={toggleMenu}
