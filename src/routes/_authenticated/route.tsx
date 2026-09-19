@@ -32,12 +32,14 @@ export const Route = createFileRoute("/_authenticated")({
 
 function pageKeyForPath(pathname: string) {
   if (pathname === "/ev") return "page.home";
+  if (pathname.startsWith("/elektron-jurnal")) return "page.journal";
   if (pathname.startsWith("/teqvim")) return "page.calendar";
   if (pathname.startsWith("/imtahanlar")) return "page.exams";
   if (pathname.startsWith("/sohbet")) return "page.chat";
   if (pathname.startsWith("/kitabxana")) return "page.library";
   if (pathname.startsWith("/ofis")) return "page.office";
   if (pathname.startsWith("/bildirisler")) return "page.notifications";
+  if (pathname === "/elanlar") return "page.announcements";
   if (pathname.startsWith("/menyu/profil")) return "page.profileSettings";
   if (pathname.startsWith("/menyu/tehlukesizlik")) return "page.security";
   if (pathname.startsWith("/menyu/bildiris")) return "page.notificationSettings";
@@ -47,6 +49,9 @@ function pageKeyForPath(pathname: string) {
   if (pathname.startsWith("/menyu")) return "page.menu";
   if (pathname.startsWith("/qruplar")) return "page.groups";
   if (pathname.startsWith("/fakulte-icmali")) return "page.facultyOverview";
+  if (pathname.startsWith("/fennler/")) return "page.course";
+  if (pathname.startsWith("/muellim/")) return "page.teacherWorkspace";
+  if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/")) return "page.tutorWorkspace";
   if (pathname.startsWith("/admin")) return "page.admin";
   return null;
 }
