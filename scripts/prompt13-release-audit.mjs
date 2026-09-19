@@ -26,7 +26,7 @@ assert(
 
 const gitignore = read(".gitignore");
 for (const rule of [".env", ".env.*", "!.env.example"]) {
-  assert(gitignore.split("\n").includes(rule), `.gitignore is missing release security rule: ${rule}`);
+  assert(\n    gitignore.split("\n").includes(rule),\n    `.gitignore is missing release security rule: ${rule}`,\n  );
 }
 
 const envExample = read(".env.example");
@@ -58,7 +58,7 @@ const runtimeFiles = trackedFiles.filter((path) => {
 const secretPatterns = [
   [/sb_secret_[A-Za-z0-9_-]{12,}/, "Supabase secret key literal"],
   [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/, "private key material"],
-  [/VITE_[A-Z0-9_]*(?:SERVICE_ROLE|SECRET|PRIVATE_KEY|ACCESS_TOKEN)/, "browser-exposed secret variable"],
+  [\n    /VITE_[A-Z0-9_]*(?:SERVICE_ROLE|SECRET|PRIVATE_KEY|ACCESS_TOKEN)/,\n    "browser-exposed secret variable",\n  ],
 ];
 
 for (const path of runtimeFiles) {
@@ -102,7 +102,7 @@ assert(viteConfig.includes('preset: "vercel"'), "Vite/Nitro Vercel preset is mis
 assert(viteConfig.includes('process.env["VERCEL"]'), "Vercel environment detection is missing");
 
 const vercelConfig = JSON.parse(read("vercel.json"));
-assert(vercelConfig.buildCommand === "npm run build", "vercel.json buildCommand must be npm run build");
+assert(\n  vercelConfig.buildCommand === "npm run build",\n  "vercel.json buildCommand must be npm run build",\n);
 
 const assetRoots = ["src/assets", "public"];
 const assetFiles = [];
@@ -145,7 +145,7 @@ for (const path of cssFiles) {
   }
 }
 if (importantCount > 250) {
-  warnings.push(`CSS contains ${importantCount} !important declarations; retained to avoid risky release-stage redesign regressions.`);
+  warnings.push(\n    `CSS contains ${importantCount} !important declarations; retained to avoid risky release-stage redesign regressions.`,\n  );
 }
 
 for (const warning of warnings) console.warn(`Release audit warning: ${warning}`);
