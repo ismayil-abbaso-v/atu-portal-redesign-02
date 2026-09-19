@@ -9,6 +9,7 @@ import {
   Home,
   LayoutDashboard,
   LogOut,
+  Menu,
   MessageSquare,
   PanelsTopLeft,
   PenLine,
@@ -98,13 +99,16 @@ function IkonQutusu({ children }: { children: ReactNode }) {
   );
 }
 
-function InstitutionalLineArt() {
+function InstitutionalLineArt({ acıq }: { acıq: boolean }) {
   return (
-    <div className="portal-sidebar-art" aria-hidden>
+    <div className={cn("portal-sidebar-art", acıq ? "is-expanded" : "is-collapsed")} aria-hidden>
       <img
         src={atuBuildingBrand}
         alt=""
-        className="mx-auto block h-auto w-[82%] object-contain object-bottom"
+        className={cn(
+          "mx-auto block h-auto object-contain object-bottom transition-[width,opacity,filter] duration-300 ease-out",
+          acıq ? "w-[82%] opacity-95" : "w-[52px] opacity-75",
+        )}
         draggable={false}
       />
     </div>
@@ -175,6 +179,7 @@ export function Sidebar({
   }, [acıq, setAcıq]);
 
   useEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
     setAcıq(false);
   }, [pathname, setAcıq]);
 
@@ -276,26 +281,46 @@ export function Sidebar({
           } as CSSProperties
         }
         className="portal-desktop-sidebar"
+        data-expanded={acıq ? "true" : "false"}
       >
         <Link
           to="/ev"
           aria-label={`${t("app.name")} — ${t("nav.home")}`}
-          className="mb-5 flex min-h-[64px] items-center gap-3 border-b border-border/70 pb-4"
+          className="portal-sidebar-brand"
         >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary p-2 shadow-sm">
+          <span className="portal-sidebar-brand__logo">
             <img src={atuLogo} alt="ATU" className="size-full object-contain" />
           </span>
-          <span className="min-w-0 leading-tight">
-            <span className="block truncate font-display text-[15px] font-bold text-primary">
+          <span
+            className={cn(
+              "portal-sidebar-brand__copy",
+              acıq ? "max-w-[156px] opacity-100" : "max-w-0 opacity-0",
+            )}
+          >
+            <span className="block truncate font-display text-[15px] font-bold tracking-[-0.02em] text-primary">
               {t("app.name")}
             </span>
-            <span className="mt-1 block text-[11px] font-semibold leading-3 text-muted-foreground">
+            <span className="mt-1 block max-w-[150px] text-[10px] font-semibold leading-[1.25] text-muted-foreground">
               Azərbaycan Texnologiya Universiteti
             </span>
           </span>
         </Link>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:none]">
+        <button
+          type="button"
+          aria-label={t("nav.menu")}
+          aria-expanded={acıq}
+          onClick={() => setAcıq((value) => !value)}
+          className="portal-sidebar-link portal-sidebar-toggle"
+          title={t("nav.menu")}
+        >
+          <IkonQutusu>
+            <Menu className="size-[var(--sb-icon-svg)]" />
+          </IkonQutusu>
+          <PanelEtiketi acıq={acıq}>{t("nav.menu")}</PanelEtiketi>
+        </button>
+
+        <div className="portal-sidebar-scroll min-h-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:none]">
           <nav className="flex w-full flex-col items-stretch gap-[var(--sb-row-gap)]">
             {dinamikUstBolme.map(link)}
           </nav>
@@ -305,7 +330,7 @@ export function Sidebar({
           </nav>
         </div>
 
-        <div className="shrink-0 pt-[var(--sb-section-gap)]">
+        <div className="portal-sidebar-account shrink-0 pt-[var(--sb-section-gap)]">
           <hr className="mb-[var(--sb-section-gap)] w-full border-border/70" />
           <nav className="flex w-full flex-col items-stretch gap-[var(--sb-row-gap)]">
             {dinamikAltBolme.map((item) =>
@@ -315,16 +340,17 @@ export function Sidebar({
               type="button"
               onClick={cıxıs}
               title={t("nav.logout")}
-              className="portal-sidebar-link hover:!bg-destructive/10 hover:!text-destructive"
+              className="portal-sidebar-link portal-sidebar-logout"
             >
               <IkonQutusu>
                 <LogOut className="size-[var(--sb-icon-svg)]" />
               </IkonQutusu>
-              <PanelEtiketi acıq>{t("nav.logout")}</PanelEtiketi>
+              <PanelEtiketi acıq={acıq}>{t("nav.logout")}</PanelEtiketi>
             </button>
           </nav>
         </div>
-        <InstitutionalLineArt />
+
+        <InstitutionalLineArt acıq={acıq} />
       </aside>
 
       <div
