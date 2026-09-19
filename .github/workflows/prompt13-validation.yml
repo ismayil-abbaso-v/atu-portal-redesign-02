@@ -71,51 +71,66 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Preview smoke test
+      - name: Built SSR route smoke
         shell: bash
         run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/atu-preview.log 2>&1 &
-          preview_pid=$!
-          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          node --input-type=module <<'NODE'
+          const serverModule = await import("./.output/server/index.mjs");
+          const candidate = serverModule.default ?? serverModule;
+          const fetchHandler =
+            typeof candidate?.fetch === "function"
+              ? candidate.fetch.bind(candidate)
+              : typeof candidate === "function"
+                ? candidate
+                : typeof serverModule.fetch === "function"
+                  ? serverModule.fetch.bind(serverModule)
+                  : null;
 
-          ready=0
-          for attempt in $(seq 1 30); do
-            if curl --silent --show-error --output /dev/null http://127.0.0.1:4173/; then
-              ready=1
-              break
-            fi
-            sleep 1
-          done
+          if (!fetchHandler) {
+            throw new Error("Built Nitro server does not expose a fetch-compatible handler.");
+          }
 
-          if [ "$ready" -ne 1 ]; then
-            cat /tmp/atu-preview.log
-            exit 1
-          fi
+          const executionContext = {
+            waitUntil() {},
+            passThroughOnException() {},
+          };
 
-          routes=(
-            /
-            /ev
-            /elektron-jurnal
-            /teqvim
-            /imtahanlar
-            /sohbet
-            /kitabxana
-            /ofis
-            /bildirisler
-            /menyu
-            /admin
-          )
+          const routes = [
+            "/",
+            "/ev",
+            "/elektron-jurnal",
+            "/teqvim",
+            "/imtahanlar",
+            "/sohbet",
+            "/kitabxana",
+            "/ofis",
+            "/bildirisler",
+            "/menyu",
+            "/admin",
+          ];
 
-          for route in "${routes[@]}"; do
-            code=$(curl --silent --show-error --output /tmp/atu-smoke-body --write-out "%{http_code}"               "http://127.0.0.1:4173${route}")
-            if [ "$code" -eq 404 ] || [ "$code" -ge 500 ]; then
-              echo "Smoke test failed for ${route}: HTTP ${code}"
-              cat /tmp/atu-smoke-body
-              cat /tmp/atu-preview.log
-              exit 1
-            fi
-            echo "${route}: HTTP ${code}"
-          done
+          for (const route of routes) {
+            const response = await fetchHandler(
+              new Request(`http://localhost${route}`, {
+                headers: { accept: "text/html" },
+                redirect: "manual",
+              }),
+              {},
+              executionContext,
+            );
+
+            if (!(response instanceof Response)) {
+              throw new Error(`Built SSR handler returned a non-Response for ${route}.`);
+            }
+            if (response.status === 404 || response.status >= 500) {
+              const body = await response.clone().text();
+              throw new Error(
+                `Built SSR smoke failed for ${route}: HTTP ${response.status}\n${body.slice(0, 1200)}`,
+              );
+            }
+            console.log(`${route}: HTTP ${response.status}`);
+          }
+          NODE
 
       - name: Vercel compatibility build
         shell: bash
