@@ -50,7 +50,7 @@ Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 be
 
 - [x] Prompt 11 visual/mobile/accessibility static QA is re-run during the release workflow.
 - [x] Safe-area top/bottom handling and `100dvh` contracts remain.
-- [x] Horizontal overflow protection remains.
+- [x] Document-level horizontal clipping is not used as an overflow workaround; intentional horizontal scrolling/containment is component-scoped.
 - [x] Current-route `aria-current`, closed-drawer focus isolation and Escape-close contracts remain.
 - [x] Reduced-motion contract remains.
 - [x] No Login/Sidebar/`/menyu` redesign is introduced in Prompt 13.
