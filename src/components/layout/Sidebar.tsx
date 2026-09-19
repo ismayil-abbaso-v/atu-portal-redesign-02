@@ -106,7 +106,7 @@ function InstitutionalLineArt({ acıq }: { acıq: boolean }) {
         src={atuBuildingBrand}
         alt=""
         className={cn(
-          "mx-auto block h-auto object-contain object-bottom transition-[width,opacity,filter] duration-300 ease-out",
+          "mx-auto block h-auto object-contain object-bottom transition-[width,opacity,filter,transform] duration-300 ease-out",
           acıq ? "w-[82%] opacity-95" : "w-[52px] opacity-75",
         )}
         draggable={false}
