@@ -104,7 +104,7 @@ function InstitutionalLineArt() {
       <img
         src={atuBuildingBrand}
         alt=""
-        className="block h-auto w-full object-contain object-bottom"
+        className="mx-auto block h-auto w-[82%] object-contain object-bottom"
         draggable={false}
       />
     </div>
