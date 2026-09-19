@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
-import profileHero from "@/assets/profile-settings-hero.svg";
+import profileHero from "@/assets/profile-settings-hero.webp";
 import { AvatarCropDialog } from "@/components/profile/AvatarCropDialog";
 import { SignedAvatarImg } from "@/components/common/SignedAvatar";
 import { useUserRoles } from "@/hooks/use-user-role";

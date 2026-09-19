@@ -19,7 +19,7 @@ import {
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-import notificationSettingsHero from "@/assets/notification-settings-hero.svg";
+import notificationSettingsHero from "@/assets/notification-settings-hero.webp";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { useUserRoles } from "@/hooks/use-user-role";
 import { supabase } from "@/integrations/supabase/client";

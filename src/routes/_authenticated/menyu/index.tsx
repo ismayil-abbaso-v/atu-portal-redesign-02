@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 
-import menuHero from "@/assets/menu-settings-hero.svg";
+import menuHero from "@/assets/menu-settings-hero.webp";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { usePrimaryRole } from "@/hooks/use-user-role";
 import { type MenuHubKey, useMenuHubI18n } from "@/lib/menu-hub-i18n";

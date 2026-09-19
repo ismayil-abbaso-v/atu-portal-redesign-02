@@ -1,7 +1,7 @@
 import { BookOpen, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import libraryHeroImage from "@/assets/library-hero.svg";
+import libraryHeroImage from "@/assets/library-hero.webp";
 import { kitabxanaKateqoriyalari } from "@/lib/library-categories";
 import { usePageI18n } from "@/lib/i18n-extra";
 

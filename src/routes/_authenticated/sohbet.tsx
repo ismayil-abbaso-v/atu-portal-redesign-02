@@ -12,7 +12,7 @@ import { useUserRoles } from "@/hooks/use-user-role";
 import type { Database } from "@/integrations/supabase/types";
 import { usePageI18n } from "@/lib/i18n-extra";
 import "@/chat-panel.css";
-import chatHero from "@/assets/chat-hero.svg";
+import chatHero from "@/assets/chat-hero.webp";
 import "@/chat-library-redesign.css";
 
 type ChatGroup = Database["public"]["Tables"]["chat_groups"]["Row"];

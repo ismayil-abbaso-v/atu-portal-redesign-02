@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useCalendarManagementI18n } from "@/lib/calendar-management-i18n";
 import { usePageI18n } from "@/lib/i18n-extra";
-import calendarHero from "@/assets/calendar-hero.svg";
+import calendarHero from "@/assets/calendar-hero.webp";
 import "@/calendar-exams-redesign.css";
 import {
   fetchTeacherLessonSessions,

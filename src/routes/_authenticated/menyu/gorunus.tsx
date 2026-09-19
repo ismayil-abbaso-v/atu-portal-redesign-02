@@ -12,7 +12,7 @@ import {
   Type,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import appearanceHero from "@/assets/appearance-settings-hero.svg";
+import appearanceHero from "@/assets/appearance-settings-hero.webp";
 import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { DeanDashboard } from "@/components/dashboard/DeanDashboard";

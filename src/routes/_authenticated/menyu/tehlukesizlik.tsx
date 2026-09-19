@@ -3,7 +3,7 @@ import { Copy, Eye, EyeOff, KeyRound, Laptop, Loader2, LogOut, MapPin, MonitorSm
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { toast } from "sonner";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
-import securityHero from "@/assets/security-settings-hero.svg";
+import securityHero from "@/assets/security-settings-hero.webp";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import "@/settings-redesign.css";

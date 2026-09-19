@@ -16,7 +16,8 @@ function text(path) {
 
 function requireIncludes(path, needle, label) {
   const source = text(path);
-  if (!source.includes(needle)) failures.push(`${label}: ${path} does not contain ${JSON.stringify(needle)}`);
+  if (!source.includes(needle))
+    failures.push(`${label}: ${path} does not contain ${JSON.stringify(needle)}`);
 }
 
 const referenceRoutes = [
@@ -39,13 +40,18 @@ for (const route of referenceRoutes) {
 const heroAssets = [
   "src/assets/student-home-hero.webp",
   "src/assets/electronic-journal-hero.webp",
-  "src/assets/calendar-hero.svg",
-  "src/assets/exams-hero.svg",
-  "src/assets/chat-hero.svg",
-  "src/assets/library-hero.svg",
-  "src/assets/office-hero.svg",
-  "src/assets/notifications-hero.svg",
-  "src/assets/menu-settings-hero.svg",
+  "src/assets/calendar-hero.webp",
+  "src/assets/exams-hero.webp",
+  "src/assets/chat-hero.webp",
+  "src/assets/library-hero.webp",
+  "src/assets/office-hero.webp",
+  "src/assets/notifications-hero.webp",
+  "src/assets/menu-settings-hero.webp",
+  "src/assets/profile-settings-hero.webp",
+  "src/assets/security-settings-hero.webp",
+  "src/assets/notification-settings-hero.webp",
+  "src/assets/appearance-settings-hero.webp",
+  "src/assets/help-settings-hero.webp",
   "src/assets/transcript-hero.webp",
   "src/assets/student-innovation-lab.webp",
 ];
@@ -57,29 +63,72 @@ for (const asset of heroAssets) {
     continue;
   }
   const size = statSync(absolute).size;
-  if (size > 200_000) failures.push(`Reference hero asset exceeds 200 KB: ${asset} (${size} bytes)`);
+  if (size > 200_000)
+    failures.push(`Reference hero asset exceeds 200 KB: ${asset} (${size} bytes)`);
   if (/building|campus|university-building|atu-building/i.test(asset)) {
     failures.push(`Building-themed hero asset is not allowed on reference routes: ${asset}`);
   }
 }
 
-requireIncludes("src/routes/_authenticated/route.tsx", "data-route={pathname}", "Route-scoped responsive QA");
+requireIncludes(
+  "src/routes/_authenticated/route.tsx",
+  "data-route={pathname}",
+  "Route-scoped responsive QA",
+);
 requireIncludes("src/mobile-native.css", "env(safe-area-inset-top)", "Mobile safe-area QA");
 requireIncludes("src/mobile-native.css", "env(safe-area-inset-bottom)", "Mobile safe-area QA");
 requireIncludes("src/mobile-native.css", "100dvh", "Mobile viewport QA");
 requireIncludes("src/mobile-native.css", "overflow-x: hidden", "Horizontal-overflow QA");
 requireIncludes("src/styles.css", "@media (prefers-reduced-motion:reduce)", "Reduced-motion QA");
-requireIncludes("src/components/layout/MobileBottomNav.tsx", 'aria-current={active ? "page" : undefined}', "Bottom-nav current-page semantics");
-requireIncludes("src/components/layout/Sidebar.tsx", 'aria-current={aktiv ? "page" : undefined}', "Sidebar current-page semantics");
-requireIncludes("src/components/layout/Sidebar.tsx", "inert={!acıq}", "Closed drawer focus isolation");
-requireIncludes("src/components/layout/AppHeader.tsx", "inert={!open}", "Closed notification-panel focus isolation");
-requireIncludes("src/components/layout/AppHeader.tsx", "inert={!profileOpen}", "Closed profile-panel focus isolation");
-requireIncludes("src/components/layout/AppHeader.tsx", 'event.key !== "Escape"', "Header Escape behavior");
-requireIncludes("src/routes/_authenticated/bildirisler.tsx", '<span className="sr-only">{unreadLabel}</span>', "Unread state non-color label");
+requireIncludes(
+  "src/components/layout/MobileBottomNav.tsx",
+  'aria-current={active ? "page" : undefined}',
+  "Bottom-nav current-page semantics",
+);
+requireIncludes(
+  "src/components/layout/Sidebar.tsx",
+  'aria-current={aktiv ? "page" : undefined}',
+  "Sidebar current-page semantics",
+);
+requireIncludes(
+  "src/components/layout/Sidebar.tsx",
+  "inert={!acıq}",
+  "Closed drawer focus isolation",
+);
+requireIncludes(
+  "src/components/layout/AppHeader.tsx",
+  "inert={!open}",
+  "Closed notification-panel focus isolation",
+);
+requireIncludes(
+  "src/components/layout/AppHeader.tsx",
+  "inert={!profileOpen}",
+  "Closed profile-panel focus isolation",
+);
+requireIncludes(
+  "src/components/layout/AppHeader.tsx",
+  'event.key !== "Escape"',
+  "Header Escape behavior",
+);
+requireIncludes(
+  "src/routes/_authenticated/bildirisler.tsx",
+  '<span className="sr-only">{unreadLabel}</span>',
+  "Unread state non-color label",
+);
 
 const mobileCss = text("src/mobile-native.css");
-for (const route of ["/ev", "/elektron-jurnal", "/teqvim", "/imtahanlar", "/sohbet", "/kitabxana", "/ofis", "/bildirisler"]) {
-  if (!mobileCss.includes(`[data-route="${route}"]`)) failures.push(`Mobile route contract missing for ${route}`);
+for (const route of [
+  "/ev",
+  "/elektron-jurnal",
+  "/teqvim",
+  "/imtahanlar",
+  "/sohbet",
+  "/kitabxana",
+  "/ofis",
+  "/bildirisler",
+]) {
+  if (!mobileCss.includes(`[data-route="${route}"]`))
+    failures.push(`Mobile route contract missing for ${route}`);
 }
 if (!mobileCss.includes('[data-route^="/menyu"]') && !mobileCss.includes('[data-route="/menyu"]')) {
   failures.push("Mobile route contract missing for /menyu family");
@@ -87,7 +136,9 @@ if (!mobileCss.includes('[data-route^="/menyu"]') && !mobileCss.includes('[data-
 
 const loginIllustration = join(root, "src/assets/login-illustration.png");
 if (existsSync(loginIllustration) && statSync(loginIllustration).size > 1_000_000) {
-  warnings.push(`Large inherited login asset: src/assets/login-illustration.png (${statSync(loginIllustration).size} bytes).`);
+  warnings.push(
+    `Large inherited login asset: src/assets/login-illustration.png (${statSync(loginIllustration).size} bytes).`,
+  );
 }
 
 const cssFiles = [
@@ -103,7 +154,8 @@ const cssFiles = [
 for (const cssFile of cssFiles) {
   const source = text(cssFile);
   if (/\bparallax\b/i.test(source)) failures.push(`Large parallax behavior found in ${cssFile}`);
-  if (/animation[^;]*(bounce|pulse)[^;]*infinite/i.test(source)) failures.push(`Infinite decorative bounce/pulse found in ${cssFile}`);
+  if (/animation[^;]*(bounce|pulse)[^;]*infinite/i.test(source))
+    failures.push(`Infinite decorative bounce/pulse found in ${cssFile}`);
 }
 
 for (const warning of warnings) console.warn(`QA warning: ${warning}`);
@@ -128,4 +180,6 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log(`Prompt 11 static QA passed: ${referenceRoutes.length} reference routes, ${heroAssets.length} contextual visual assets, responsive/accessibility contracts and QA documentation verified.`);
+console.log(
+  `Prompt 11 static QA passed: ${referenceRoutes.length} reference routes, ${heroAssets.length} contextual visual assets, responsive/accessibility contracts and QA documentation verified.`,
+);

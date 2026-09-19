@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BookOpen, CreditCard, KeyRound, LifeBuoy, Search, Sparkles, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import helpHero from "@/assets/help-settings-hero.svg";
+import helpHero from "@/assets/help-settings-hero.webp";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import {
   Accordion,

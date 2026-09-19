@@ -1,7 +1,7 @@
 import { Children, cloneElement, isValidElement, type ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
 import { getExamMessages } from "@/lib/exam-i18n";
-import examHero from "@/assets/exams-hero.svg";
+import examHero from "@/assets/exams-hero.webp";
 import "@/calendar-exams-redesign.css";
 
 interface StatItem { icon: ReactNode; value: string | number; label: string; }

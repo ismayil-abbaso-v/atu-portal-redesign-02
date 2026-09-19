@@ -14,7 +14,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import officeHero from "@/assets/office-hero.svg";
+import officeHero from "@/assets/office-hero.webp";
 import { EmptyState } from "@/components/layout/EmptyState";
 import { OfficeFileCard, type OfisFayli } from "@/components/office/OfficeFileCard";
 import { OfficeUploadDialog } from "@/components/office/OfficeUploadDialog";

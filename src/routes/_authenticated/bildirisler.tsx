@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import notificationsHero from "@/assets/notifications-hero.svg";
+import notificationsHero from "@/assets/notifications-hero.webp";
 import { AnnouncementCard } from "@/components/announcements/AnnouncementCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
