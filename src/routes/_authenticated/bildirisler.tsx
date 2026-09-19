@@ -229,7 +229,7 @@ function AnnouncementsPanel() {
   const announcementsQuery = useQuery({
     queryKey: ["student-announcements", userId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("announcements")
         .select("*")
         .order("is_featured", { ascending: false })
@@ -245,7 +245,7 @@ function AnnouncementsPanel() {
   const readsQuery = useQuery({
     queryKey: ["student-announcement-reads", userId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("announcement_reads")
         .select("announcement_id,user_id,first_read_at,last_read_at,open_count")
         .eq("user_id", userId);
