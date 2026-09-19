@@ -1,0 +1,153 @@
+.student-journal-redesign {
+  display: grid;
+  gap: 18px;
+}
+.journal-redesign-hero {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 22px;
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--shadow-subtle);
+  animation: journal-hero-in 0.5s var(--ease-standard) both;
+}
+.journal-redesign-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(92, 4, 31, 0.98) 0%,
+    rgba(122, 11, 40, 0.91) 33%,
+    rgba(122, 11, 40, 0.2) 61%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+}
+.journal-redesign-hero__copy {
+  position: absolute;
+  left: clamp(24px, 4vw, 54px);
+  top: 50%;
+  z-index: 2;
+  max-width: 470px;
+  transform: translateY(-50%);
+  color: #fff;
+}
+.journal-redesign-hero__copy > span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f2c8d4;
+}
+.journal-redesign-hero__copy h1 {
+  margin-top: 8px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(30px, 3.2vw, 48px);
+  font-weight: 650;
+  line-height: 1.05;
+}
+.journal-redesign-hero__copy p {
+  max-width: 35ch;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.83);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.journal-redesign-hero__copy blockquote {
+  margin-top: 18px;
+  border-left: 2px solid #f6cbd8;
+  padding-left: 12px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 13px;
+  font-style: italic;
+}
+.journal-redesign-hero__facts {
+  position: absolute;
+  right: 24px;
+  bottom: 20px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+.journal-redesign-hero__facts > span {
+  display: flex;
+  min-width: 74px;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 12px;
+  background: rgba(64, 3, 23, 0.5);
+  padding: 8px 10px;
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+.journal-redesign-hero__facts strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+}
+.journal-redesign-hero__facts small {
+  margin-top: 2px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.student-journal-redesign .student-journal-daily-table > div {
+  display: grid;
+  gap: 16px;
+}
+.student-journal-redesign .student-journal-daily-table section,
+.student-journal-redesign .student-journal-daily-table aside > section {
+  border-color: var(--border-subtle) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-subtle) !important;
+}
+.student-journal-redesign .student-journal-daily-table table {
+  border-radius: 14px;
+}
+.student-journal-redesign .student-journal-daily-table [role="tablist"] {
+  background: var(--surface-muted);
+}
+@media (max-width: 767px) {
+  .journal-redesign-hero {
+    min-height: 310px;
+    border-radius: 18px;
+    background-position: 70% center;
+  }
+  .journal-redesign-hero__overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(96, 5, 32, 0.97) 0%,
+      rgba(122, 11, 40, 0.83) 48%,
+      rgba(60, 3, 22, 0.3) 100%
+    );
+  }
+  .journal-redesign-hero__copy {
+    left: 20px;
+    right: 20px;
+    top: 24px;
+    transform: none;
+  }
+  .journal-redesign-hero__copy h1 {
+    font-size: 32px;
+  }
+  .journal-redesign-hero__facts {
+    right: 16px;
+    bottom: 14px;
+  }
+  .journal-redesign-hero__facts > span {
+    min-width: 66px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journal-redesign-hero {
+    animation: none;
+  }
+}
+@keyframes journal-hero-in {
+  from {
+    opacity: 0;
+    transform: scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

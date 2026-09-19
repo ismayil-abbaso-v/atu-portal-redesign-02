@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { BookOpenCheck } from "lucide-react";
 
+import journalHero from "@/assets/electronic-journal-hero.webp";
 import { TeacherDashboard } from "@/components/dashboard/TeacherDashboard";
 import { StudentJournalView } from "@/components/electronic-journal/StudentJournalView";
 import "@/components/electronic-journal/student-daily-lessons-table.css";
@@ -11,6 +12,8 @@ import { useUserRoles } from "@/hooks/use-user-role";
 import { useJournalI18n } from "@/lib/electronic-journal-i18n";
 import { canMonitorJournal } from "@/lib/route-permissions";
 import { useTutorJournalI18n } from "@/lib/tutor-journal-i18n";
+import { useI18n, type Locale } from "@/lib/i18n";
+import "@/journal-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/elektron-jurnal")({
   beforeLoad: canMonitorJournal,
@@ -20,7 +23,32 @@ export const Route = createFileRoute("/_authenticated/elektron-jurnal")({
 
 function JournalLoadingSkeleton() {
   const { t: jt } = useJournalI18n();
-  return <div className="animate-page-enter space-y-3 sm:space-y-4" aria-label={jt("page.loading")}><div className="skeleton-shimmer h-28 rounded-2xl sm:h-32" /><div className="rounded-2xl border border-border/50 bg-card p-3 sm:p-5"><div className="mb-3 flex items-center justify-between"><div className="skeleton-shimmer h-8 w-36 rounded-lg" /><div className="skeleton-shimmer h-8 w-24 rounded-lg" /></div><div className="grid grid-cols-3 gap-2 sm:gap-3"><div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" /><div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" /><div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" /></div></div><div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-4"><div className="rounded-2xl border border-border/50 bg-card p-3 sm:p-5"><div className="skeleton-shimmer h-10 w-full rounded-xl" /><div className="skeleton-shimmer mt-4 hidden h-[330px] rounded-xl sm:block" /></div><div className="hidden space-y-3 xl:block"><div className="skeleton-shimmer h-48 rounded-2xl" /><div className="skeleton-shimmer h-44 rounded-2xl" /></div></div></div>;
+  return (
+    <div className="animate-page-enter space-y-3 sm:space-y-4" aria-label={jt("page.loading")}>
+      <div className="skeleton-shimmer h-28 rounded-2xl sm:h-32" />
+      <div className="rounded-2xl border border-border/50 bg-card p-3 sm:p-5">
+        <div className="mb-3 flex items-center justify-between">
+          <div className="skeleton-shimmer h-8 w-36 rounded-lg" />
+          <div className="skeleton-shimmer h-8 w-24 rounded-lg" />
+        </div>
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" />
+          <div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" />
+          <div className="skeleton-shimmer h-24 rounded-2xl sm:h-32" />
+        </div>
+      </div>
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-4">
+        <div className="rounded-2xl border border-border/50 bg-card p-3 sm:p-5">
+          <div className="skeleton-shimmer h-10 w-full rounded-xl" />
+          <div className="skeleton-shimmer mt-4 hidden h-[330px] rounded-xl sm:block" />
+        </div>
+        <div className="hidden space-y-3 xl:block">
+          <div className="skeleton-shimmer h-48 rounded-2xl" />
+          <div className="skeleton-shimmer h-44 rounded-2xl" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ElektronJurnalSehifesi() {
@@ -44,7 +72,69 @@ function ElektronJurnalSehifesi() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3 sm:gap-4">
-      {isLoading || !userId ? <JournalLoadingSkeleton /> : roles.includes("muellim") ? <TeacherDashboard userId={userId} /> : roles.includes("tyutor") ? <TutorJournalMonitor userId={userId} /> : roles.includes("telebe") ? <div className="student-journal-daily-table"><StudentJournalView userId={userId} /></div> : <div className="rounded-2xl bg-card p-6 shadow-sm"><EmptyState icon={BookOpenCheck} mesaj={jt("page.roleOnly")} /></div>}
+      {isLoading || !userId ? (
+        <JournalLoadingSkeleton />
+      ) : roles.includes("muellim") ? (
+        <TeacherDashboard userId={userId} />
+      ) : roles.includes("tyutor") ? (
+        <TutorJournalMonitor userId={userId} />
+      ) : roles.includes("telebe") ? (
+        <div className="student-journal-redesign">
+          <JournalHero />
+          <div className="student-journal-daily-table">
+            <StudentJournalView userId={userId} />
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-card p-6 shadow-sm">
+          <EmptyState icon={BookOpenCheck} mesaj={jt("page.roleOnly")} />
+        </div>
+      )}
     </div>
+  );
+}
+
+const JOURNAL_HERO_COPY: Record<Locale, { title: string; subtitle: string; quote: string }> = {
+  az: {
+    title: "Elektron jurnal",
+    subtitle: "Akademik nailiyyətləriniz — daha parlaq gələcək üçün!",
+    quote: "Bilik, texnologiya, gələcək",
+  },
+  tr: {
+    title: "Elektronik jurnal",
+    subtitle: "Akademik başarılarınız — daha parlak bir gelecek için!",
+    quote: "Bilgi, teknoloji, gelecek",
+  },
+  en: {
+    title: "Electronic journal",
+    subtitle: "Your academic achievements — for a brighter future!",
+    quote: "Knowledge, technology, future",
+  },
+  ru: {
+    title: "Электронный журнал",
+    subtitle: "Ваши академические достижения — для светлого будущего!",
+    quote: "Знания, технологии, будущее",
+  },
+};
+
+function JournalHero() {
+  const { locale } = useI18n();
+  const copy = JOURNAL_HERO_COPY[locale];
+  return (
+    <section className="journal-redesign-hero" style={{ backgroundImage: `url(${journalHero})` }}>
+      <div className="journal-redesign-hero__overlay" />
+      <div className="journal-redesign-hero__copy">
+        <span>ATU · 1969</span>
+        <h1>{copy.title}</h1>
+        <p>{copy.subtitle}</p>
+        <blockquote>“{copy.quote}”</blockquote>
+      </div>
+      <div className="journal-redesign-hero__facts" aria-label="ATU">
+        <span>
+          <strong>1969</strong>
+          <small>ATU</small>
+        </span>
+      </div>
+    </section>
   );
 }
