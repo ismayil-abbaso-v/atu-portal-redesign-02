@@ -140,7 +140,7 @@ let importantCount = 0;
 for (const path of cssFiles) {
   const source = read(path);
   importantCount += (source.match(/!important/g) ?? []).length;
-  if (/outline\s*:\s*[^;]*(?:red|lime|magenta|fuchsia)/i.test(source)) {
+  if (/outline\s*:\s*[^;}]*?(?:red|lime|magenta|fuchsia)/i.test(source)) {
     failures.push(`Debug outline found in CSS: ${path}`);
   }
 }
