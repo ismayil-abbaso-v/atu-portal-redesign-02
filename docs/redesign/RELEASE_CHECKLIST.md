@@ -37,12 +37,12 @@ Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 be
 - [x] Existing publishable Supabase identifiers are treated as public client configuration, not secrets.
 - [x] Public API proxy/auth behavior remains unchanged.
 
-## Route completeness and runtime smoke
+## Route completeness and built-runtime smoke
 
 - [x] Prompt 12 route-completeness audit is re-run.
 - [x] 34/34 user-facing route patterns remain represented.
 - [x] Root 404/error boundaries remain present.
-- [x] Preview smoke covers: `/`, `/ev`, `/elektron-jurnal`, `/teqvim`, `/imtahanlar`, `/sohbet`, `/kitabxana`, `/ofis`, `/bildirisler`, `/menyu`, `/admin`.
+- [x] Built Nitro SSR handler smoke covers: `/`, `/ev`, `/elektron-jurnal`, `/teqvim`, `/imtahanlar`, `/sohbet`, `/kitabxana`, `/ofis`, `/bildirisler`, `/menyu`, `/admin`.
 - [x] Authenticated routes may redirect when the smoke runner has no credentials; 404/5xx responses are release failures.
 - [x] No test credential, auth bypass or production secret is introduced for smoke testing.
 
@@ -80,6 +80,6 @@ Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 be
 
 ## Release decision
 
-The release workflow is the final automated gate. A green `Prompt 13 production readiness` run means clean install, production audit, prior QA contracts, route completeness, dependency-tree validation, typecheck, lint-baseline protection, regression tests, local preview smoke and Vercel-compatible build all completed successfully.
+The release workflow is the final automated gate. A green `Prompt 13 production readiness` run means clean install, production audit, prior QA contracts, route completeness, dependency-tree validation, typecheck, lint-baseline protection, regression tests, built Nitro SSR route smoke and Vercel-compatible build all completed successfully.
 
 Authenticated production-data E2E and a live Vercel deployment are not fabricated when credentials/project access are unavailable.
