@@ -1,0 +1,37 @@
+name: Prompt 11 final QA
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Prompt 11 semantic lint
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/components/layout/AppHeader.tsx
+          src/components/layout/Sidebar.tsx
+          src/routes/_authenticated/bildirisler.tsx
+      - name: Static visual, mobile and accessibility contracts
+        run: node scripts/prompt11-static-qa.mjs
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Regression tests
+        run: npm test
+      - name: Production build
+        run: npm run build

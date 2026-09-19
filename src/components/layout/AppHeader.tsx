@@ -73,13 +73,16 @@ export function AppHeader({
   }, [pathname]);
 
   useEffect(() => {
-    if (!mobileSearchOpen) return;
+    if (!mobileSearchOpen && !open && !profileOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobileSearchOpen(false);
+      if (event.key !== "Escape") return;
+      setMobileSearchOpen(false);
+      setOpen(false);
+      setProfileOpen(false);
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [mobileSearchOpen]);
+  }, [mobileSearchOpen, open, profileOpen]);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -171,6 +174,7 @@ export function AppHeader({
             type="button"
             aria-label={t("common.search")}
             aria-expanded={mobileSearchOpen}
+            aria-controls="portal-mobile-search-panel"
             onClick={() => {
               setOpen(false);
               setProfileOpen(false);
@@ -193,6 +197,7 @@ export function AppHeader({
               type="button"
               aria-label={t("nav.notifications")}
               aria-expanded={open}
+              aria-controls="portal-notification-panel"
               onClick={() => {
                 setMobileSearchOpen(false);
                 setProfileOpen(false);
@@ -209,6 +214,9 @@ export function AppHeader({
             </button>
 
             <div
+              id="portal-notification-panel"
+              aria-hidden={!open}
+              inert={!open}
               className={`${open ? "notification-panel--open pointer-events-auto opacity-100 scale-100 translate-y-0" : "pointer-events-none opacity-0 scale-[0.985] -translate-y-1"} notification-panel absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(24rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 transition-[opacity,transform] duration-200 ease-out`}
             >
               <span aria-hidden className="notification-panel__topline" />
@@ -320,6 +328,7 @@ export function AppHeader({
               type="button"
               aria-label={t("nav.profile")}
               aria-expanded={profileOpen}
+              aria-controls="portal-profile-panel"
               onClick={() => {
                 setMobileSearchOpen(false);
                 setOpen(false);
@@ -350,6 +359,9 @@ export function AppHeader({
             </button>
 
             <div
+              id="portal-profile-panel"
+              aria-hidden={!profileOpen}
+              inert={!profileOpen}
               className={
                 profileOpen
                   ? "absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_20px_60px_rgba(61,15,28,0.16)] opacity-100 scale-100 translate-y-0 transition-[opacity,transform] duration-200 ease-out"
@@ -398,8 +410,10 @@ export function AppHeader({
       </div>
 
       <div
+        id="portal-mobile-search-panel"
         className={`portal-mobile-search-panel md:hidden ${mobileSearchOpen ? "is-open" : ""}`}
         aria-hidden={!mobileSearchOpen}
+        inert={!mobileSearchOpen}
       >
         <PortalSearch
           autoFocus={mobileSearchOpen}

@@ -132,7 +132,17 @@ function BildirisTarixi({ tarix }: { tarix: string }) {
   return <span>{isToday(date) ? formatDistanceToNow(date, { addSuffix: true, locale: dateLocale }) : format(date, "d MMMM, HH:mm", { locale: dateLocale })}</span>;
 }
 
-function BildirisSetri({ bildiris, onOxu, index }: { bildiris: Notification; onOxu: (id: string) => void; index: number }) {
+function BildirisSetri({
+  bildiris,
+  onOxu,
+  index,
+  unreadLabel,
+}: {
+  bildiris: Notification;
+  onOxu: (id: string) => void;
+  index: number;
+  unreadLabel: string;
+}) {
   const { icon: Icon, etiket } = bildirisKonfiqurasiyasiniAl(bildiris.tip);
   const unread = !bildiris.oxunub_mu;
 
@@ -147,7 +157,15 @@ function BildirisSetri({ bildiris, onOxu, index }: { bildiris: Notification; onO
             <time><BildirisTarixi tarix={bildiris.tarix} /></time>
           </span>
           {bildiris.metin ? <span className="notification-reference-row__preview">{bildiris.metin}</span> : null}
-          <span className="notification-reference-row__meta"><span>{etiket}</span>{unread ? <i aria-label="Unread" /> : null}</span>
+          <span className="notification-reference-row__meta">
+            <span>{etiket}</span>
+            {unread ? (
+              <>
+                <i aria-hidden />
+                <span className="sr-only">{unreadLabel}</span>
+              </>
+            ) : null}
+          </span>
         </span>
         <ChevronRight aria-hidden className="notification-reference-row__arrow" />
       </button>
@@ -366,7 +384,15 @@ function NotificationsPanel({ view }: { view: Exclude<HubView, "announcements"> 
           </div>
         ) : (
           <ul className="notification-reference-list">
-            {filtered.map((notification, index) => <BildirisSetri key={notification.id} bildiris={notification} index={index} onOxu={(id) => markAsRead.mutate(id)} />)}
+            {filtered.map((notification, index) => (
+              <BildirisSetri
+                key={notification.id}
+                bildiris={notification}
+                index={index}
+                unreadLabel={copy.unread}
+                onOxu={(id) => markAsRead.mutate(id)}
+              />
+            ))}
           </ul>
         )}
       </main>

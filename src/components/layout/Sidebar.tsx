@@ -203,6 +203,7 @@ export function Sidebar({
         key={item.to}
         to={item.to}
         title={label}
+        aria-current={aktiv ? "page" : undefined}
         data-active={aktiv}
         className="portal-sidebar-link"
       >
@@ -222,6 +223,7 @@ export function Sidebar({
         key={`${item.to}-${label}`}
         to={item.to}
         onClick={() => setAcıq(false)}
+        aria-current={aktiv ? "page" : undefined}
         className={cn(
           "group flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-[13px] font-semibold transition-[background-color,color,transform] duration-200 ease-out active:scale-[.985]",
           aktiv
@@ -247,6 +249,7 @@ export function Sidebar({
     <Link
       to="/menyu"
       title={istifadeciAdi}
+      aria-current={pathname.startsWith("/menyu") ? "page" : undefined}
       data-active={pathname.startsWith("/menyu")}
       className="portal-sidebar-link"
     >
@@ -336,6 +339,7 @@ export function Sidebar({
           acıq ? "pointer-events-auto" : "pointer-events-none",
         )}
         aria-hidden={!acıq}
+        inert={!acıq}
       >
         <button
           type="button"
@@ -347,6 +351,7 @@ export function Sidebar({
           )}
         />
         <aside
+          id="portal-mobile-drawer"
           role="dialog"
           aria-modal={acıq ? true : undefined}
           aria-label={t("nav.menu")}
