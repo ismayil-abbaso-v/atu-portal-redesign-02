@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "run": {
+    "date": "2026-09-19",
+    "commit": "82411a0f356fb0f448915be3ed7a466cd6ac1d53",
+    "browser": "Chrome (managed CDP)",
+    "status": "BLOCKED",
+    "attempt": {
+      "target": "http://127.0.0.1:5173/",
+      "result": "net::ERR_BLOCKED_BY_CLIENT"
+    },
+    "blockers": [
+      "Managed browser cannot reach the local Vite preview",
+      "Repository does not provide an externally reachable preview URL",
+      "Repository does not provide a safe authenticated QA identity or storage-state fixture",
+      "Original reference screenshots are not stored as named route fixtures"
+    ]
+  },
+  "viewports": [
+    { "class": "desktop", "width": 2560, "height": 1440 },
+    { "class": "desktop", "width": 1920, "height": 1080 },
+    { "class": "desktop", "width": 1536, "height": 864 },
+    { "class": "desktop", "width": 1440, "height": 900 },
+    { "class": "desktop", "width": 1366, "height": 768 },
+    { "class": "desktop", "width": 1280, "height": 800 },
+    { "class": "tablet", "width": 1024, "height": 1366 },
+    { "class": "tablet", "width": 820, "height": 1180 },
+    { "class": "tablet", "width": 768, "height": 1024 },
+    { "class": "mobile", "width": 430, "height": 932 },
+    { "class": "mobile", "width": 412, "height": 915 },
+    { "class": "mobile", "width": 393, "height": 873 },
+    { "class": "mobile", "width": 390, "height": 844 },
+    { "class": "mobile", "width": 375, "height": 812 },
+    { "class": "mobile", "width": 360, "height": 800 },
+    { "class": "mobile", "width": 320, "height": 568 }
+  ],
+  "routes": [
+    "/ev",
+    "/elektron-jurnal",
+    "/teqvim",
+    "/imtahanlar",
+    "/sohbet",
+    "/kitabxana",
+    "/ofis",
+    "/bildirisler",
+    "/menyu",
+    "/menyu/transkript",
+    "/menyu/profil",
+    "/menyu/tehlukesizlik",
+    "/menyu/bildiris",
+    "/menyu/gorunus",
+    "/menyu/yardim"
+  ],
+  "captureDefaults": {
+    "status": "BLOCKED",
+    "screenshot": null,
+    "reference": null,
+    "finalUrl": null,
+    "measurements": null,
+    "issues": [],
+    "blocker": "Authenticated rendered page unavailable in the managed browser"
+  },
+  "expectedCaptureCount": 240
+}

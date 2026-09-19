@@ -1,64 +1,59 @@
 # ATU Portal Redesign 02 — Visual QA
 
+## Prompt 15 execution status
+
+Prompt 15 was executed on 2026-09-19 against commit `82411a0f356fb0f448915be3ed7a466cd6ac1d53`.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Production build and typecheck | PASS | `npm run build` |
+| Automated unit suite | PASS | `npm test` |
+| Static redesign contracts | PASS | `node scripts/prompt11-static-qa.mjs` |
+| Real browser bootstrap | PASS | Chrome CDP session created |
+| Local preview navigation | BLOCKED | Cloud browser rejected `http://127.0.0.1:5173/` with `net::ERR_BLOCKED_BY_CLIENT` |
+| Authenticated route capture | BLOCKED | No safe demo/test identity or authenticated storage state is supplied by the repository |
+| Reference pixel comparison | BLOCKED | Original reference screenshots are not stored as named fixtures in the repository |
+
+No route or viewport is reported as visually passing without a rendered screenshot. The exact capture inventory and retry contract live in [`visual-qa/README.md`](./visual-qa/README.md) and [`visual-qa/manifest.json`](./visual-qa/manifest.json).
+
 ## Reference target
 
-Primary desktop comparison target: **1536×864**.
+The primary desktop comparison target remains **1536×864**. Prompt 15 expands coverage to six desktop, three tablet and seven mobile widths.
 
-Reference routes:
-
-| Route | Contextual hero contract | Static contract |
-|---|---|---|
-| /ev | student + laptop + technology | PASS |
-| /elektron-jurnal | academic-results desk | PASS |
-| /teqvim | planner/calendar workspace | PASS |
-| /imtahanlar | exam-preparation workspace | PASS |
-| /sohbet | students collaborating | PASS |
-| /kitabxana | library/books | PASS |
-| /ofis | administrative office/documents | PASS |
-| /bildirisler | notification visual | PASS |
-| /menyu | settings/security workspace | PASS |
-| /menyu/transkript | transcript/graduation | PASS |
+| Route | Contextual hero contract | Static contract | Rendered comparison |
+|---|---|---:|---:|
+| `/ev` | student + laptop + technology | PASS | BLOCKED |
+| `/elektron-jurnal` | academic-results desk | PASS | BLOCKED |
+| `/teqvim` | planner/calendar workspace | PASS | BLOCKED |
+| `/imtahanlar` | exam-preparation workspace | PASS | BLOCKED |
+| `/sohbet` | students collaborating | PASS | BLOCKED |
+| `/kitabxana` | library/books | PASS | BLOCKED |
+| `/ofis` | administrative office/documents | PASS | BLOCKED |
+| `/bildirisler` | notification visual | PASS | BLOCKED |
+| `/menyu` | settings/security workspace | PASS | BLOCKED |
+| `/menyu/transkript` | transcript/graduation | PASS | BLOCKED |
+| `/menyu/profil` | profile workspace | PASS | BLOCKED |
+| `/menyu/tehlukesizlik` | security workspace | PASS | BLOCKED |
+| `/menyu/bildiris` | notification settings | PASS | BLOCKED |
+| `/menyu/gorunus` | appearance settings | PASS | BLOCKED |
+| `/menyu/yardim` | help/support workspace | PASS | BLOCKED |
 
 The home innovation banner uses the dedicated innovation-lab asset rather than a university-building image.
 
 ## Static visual audit
 
-Prompt 11 verifies that the expected hero asset exists for every reference route, and rejects oversized reference hero assets above 200 KB. It also rejects building/campus naming in the reference hero contract.
+The static audit verifies that every route has its expected contextual asset, rejects oversized reference hero assets above 200 KB, and rejects campus/building substitutions in the hero contract. It also checks the redesign shell, route-scoped responsive styles, mobile navigation semantics and asset integrity.
 
-The shell and page implementations now consistently use the redesign's burgundy/white institutional language, contextual hero treatment, shared border/radius conventions and mobile route scoping.
+Source review covers sidebar and header geometry, content alignment, hero crop rules, typography, card/grid proportions, rails, spacing, border/radius/shadow tokens, controls, table/list density, banners, palette and mobile adaptations.
 
-## Pixel checklist status
+## Acceptance boundary
 
-The following items are represented in the implementation and were included in the QA source review:
+Static checks are not a substitute for screenshots. Final visual acceptance requires:
 
-1. sidebar width and active navigation treatment
-2. logo placement
-3. navigation row height
-4. header height
-5. search position
-6. avatar/profile block
-7. content left edge
-8. hero hierarchy and crop rules
-9. title and text hierarchy
-10. card/grid proportions
-11. right-side rails
-12. section spacing
-13. border/radius/shadow system
-14. icon/button sizing
-15. table/list density
-16. bottom contextual banners
-17. burgundy palette consistency
-18. mobile adaptations
+1. a safe authenticated test session with production-like data;
+2. an externally reachable preview of the exact commit under review;
+3. named reference images mapped to routes;
+4. all manifest captures at their exact viewport dimensions;
+5. inspection for overflow, clipping, fixed-element overlap, hero collisions, touch targets and reference drift.
 
-## Screenshot comparison status
-
-A true screenshot side-by-side/pixel-diff was **not produced in CI**. The authenticated routes require a valid application session/data context, and the original reference screenshots are not stored in the repository as visual-regression fixtures.
-
-Therefore:
-
-- No false "pixel-perfect PASS" is claimed.
-- Static visual contracts: **PASS**.
-- Authenticated 1536×864 reference screenshot comparison: **MANUAL REVIEW REQUIRED**.
-- The manual review should capture each reference route with production-like data and compare sidebar, header, hero, grid/card geometry, table density, whitespace and image crop to the supplied reference image.
-
-This limitation does not affect the successful typecheck, tests or production build.
+Until those inputs exist, Prompt 15 is **engineering-complete but visual acceptance BLOCKED**. No global `overflow-x: hidden` workaround was added and no speculative CSS change was made from an unrendered page.
