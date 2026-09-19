@@ -157,7 +157,9 @@ for (const key of [
 ]) {
   const escaped = key.replace(".", "\\.");
   const matches = extraI18n.match(new RegExp(`"${escaped}"`, "g")) ?? [];
-  if (matches.length < 4) fail(`src/lib/i18n-extra.ts — ${key} is not present for all four locales`);
+  if (matches.length < 4) {
+    fail(`src/lib/i18n-extra.ts — ${key} is not present for all four locales`);
+  }
 }
 
 try {
