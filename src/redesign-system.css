@@ -275,7 +275,7 @@
 }
 
 .portal-sidebar-art.is-expanded img {
-  transform: scale(1.22);
+  transform: translateY(8px) scale(1.22);
 }
 
 .portal-sidebar-art.is-collapsed img {
