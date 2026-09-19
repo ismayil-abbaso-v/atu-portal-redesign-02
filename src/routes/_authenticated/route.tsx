@@ -164,7 +164,11 @@ function AuthenticatedLayout() {
   }, [locale, t]);
 
   return (
-    <div className="portal-app-shell" data-route={pathname}>
+    <div
+      className="portal-app-shell"
+      data-route={pathname}
+      data-sidebar-expanded={sidebarAcıq ? "true" : "false"}
+    >
       <Sidebar
         istifadeciAdi={ad}
         avatarUrl={avatarUrl}
