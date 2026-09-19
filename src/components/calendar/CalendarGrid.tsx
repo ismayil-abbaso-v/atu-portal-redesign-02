@@ -38,8 +38,8 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
   });
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
-      <div className="grid grid-cols-7 border-b border-border/70 bg-muted/25 text-center text-[11px] font-bold uppercase tracking-wide text-muted-foreground sm:text-xs">
+    <div className="calendar-redesign-grid overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
+      <div className="calendar-redesign-grid__weekdays grid grid-cols-7 border-b border-border/70 bg-muted/25 text-center text-[11px] font-bold uppercase tracking-wide text-muted-foreground sm:text-xs">
         {hefteninGunleri.map((gun) => (
           <div key={gun} className="border-r border-border/60 px-1 py-3 last:border-r-0">{gun}</div>
         ))}
@@ -61,7 +61,7 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
               key={idx}
               type="button"
               onClick={() => onTarixSec(cell.date)}
-              className={`relative flex min-h-[94px] min-w-0 flex-col border-b border-r border-border/60 p-1.5 text-left transition-colors sm:min-h-[116px] sm:p-2 ${
+              className={`calendar-redesign-grid__cell ${dayEvents.length ? "has-events" : ""} relative flex min-h-[94px] min-w-0 flex-col border-b border-r border-border/60 p-1.5 text-left transition-colors sm:min-h-[116px] sm:p-2 ${
                 isSelected
                   ? "z-[1] bg-primary/[0.065] ring-2 ring-inset ring-primary"
                   : cell.isCurrentMonth
@@ -86,15 +86,15 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
                   const label = event.isLessonSession ? event.courses?.ad ?? event.baslıq : event.baslıq;
                   const chipClass = event.isExam
                     ? event.examCompleted
-                      ? "border-emerald-500/70 bg-emerald-500/10 text-foreground"
-                      : "border-amber-500/70 bg-amber-500/10 text-foreground"
+                      ? "calendar-redesign-grid__event--result"
+                      : "calendar-redesign-grid__event--exam"
                     : event.isLessonSession
-                      ? "border-primary bg-primary/[0.07] text-foreground"
-                      : "border-muted-foreground/60 bg-muted/70 text-foreground";
+                      ? "calendar-redesign-grid__event--lesson"
+                      : "calendar-redesign-grid__event--event";
                   return (
                     <div
                       key={event.id}
-                      className={`min-w-0 truncate rounded-r-md border-l-[3px] px-1.5 py-0.5 text-[9px] font-semibold leading-4 sm:text-[10px] ${chipClass}`}
+                      className={`calendar-redesign-grid__event min-w-0 truncate rounded-r-md border-l-[3px] px-1.5 py-0.5 text-[9px] font-semibold leading-4 sm:text-[10px] ${chipClass}`}
                       title={`${event.baslangic_saat.slice(0, 5)} · ${label}`}
                     >
                       <span className="hidden text-muted-foreground lg:inline">{event.baslangic_saat.slice(0, 5)} </span>

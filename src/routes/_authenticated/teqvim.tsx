@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { addDays, format } from "date-fns";
-import { CalendarDays, CalendarRange, Loader2 } from "lucide-react";
+import { BookOpen, CalendarCheck2, CalendarDays, CalendarRange, Clock3, Loader2, Plus, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,13 +12,14 @@ import { EventFormModal } from "@/components/calendar/EventFormModal";
 import { FloatingAddButton } from "@/components/calendar/FloatingAddButton";
 import { MonthYearNav } from "@/components/calendar/MonthYearNav";
 import { ScheduleManagementView } from "@/components/calendar/ScheduleManagementView";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserRoles } from "@/hooks/use-user-role";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useCalendarManagementI18n } from "@/lib/calendar-management-i18n";
 import { usePageI18n } from "@/lib/i18n-extra";
+import calendarHero from "@/assets/calendar-hero.svg";
+import "@/calendar-exams-redesign.css";
 import {
   fetchTeacherLessonSessions,
   fetchTeacherSessionRoomMaps,
@@ -35,6 +36,43 @@ type ScopeData = {
   groupIds: string[];
   teacherCourseIds: string[];
 };
+
+const CALENDAR_UI = {
+  az: {
+    subtitle: "Akademik həyatınızı planlaşdırın.",
+    description: "Dərslər, imtahanlar, tapşırıqlar və universitet tədbirləri — hamısı bir yerdə!",
+    quote: "Nizamlı plan böyük nailiyyətlərə aparır.",
+    all: "Hamısı", lessons: "Dərslər", exams: "İmtahanlar", events: "Tədbirlər",
+    addEvent: "Tədbir əlavə et", examSession: "İmtahan sessiyası", academicCalendar: "Akademik təqvim", importantDates: "Vacib tarixlər",
+    examSessionNote: "İmtahan planınızı və nəticələri izləyin.", academicCalendarNote: "Cari ayın dərs və tədbirlərinə baxın.",
+    importantDatesNote: "Görünən dövrdə planlaşdırılmış qeydlər.", planned: "plan",
+    bannerTitle: "Planla. Öyrən. Nail ol!", bannerText: "Daha güclü bir sabaha doğru akademik ritminizi bir yerdən idarə edin.",
+  },
+  tr: {
+    subtitle: "Akademik hayatınızı planlayın.", description: "Dersler, sınavlar, görevler ve üniversite etkinlikleri — hepsi bir arada!",
+    quote: "Düzenli plan büyük başarılara götürür.", all: "Tümü", lessons: "Dersler", exams: "Sınavlar", events: "Etkinlikler",
+    addEvent: "Etkinlik ekle", examSession: "Sınav dönemi", academicCalendar: "Akademik takvim", importantDates: "Önemli tarihler",
+    examSessionNote: "Sınav planınızı ve sonuçları takip edin.", academicCalendarNote: "Bu ayın ders ve etkinliklerini görün.",
+    importantDatesNote: "Görünen dönemde planlanan kayıtlar.", planned: "plan",
+    bannerTitle: "Planla. Öğren. Başar!", bannerText: "Akademik ritminizi tek yerden yönetin.",
+  },
+  en: {
+    subtitle: "Plan your academic life.", description: "Classes, exams, assignments and university events — all in one place.",
+    quote: "A disciplined plan leads to meaningful achievement.", all: "All", lessons: "Classes", exams: "Exams", events: "Events",
+    addEvent: "Add event", examSession: "Exam session", academicCalendar: "Academic calendar", importantDates: "Important dates",
+    examSessionNote: "Track your exam plan and results.", academicCalendarNote: "Review this month's classes and events.",
+    importantDatesNote: "Items planned in the visible period.", planned: "planned",
+    bannerTitle: "Plan. Learn. Achieve!", bannerText: "Manage your academic rhythm in one place.",
+  },
+  ru: {
+    subtitle: "Планируйте академическую жизнь.", description: "Занятия, экзамены, задания и события университета — всё в одном месте.",
+    quote: "Системный план ведёт к большим достижениям.", all: "Все", lessons: "Занятия", exams: "Экзамены", events: "События",
+    addEvent: "Добавить событие", examSession: "Экзаменационная сессия", academicCalendar: "Академический календарь", importantDates: "Важные даты",
+    examSessionNote: "Следите за планом экзаменов и результатами.", academicCalendarNote: "Просматривайте занятия и события месяца.",
+    importantDatesNote: "Запланированные записи в видимом периоде.", planned: "запланировано",
+    bannerTitle: "Планируй. Учись. Достигай!", bannerText: "Управляйте академическим ритмом в одном месте.",
+  },
+} as const;
 
 export const Route = createFileRoute("/_authenticated/teqvim")({
   head: () => ({ meta: [{ title: "ATU Portal" }, { name: "description", content: "ATU Portal" }] }),
@@ -68,6 +106,7 @@ function TeqvimSehifesi() {
   const [ay, setAy] = useState(new Date().getMonth());
   const [il, setIl] = useState(new Date().getFullYear());
   const [axtaris, setAxtaris] = useState("");
+  const [eventFilter, setEventFilter] = useState<"all" | "lesson" | "exam" | "event">("all");
   const [sehifeGorunusu, setSehifeGorunusu] = useState<"calendar" | "schedule">("calendar");
   const [modalAciq, setModalAciq] = useState(false);
   const [redakteTedbir, setRedakteTedbir] = useState<EventWithDetails | null>(null);
@@ -301,9 +340,18 @@ function TeqvimSehifesi() {
 
   const filteredEvents = useMemo(() => {
     const needle = axtaris.trim().toLocaleLowerCase(intlLocale);
-    if (!needle) return events;
-    return events.filter((event) => [event.baslıq, event.courses?.ad, event.groups?.ad, event.teacherName, event.room].filter(Boolean).some((value) => String(value).toLocaleLowerCase(intlLocale).includes(needle)));
-  }, [events, axtaris, intlLocale]);
+    return events.filter((event) => {
+      const matchesSearch = !needle || [event.baslıq, event.courses?.ad, event.groups?.ad, event.teacherName, event.room]
+        .filter(Boolean)
+        .some((value) => String(value).toLocaleLowerCase(intlLocale).includes(needle));
+      const matchesKind =
+        eventFilter === "all" ||
+        (eventFilter === "lesson" && event.isLessonSession === true) ||
+        (eventFilter === "exam" && event.isExam === true) ||
+        (eventFilter === "event" && event.isLessonSession !== true && event.isExam !== true);
+      return matchesSearch && matchesKind;
+    });
+  }, [events, axtaris, intlLocale, eventFilter]);
 
   const selectedDateString = format(secilmisTarix, "yyyy-MM-dd");
   const selectedDayEvents = filteredEvents.filter((event) => event.tarix === selectedDateString);
@@ -378,45 +426,83 @@ function TeqvimSehifesi() {
   const loading = lessonsLoading || manualLoading || examsLoading || takenExamsLoading;
 
   const calendarView = (
-    <>
-      <div className="hidden min-h-0 flex-1 gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
-        <CalendarGrid ay={ay} il={il} events={filteredEvents} secilmisTarix={secilmisTarix} onTarixSec={setSecilmisTarix} />
-        <aside className="flex min-h-0 flex-col gap-4">
-          <MonthYearNav ay={ay} il={il} onAySec={setAy} onIlSec={setIl} axtaris={axtaris} onAxtarisDeyis={setAxtaris} />
-          <DayDetails tarix={secilmisTarix} events={selectedDayEvents} userId={userId} roles={roles} onEditClick={openEdit} onDeleteClick={(event) => deleteMutation.mutate(event.id)} />
-        </aside>
-      </div>
-
-      <div className="space-y-4 lg:hidden">
+    <div className="calendar-redesign-board">
+      <div className="calendar-redesign-calendar">
         <MonthYearNav ay={ay} il={il} onAySec={setAy} onIlSec={setIl} axtaris={axtaris} onAxtarisDeyis={setAxtaris} />
         <CalendarGrid ay={ay} il={il} events={filteredEvents} secilmisTarix={secilmisTarix} onTarixSec={setSecilmisTarix} />
-        <DayDetails tarix={secilmisTarix} events={selectedDayEvents} userId={userId} roles={roles} onEditClick={openEdit} onDeleteClick={(event) => deleteMutation.mutate(event.id)} />
       </div>
-    </>
+      <aside className="calendar-redesign-aside">
+        <DayDetails tarix={secilmisTarix} events={selectedDayEvents} userId={userId} roles={roles} onEditClick={openEdit} onDeleteClick={(event) => deleteMutation.mutate(event.id)} />
+      </aside>
+    </div>
   );
 
+  const copy = CALENDAR_UI[locale as keyof typeof CALENDAR_UI] ?? CALENDAR_UI.az;
+  const lessonCount = events.filter((event) => event.isLessonSession === true).length;
+  const examCount = events.filter((event) => event.isExam === true).length;
+  const generalEventCount = Math.max(0, events.length - lessonCount - examCount);
+  const filterItems = [
+    { id: "all" as const, label: copy.all, count: events.length },
+    { id: "lesson" as const, label: copy.lessons, count: lessonCount },
+    { id: "exam" as const, label: copy.exams, count: examCount },
+    { id: "event" as const, label: copy.events, count: generalEventCount },
+  ];
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <PageHeader baslıq={t("page.title")}>
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          {loading ? <span className="inline-flex size-8 items-center justify-center rounded-xl bg-muted"><Loader2 className="size-4 animate-spin text-primary" /></span> : null}
+    <div className="calendar-redesign animate-page-enter">
+      <section className="calendar-redesign-hero" style={{ backgroundImage: `url(${calendarHero})` }}>
+        <div className="calendar-redesign-hero__shade" aria-hidden />
+        <div className="calendar-redesign-hero__copy">
+          <h1>{t("page.title")}</h1>
+          <p>{copy.subtitle}</p>
+          <span>{copy.description}</span>
+        </div>
+        <blockquote className="calendar-redesign-hero__quote">“{copy.quote}”</blockquote>
+        <div className="calendar-redesign-hero__mark" aria-hidden><CalendarDays /></div>
+        {canManage ? <button type="button" className="calendar-redesign-hero__action" onClick={openCreate}><Plus aria-hidden /> {copy.addEvent}</button> : null}
+      </section>
+
+      <div className="calendar-redesign-toolbar">
+        <div className="calendar-redesign-filters" role="group" aria-label={copy.all}>
+          {filterItems.map((item) => (
+            <button type="button" key={item.id} aria-pressed={eventFilter === item.id} className={eventFilter === item.id ? "is-active" : ""} onClick={() => setEventFilter(item.id)}>
+              <span>{item.label}</span><small>{item.count}</small>
+            </button>
+          ))}
+        </div>
+        <div className="calendar-redesign-toolbar__meta">
+          {loading ? <span className="calendar-redesign-loading" aria-label="Loading"><Loader2 className="animate-spin" /></span> : null}
           <CurrentWeekBadge />
         </div>
-      </PageHeader>
+      </div>
 
       {canManage ? (
-        <Tabs value={sehifeGorunusu} onValueChange={(value) => setSehifeGorunusu(value as "calendar" | "schedule")}>
-          <TabsList className="grid h-auto w-full max-w-md grid-cols-2 rounded-2xl bg-muted p-1">
-            <TabsTrigger value="calendar" className="min-h-11 gap-2 rounded-xl py-2 font-bold"><CalendarDays className="size-4" /> {t("view.calendar")}</TabsTrigger>
-            <TabsTrigger value="schedule" className="min-h-11 gap-2 rounded-xl py-2 font-bold"><CalendarRange className="size-4" /> {t("view.schedule")}</TabsTrigger>
+        <Tabs value={sehifeGorunusu} onValueChange={(value) => setSehifeGorunusu(value as "calendar" | "schedule")} className="calendar-redesign-mode">
+          <TabsList>
+            <TabsTrigger value="calendar"><CalendarDays aria-hidden /> {t("view.calendar")}</TabsTrigger>
+            <TabsTrigger value="schedule"><CalendarRange aria-hidden /> {t("view.schedule")}</TabsTrigger>
           </TabsList>
         </Tabs>
       ) : null}
 
-      {canManage && sehifeGorunusu === "schedule" ? <ScheduleManagementView groups={managedGroups} /> : calendarView}
+      {canManage && sehifeGorunusu === "schedule" ? <ScheduleManagementView groups={managedGroups} /> : (
+        <>
+          {calendarView}
+          <section className="calendar-redesign-links" aria-label="Calendar shortcuts">
+            <Link to="/imtahanlar"><span><CalendarCheck2 aria-hidden /></span><strong>{copy.examSession}</strong><small>{copy.examSessionNote}</small></Link>
+            <button type="button" onClick={() => { const now = new Date(); setAy(now.getMonth()); setIl(now.getFullYear()); setSecilmisTarix(now); }}>
+              <span><BookOpen aria-hidden /></span><strong>{copy.academicCalendar}</strong><small>{copy.academicCalendarNote}</small>
+            </button>
+            <div><span><Clock3 aria-hidden /></span><strong>{copy.importantDates}</strong><small>{filteredEvents.length} {copy.planned} · {copy.importantDatesNote}</small></div>
+          </section>
+          <section className="calendar-redesign-banner">
+            <div><Sparkles aria-hidden /><h2>{copy.bannerTitle}</h2><p>{copy.bannerText}</p></div>
+            <span aria-hidden>{String(filteredEvents.length).padStart(2, "0")}</span>
+          </section>
+        </>
+      )}
 
       {canManage && sehifeGorunusu === "calendar" ? <FloatingAddButton onClick={openCreate} /> : null}
-
       {canManage ? (
         <EventFormModal
           isOpen={modalAciq}

@@ -54,32 +54,24 @@ export function UpcomingExamsList({ userId }: { userId: string | null }) {
   if (exams.length === 0) return <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center shadow-sm"><Calendar className="mx-auto mb-3 size-10 text-muted-foreground" /><p className="font-semibold text-foreground">{t.empty}</p><p className="mt-1 text-sm text-muted-foreground">{t.emptyDescription}</p></div>;
 
   return <>
-    <div className="animate-stagger grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="exam-upcoming-list animate-stagger">
       {exams.map((exam) => {
         const examDate = exam.imtahan_tarixi ? startOfDay(parseISO(exam.imtahan_tarixi)) : null;
         const daysLeft = examDate ? Math.max(0, differenceInCalendarDays(examDate, startOfDay(new Date()))) : null;
         const status = daysLeft == null ? { label: mt("status.ready"), badge: "bg-primary/10 text-primary", bar: "bg-primary" } : getStatus(daysLeft, t);
-        return <article key={exam.id} className="group relative flex min-w-0 flex-col overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-          <div className={`absolute inset-x-0 top-0 h-1 ${status.bar}`} />
-          <div className="flex items-start justify-between gap-2"><span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold ${status.badge}`}>{status.label}</span><span className="text-right text-xs font-semibold text-muted-foreground">{daysLeft == null ? mt("date.unscheduled") : daysLeft === 0 ? t.today : `${daysLeft} ${daysLeft === 1 ? t.day : t.dayLeft}`}</span></div>
-          <div className="mt-4 flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary"><BookOpen className="size-5" /></div>
-          <h3 className="mt-3 break-words text-[15px] font-bold leading-snug text-foreground">{exam.courses?.ad || t.unknownCourse}</h3>
-          {exam.materialOnly ? <p className="mt-1 text-xs font-semibold text-primary">{mt("status.unscheduled")}</p> : null}
-          <div className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5"><Calendar className="size-3.5 shrink-0" />{examDate ? format(examDate, "d MMMM yyyy", { locale: dateLocale }) : mt("date.unscheduled")}</span>
-            <span className="flex items-center gap-1.5"><Clock3 className="size-3.5 shrink-0" />{exam.baslangic_saat ? exam.baslangic_saat.slice(0, 5) : mt("status.unscheduled")}</span>
-            <span className="flex items-center gap-1.5"><MapPin className="size-3.5 shrink-0" />{exam.otaq || mt("room.unscheduled")}</span>
+        const dayLabel = examDate ? format(examDate, "dd") : "—";
+        const monthLabel = examDate ? format(examDate, "MMM", { locale: dateLocale }).replace(".", "") : "";
+        return <article key={exam.id} className="exam-upcoming-row">
+          <div className="exam-upcoming-row__date"><span>{monthLabel}</span><strong>{dayLabel}</strong></div>
+          <div className="exam-upcoming-row__main">
+            <div className="exam-upcoming-row__title"><span><BookOpen aria-hidden /></span><div><h3>{exam.courses?.ad || t.unknownCourse}</h3>{exam.materialOnly ? <small>{mt("status.unscheduled")}</small> : null}</div></div>
+            <div className="exam-upcoming-row__meta"><span><Clock3 aria-hidden />{exam.baslangic_saat ? exam.baslangic_saat.slice(0,5) : mt("status.unscheduled")}</span><span><MapPin aria-hidden />{exam.otaq || mt("room.unscheduled")}</span>{exam.materials.length ? <Badge variant="outline"><FileText aria-hidden />{exam.materials.length}</Badge> : null}</div>
           </div>
-
-          <div className="mt-4 space-y-2">
-            {exam.materials.length ? exam.materials.map((material) => <div key={material.id} className="rounded-xl border border-primary/15 bg-primary/[0.035] p-3"><div className="flex min-w-0 items-center gap-2"><FileText className="size-4 shrink-0 text-primary" /><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-foreground" title={material.original_file_name}>{material.original_file_name}</p><p className="mt-0.5 text-[11px] text-muted-foreground">{mt(material.exam_type === "ticket" ? "type.ticket" : "type.test")} · {mt("file.docx")}</p></div><Badge variant="outline" className="shrink-0 rounded-full text-[10px]">{mt("status.ready")}</Badge></div><Button type="button" variant="outline" className="mt-2 min-h-11 w-full rounded-xl text-xs font-bold" disabled={downloadingId === material.id} aria-label={mt("aria.download", { type: mt(material.exam_type === "ticket" ? "type.ticket" : "type.test") })} onClick={() => void download(material)}>{downloadingId === material.id ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}{downloadingId === material.id ? mt("file.preparing") : mt("file.downloadExam")}</Button></div>) : <div className="rounded-xl border border-dashed border-border px-3 py-2.5 text-xs text-muted-foreground">{mt("student.materialMissing")}</div>}
-          </div>
-
-          <button type="button" onClick={() => setSelected(exam)} className="mt-4 flex min-h-11 items-center justify-between rounded-xl bg-muted px-3.5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted/70">{t.details}<ArrowUpRight className="size-4 text-muted-foreground" /></button>
+          <div className="exam-upcoming-row__status"><span className={status.badge}>{status.label}</span><small>{daysLeft == null ? mt("date.unscheduled") : daysLeft === 0 ? t.today : `${daysLeft} ${daysLeft === 1 ? t.day : t.dayLeft}`}</small></div>
+          <button type="button" onClick={() => setSelected(exam)} aria-label={t.details} className="exam-upcoming-row__open"><ArrowUpRight aria-hidden /></button>
         </article>;
       })}
     </div>
-
     <Dialog open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
       <DialogContent className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-3xl border-border bg-card sm:max-w-md">
         <DialogHeader><DialogTitle className="text-lg font-bold text-foreground">{selected?.courses?.ad || t.title}</DialogTitle></DialogHeader>

@@ -55,8 +55,8 @@ export function DayDetails({ tarix, events, roles, onEditClick, onDeleteClick }:
 
   return (
     <TooltipProvider delayDuration={250}>
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col space-y-4 rounded-3xl bg-card p-4 shadow-sm sm:p-5">
-        <div className="border-b border-border pb-3">
+      <div className="calendar-redesign-details flex min-h-0 min-w-0 flex-1 flex-col space-y-4 rounded-3xl bg-card p-4 shadow-sm sm:p-5">
+        <div className="calendar-redesign-details__header border-b border-border pb-3">
           <h3 className="text-base font-bold text-foreground">{formatSecilmisTarix(tarix)}</h3>
           <p className="text-xs text-muted-foreground">{t("calendar.todayPlanned")}</p>
         </div>
@@ -74,7 +74,7 @@ export function DayDetails({ tarix, events, roles, onEditClick, onDeleteClick }:
                   ? event.courses.ad
                   : event.baslıq;
               return (
-                <div key={event.id} className="group relative flex min-w-0 flex-col justify-between rounded-2xl border border-border/40 bg-muted/40 p-4 transition-all hover:border-primary/30 hover:bg-muted/60 active:scale-[.995]">
+                <div key={event.id} className="calendar-redesign-details__event group relative flex min-w-0 flex-col justify-between rounded-2xl border border-border/40 bg-muted/40 p-4 transition-all hover:border-primary/30 hover:bg-muted/60 active:scale-[.995]">
                   <div className="min-w-0">
                     <div className="flex min-w-0 items-start justify-between gap-2">
                       <div className="min-w-0">
