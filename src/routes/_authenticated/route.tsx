@@ -8,6 +8,7 @@ import { useActivityLogger } from "@/hooks/use-activity-logger";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { useLegacyPageI18nBridge } from "@/lib/legacy-page-i18n";
+import "@/role-workspace-redesign.css";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -60,6 +61,15 @@ function AuthenticatedLayout() {
   useLegacyPageI18nBridge(pathname);
 
   const genericPageKey = useMemo(() => pageKeyForPath(pathname), [pathname]);
+  const roleWorkspaceClass = useMemo(() => {
+    if (pathname === "/admin" || pathname.startsWith("/admin/")) return "role-workspace-page role-workspace-admin";
+    if (pathname === "/qruplar" || pathname.startsWith("/qruplar/")) return "role-workspace-page role-workspace-groups";
+    if (pathname === "/fakulte-icmali") return "role-workspace-page role-workspace-faculty";
+    if (pathname.startsWith("/fennler/")) return "role-workspace-page role-workspace-course";
+    if (pathname.startsWith("/muellim/")) return "role-workspace-page role-workspace-teacher";
+    if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/")) return "role-workspace-page role-workspace-tutor";
+    return "";
+  }, [pathname]);
 
   useEffect(() => {
     if (!genericPageKey) return;
@@ -162,7 +172,13 @@ function AuthenticatedLayout() {
         />
         <main className="portal-main">
           <div className="portal-main-inner">
-            <Outlet />
+            {roleWorkspaceClass ? (
+              <div className={roleWorkspaceClass}>
+                <Outlet />
+              </div>
+            ) : (
+              <Outlet />
+            )}
           </div>
         </main>
       </div>

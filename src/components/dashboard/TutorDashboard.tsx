@@ -251,7 +251,7 @@ export function TutorDashboard({ userId }: { userId: string }) {
   const nearestExams = exams.slice(0, 5);
 
   return (
-    <div className="role-panel-enter space-y-4 pb-7 sm:space-y-5">
+    <div className="role-workspace-page role-workspace-home role-workspace-tutor-home role-panel-enter space-y-4 pb-7 sm:space-y-5">
       <section className="relative isolate overflow-hidden rounded-[28px] border border-border bg-card px-4 py-5 shadow-sm sm:px-6 sm:py-7 lg:px-8">
         <div aria-hidden className="tutor-home-network pointer-events-none absolute inset-0 -z-20" />
         <div aria-hidden className="tutor-home-orb tutor-home-orb-a pointer-events-none absolute -z-10" />

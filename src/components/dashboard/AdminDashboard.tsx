@@ -42,7 +42,7 @@ export function AdminDashboard() {
   if (isLoadingRoles || isLoadingRecent) return <div className="flex min-h-[400px] items-center justify-center"><Loader2 className="size-7 animate-spin text-primary" /></div>;
 
   return (
-    <div className="space-y-6">
+    <div className="role-workspace-page role-workspace-home role-workspace-admin-home space-y-6">
       <PageHeader baslıq={t("dashboard")} />
       <div>
         <div className="mb-3 flex items-baseline justify-between px-0.5"><h2 className="font-display text-xl font-semibold text-foreground">{t("distribution")}</h2></div>

@@ -12,7 +12,7 @@ export function DeanDashboard({ userId }: { userId: string }) {
   const { data: groupStats = [], isLoading: isLoadingGroups } = useQuery({ queryKey: ["dean-group-stats", fakulte], queryFn: async () => { if (!fakulte) return []; const { data, error } = await supabase.from("group_stats").select("*").eq("fakulte", fakulte).order("avg_score", { ascending: false }); if (error) throw error; return data; }, enabled: !!fakulte });
   if (isLoadingProfile || isLoadingStats || isLoadingGroups) return <div className="flex h-[400px] items-center justify-center"><Loader2 className="size-8 animate-spin text-primary" /></div>;
 
-  return <div className="space-y-4 pb-6">
+  return <div className="role-workspace-page role-workspace-home role-workspace-dean-home space-y-4 pb-6">
     <PageHeader baslıq={`${t("cabinet")}${fakulte ? ` — ${fakulte}` : ""}`} />
     <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
       <StatChip icon={Users} renk="maroon" value={facultyStats?.total_students ?? 0} label={t("totalStudents")} />

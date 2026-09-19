@@ -1,0 +1,44 @@
+name: Prompt 9 validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+      - run: npm install --no-audit --no-fund
+      - name: Role route inventory
+        run: |
+          test -f src/routes/_authenticated/admin/index.tsx
+          test -f 'src/routes/_authenticated/qruplar_.$groupId.tsx'
+          test -f src/routes/_authenticated/fakulte-icmali.tsx
+          test -f 'src/routes/_authenticated/fennler_.$courseId.tsx'
+          test -f 'src/routes/_authenticated/muellim_.$groupId.$courseId.tsx'
+          test -f src/routes/_authenticated/tyutor-paneli.tsx
+          test -f 'src/routes/_authenticated/tyutor_.$groupId.tsx'
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint Prompt 9 changes
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/routes/_authenticated/route.tsx
+          src/components/dashboard/AdminDashboard.tsx
+          src/components/dashboard/DeanDashboard.tsx
+          src/components/dashboard/TeacherDashboard.tsx
+          src/components/dashboard/TutorDashboard.tsx
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build

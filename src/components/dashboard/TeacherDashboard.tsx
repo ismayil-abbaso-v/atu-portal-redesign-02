@@ -326,7 +326,7 @@ export function TeacherDashboard({ userId }: { userId: string }) {
 
   return (
     <TooltipProvider delayDuration={250}>
-      <div className="role-panel-enter min-w-0 space-y-5 pb-8">
+      <div className="role-workspace-page role-workspace-home role-workspace-teacher-home role-panel-enter min-w-0 space-y-5 pb-8">
         <section className="relative isolate overflow-hidden rounded-[30px] border border-border/60 bg-card px-4 py-5 shadow-sm sm:px-7 sm:py-7">
           <div className="tutor-home-network pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
           <div className="tutor-home-orb tutor-home-orb-a pointer-events-none absolute -z-10" aria-hidden="true" />
