@@ -215,12 +215,17 @@ function GirisSehifesi() {
         <img
           src={atuLogo}
           alt="Azərbaycan Texnologiya Universiteti loqosu"
+          loading="eager"
+          decoding="async"
           className="relative h-auto w-[190px] object-contain sm:w-[230px] lg:w-[300px]"
         />
         <div className="relative flex flex-none items-center justify-center pt-4 pb-0 -translate-y-6 lg:flex-1 lg:py-4 lg:translate-y-0">
           <img
             src={loginIllustration}
             alt="Tələbə Portalı — akademik proqres, qiymətlər və dərs cədvəli göstərən illüstrasiya"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="w-full max-w-[640px] object-contain"
           />
         </div>

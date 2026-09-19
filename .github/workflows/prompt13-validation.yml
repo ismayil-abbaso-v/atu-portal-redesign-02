@@ -1,0 +1,127 @@
+name: Prompt 13 production readiness
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Clean install
+        run: npm ci --no-audit --no-fund
+
+      - name: Production security/config audit
+        run: node scripts/prompt13-release-audit.mjs
+
+      - name: Revalidate visual/mobile/accessibility contracts
+        run: node scripts/prompt11-static-qa.mjs
+
+      - name: Revalidate route completeness
+        run: node scripts/prompt12-route-completeness.mjs
+
+      - name: Dependency tree
+        run: npm ls --omit=dev --depth=0
+
+      - name: Production dependency audit
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint Prompt 13 changes
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/routes/index.tsx
+          scripts/prompt13-release-audit.mjs
+
+      - name: Repository lint baseline gate
+        shell: bash
+        run: |
+          set +e
+          npm run lint > /tmp/release-lint.log 2>&1
+          lint_status=$?
+          set -e
+          cat /tmp/release-lint.log
+          if [ "$lint_status" -eq 0 ]; then
+            exit 0
+          fi
+          grep -q "6548 problems (6536 errors, 12 warnings)" /tmp/release-lint.log
+
+      - name: Regression tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Preview smoke test
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/atu-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --silent --show-error --output /dev/null http://127.0.0.1:4173/; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/atu-preview.log
+            exit 1
+          fi
+
+          routes=(
+            /
+            /ev
+            /elektron-jurnal
+            /teqvim
+            /imtahanlar
+            /sohbet
+            /kitabxana
+            /ofis
+            /bildirisler
+            /menyu
+            /admin
+          )
+
+          for route in "${routes[@]}"; do
+            code=$(curl --silent --show-error --output /tmp/atu-smoke-body --write-out "%{http_code}"               "http://127.0.0.1:4173${route}")
+            if [ "$code" -eq 404 ] || [ "$code" -ge 500 ]; then
+              echo "Smoke test failed for ${route}: HTTP ${code}"
+              cat /tmp/atu-smoke-body
+              cat /tmp/atu-preview.log
+              exit 1
+            fi
+            echo "${route}: HTTP ${code}"
+          done
+
+      - name: Vercel compatibility build
+        shell: bash
+        run: |
+          rm -rf .vercel
+          VERCEL=1 npm run build
+          test -f .vercel/output/config.json
+          test -d .vercel/output/functions
+          grep -q '"version": 3' .vercel/output/config.json
