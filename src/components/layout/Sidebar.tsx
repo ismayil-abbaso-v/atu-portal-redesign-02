@@ -20,6 +20,7 @@ import {
 import { useEffect } from "react";
 import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from "react";
 
+import atuBuildingBrand from "@/assets/atu-building-brand.png";
 import atuLogo from "@/assets/atu-logo-cropped.svg";
 import { SignedAvatarImg } from "@/components/common/SignedAvatar";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -100,19 +101,12 @@ function IkonQutusu({ children }: { children: ReactNode }) {
 function InstitutionalLineArt() {
   return (
     <div className="portal-sidebar-art" aria-hidden>
-      <svg
-        viewBox="0 0 210 92"
-        className="w-full"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.25"
-      >
-        <path d="M7 78h196M20 77V48l27-18 27 18v29M33 77V55h28v22M83 77V35l23-18 23 18v42M96 77V43h20v34M138 77V48l25-18 27 18v29M151 77V55h27v22" />
-        <path d="M12 48h67M78 35h56M133 48h65M18 82h174" opacity=".55" />
-      </svg>
-      <p className="mt-2 text-center font-display text-[13px] font-semibold tracking-[.04em]">
-        Bilik · Texnologiya · Gələcək
-      </p>
+      <img
+        src={atuBuildingBrand}
+        alt=""
+        className="block h-auto w-full object-contain object-bottom"
+        draggable={false}
+      />
     </div>
   );
 }
