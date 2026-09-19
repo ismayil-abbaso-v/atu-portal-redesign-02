@@ -1,0 +1,45 @@
+name: Prompt 10 mobile validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint Prompt 10 TypeScript
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/components/layout/AppHeader.tsx
+          src/components/layout/Sidebar.tsx
+          src/components/layout/MobileBottomNav.tsx
+          src/routes/_authenticated/route.tsx
+      - name: Prompt 10 mobile contract checks
+        run: |
+          grep -q 'env(safe-area-inset-top)' src/mobile-native.css
+          grep -q 'env(safe-area-inset-bottom)' src/mobile-native.css
+          grep -q '100dvh' src/mobile-native.css
+          grep -q 'min(86vw,330px)' src/components/layout/Sidebar.tsx
+          grep -q 'data-mobile-app-nav' src/components/layout/MobileBottomNav.tsx
+          grep -q 'portal-mobile-search-panel' src/components/layout/AppHeader.tsx
+          grep -q 'data-route={pathname}' src/routes/_authenticated/route.tsx
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build

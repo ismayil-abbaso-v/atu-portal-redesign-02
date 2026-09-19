@@ -24,7 +24,7 @@ export function MobileBottomNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   return (
-    <nav className="portal-mobile-bottom-nav md:hidden" aria-label={t("nav.menu")}>
+    <nav className="portal-mobile-bottom-nav md:hidden" aria-label={t("nav.menu")} data-mobile-app-nav>
       <div className="portal-mobile-bottom-nav__inner">
         {items.map((item) => {
           const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
@@ -40,8 +40,8 @@ export function MobileBottomNav() {
                 active && "is-active",
               )}
             >
-              <span className="portal-mobile-bottom-nav__icon">
-                <Icon aria-hidden />
+              <span className="portal-mobile-bottom-nav__icon" aria-hidden>
+                <Icon />
               </span>
               <span>{t(item.labelKey)}</span>
             </Link>

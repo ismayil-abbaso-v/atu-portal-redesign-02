@@ -1,0 +1,674 @@
+/* Prompt 10 — native-style phone experience. Presentation only; no data/auth/business changes. */
+@media (max-width: 767px) {
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+
+  html {
+    min-height: 100%;
+    background: var(--canvas);
+  }
+
+  body {
+    min-height: 100dvh;
+    overscroll-behavior-x: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  input,
+  textarea,
+  select {
+    scroll-margin-block: calc(5.25rem + env(safe-area-inset-top)) calc(6.25rem + env(safe-area-inset-bottom));
+  }
+
+  .portal-app-shell {
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  .portal-content-scroll {
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .portal-header {
+    top: 0;
+    min-height: calc(64px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    box-shadow: 0 1px 10px rgb(61 15 28 / 0.045);
+  }
+
+  .portal-header__inner {
+    min-height: 64px;
+    gap: 0.45rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .portal-header__inner > div:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .portal-mobile-brand-copy {
+    display: block;
+    max-width: min(36vw, 142px);
+    line-height: 1.05;
+  }
+
+  .portal-mobile-brand-copy > span:first-child {
+    display: block;
+    overflow: hidden;
+    color: var(--primary);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .portal-mobile-brand-copy > span:last-child {
+    display: block;
+    overflow: hidden;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 8px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .portal-header__icon-button,
+  .portal-mobile-notification-button,
+  .portal-mobile-profile-button {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 12px;
+  }
+
+  .portal-mobile-profile-button {
+    padding: 5px !important;
+  }
+
+  .portal-mobile-profile-button > span:first-child {
+    width: 32px;
+    height: 32px;
+  }
+
+  .portal-header .notification-panel,
+  .portal-header [class*="w-[min(20rem"] {
+    position: fixed !important;
+    top: calc(68px + env(safe-area-inset-top)) !important;
+    right: 8px !important;
+    left: 8px !important;
+    width: auto !important;
+    max-height: min(72dvh, 560px);
+    overflow: auto;
+    border-radius: 14px !important;
+  }
+
+  .portal-mobile-search-panel {
+    position: absolute;
+    top: calc(100% - 1px);
+    right: 0;
+    left: 0;
+    z-index: 55;
+    padding: 0 10px 10px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition:
+      opacity 180ms cubic-bezier(.22,1,.36,1),
+      transform 180ms cubic-bezier(.22,1,.36,1);
+    backdrop-filter: blur(18px);
+  }
+
+  .portal-mobile-search-panel.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .portal-mobile-search-panel .portal-search {
+    min-height: 46px;
+    width: 100%;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 8px 24px rgb(61 15 28 / 0.08);
+  }
+
+  .portal-main {
+    min-width: 0;
+    padding:
+      calc(76px + env(safe-area-inset-top))
+      12px
+      calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .portal-main-inner,
+  .portal-main-inner > *,
+  .portal-main-inner section,
+  .portal-main-inner article,
+  .portal-main-inner aside {
+    min-width: 0;
+  }
+
+  .portal-mobile-bottom-nav {
+    min-height: calc(72px + env(safe-area-inset-bottom));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 5px 6px max(6px, env(safe-area-inset-bottom));
+    box-shadow: 0 -8px 28px rgb(61 15 28 / 0.07);
+  }
+
+  .portal-mobile-bottom-nav__item {
+    min-height: 58px;
+    border-radius: 11px;
+    font-size: clamp(8px, 2.5vw, 10px);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .portal-mobile-bottom-nav__icon {
+    display: grid;
+    width: 30px;
+    height: 28px;
+    place-items: center;
+  }
+
+  .portal-mobile-bottom-nav__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .portal-mobile-bottom-nav__item--featured {
+    transform: translateY(-11px);
+  }
+
+  .portal-mobile-bottom-nav__item--featured .portal-mobile-bottom-nav__icon {
+    width: 54px;
+    height: 54px;
+    border: 4px solid var(--canvas);
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 9px 24px color-mix(in srgb, var(--primary) 26%, transparent);
+  }
+
+  .portal-mobile-bottom-nav__item--featured[aria-current="page"] .portal-mobile-bottom-nav__icon {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--primary) 14%, transparent),
+      0 9px 24px color-mix(in srgb, var(--primary) 30%, transparent);
+  }
+
+  .portal-mobile-drawer-layer {
+    overscroll-behavior: contain;
+  }
+
+  .portal-mobile-drawer {
+    width: min(86vw, 330px) !important;
+    max-width: calc(100vw - 28px);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior: contain;
+  }
+
+  .portal-mobile-drawer__header {
+    min-height: 64px;
+    height: auto !important;
+  }
+
+  .portal-mobile-drawer__body {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .portal-mobile-drawer__body a,
+  .portal-mobile-drawer__footer a,
+  .portal-mobile-drawer__footer button {
+    min-height: 44px;
+  }
+
+  /* Home: compact hero, full-width academic progress and native horizontal week strip. */
+  [data-route="/ev"] .student-home {
+    gap: 12px;
+  }
+
+  [data-route="/ev"] .student-home-hero,
+  [data-route="/ev"] .student-home-skeleton__hero {
+    min-height: 300px;
+    height: 300px;
+  }
+
+  [data-route="/ev"] .student-home-hero__copy {
+    top: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  [data-route="/ev"] .student-home-hero__copy h1 {
+    font-size: clamp(27px, 8.3vw, 33px);
+  }
+
+  [data-route="/ev"] .student-home-hero__quote {
+    right: 14px;
+    bottom: 54px;
+    width: min(52vw, 190px);
+    font-size: 12px;
+  }
+
+  [data-route="/ev"] .student-home-grid,
+  [data-route="/ev"] .student-home-side {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-route="/ev"] .student-home-week__days {
+    margin-inline: -4px;
+    padding: 2px 4px 10px;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+
+  [data-route="/ev"] .student-home-week__days > span {
+    min-width: 48px;
+    flex: 0 0 48px;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/ev"] .student-home-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  [data-route="/ev"] .student-home-service {
+    min-height: 84px;
+  }
+
+  [data-route="/ev"] .student-home-innovation {
+    min-height: 258px;
+  }
+
+  /* Journal: compact hero, wrapped filters and scroll-safe academic tables. */
+  [data-route="/elektron-jurnal"] .student-journal-redesign {
+    gap: 12px;
+  }
+
+  [data-route="/elektron-jurnal"] .journal-redesign-hero {
+    min-height: 240px;
+    border-radius: 16px;
+  }
+
+  [data-route="/elektron-jurnal"] .journal-redesign-hero__copy {
+    top: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  [data-route="/elektron-jurnal"] .journal-redesign-hero__copy h1 {
+    font-size: 30px;
+  }
+
+  [data-route="/elektron-jurnal"] .journal-redesign-hero__facts {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100% - 24px);
+    overflow-x: auto;
+  }
+
+  [data-route="/elektron-jurnal"] .student-journal-daily-table {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  [data-route="/elektron-jurnal"] .student-journal-daily-table .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Calendar: compact month first, then selected-day details. */
+  [data-route="/teqvim"] .calendar-redesign {
+    gap: 10px;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero {
+    min-height: 224px;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-filters {
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-filters > button {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-calendar,
+  [data-route="/teqvim"] .calendar-redesign-aside {
+    width: 100%;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-grid__cell {
+    min-height: 48px !important;
+  }
+
+  /* Exams: swipeable tabs, one-column exam cards, calendar after the list. */
+  [data-route="/imtahanlar"] .exam-reference-hero {
+    min-height: 224px;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-tabs__list {
+    display: flex !important;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-tabs__list [role="tab"] {
+    min-width: 145px;
+    min-height: 48px;
+    flex: 1 0 auto;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-primary {
+    order: 1;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-side {
+    order: 2;
+  }
+
+  [data-route="/imtahanlar"] .exam-upcoming-row {
+    min-height: 94px;
+  }
+
+  /* Chat: list and room are separate app-like screens with keyboard-safe composer. */
+  [data-route="/sohbet"] .chat-redesign-page {
+    padding-bottom: 0;
+  }
+
+  [data-route="/sohbet"] .chat-redesign-shell {
+    min-height: 0;
+    height: calc(100dvh - 246px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 14px !important;
+  }
+
+  [data-route="/sohbet"] .chat-redesign-page[data-mobile-view="thread"] .chat-redesign-shell,
+  [data-route="/sohbet"] .chat-redesign-page[data-mobile-view="profile"] .chat-redesign-shell {
+    height: calc(100dvh - 156px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  [data-route="/sohbet"] .chat-thread {
+    min-height: 0;
+  }
+
+  [data-route="/sohbet"] .chat-thread__messages {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-route="/sohbet"] .chat-thread__composer {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  [data-route="/sohbet"] .chat-thread__composer textarea {
+    scroll-margin-bottom: 7rem;
+  }
+
+  /* Library: native search/categories, two-column books, side information after content. */
+  [data-route="/kitabxana"] .library-reference-hero {
+    min-height: 214px;
+  }
+
+  [data-route="/kitabxana"] .library-reference-search {
+    position: relative;
+    z-index: 3;
+  }
+
+  [data-route="/kitabxana"] .library-reference-search__categories,
+  [data-route="/kitabxana"] .library-category-strip__scroller {
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+
+  [data-route="/kitabxana"] .library-reference-search__categories > button,
+  [data-route="/kitabxana"] .library-category-strip__scroller > button {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/kitabxana"] .library-featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Office and notifications: compact one-column service/list flow. */
+  [data-route="/ofis"] .office-reference-hero,
+  [data-route="/bildirisler"] .notification-reference-hero {
+    min-height: 214px;
+  }
+
+  [data-route="/ofis"] .office-service-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-route="/ofis"] .office-service-grid > *,
+  [data-route="/ofis"] .office-support-link {
+    min-height: 44px;
+  }
+
+  [data-route="/bildirisler"] .notification-category-tabs {
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+
+  [data-route="/bildirisler"] .notification-category-tabs > button {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/bildirisler"] .notification-reference-row__button {
+    min-height: 68px;
+  }
+
+  [data-route="/bildirisler"] .notification-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Menu/settings: single-column cards/forms with keyboard-safe fields. */
+  [data-route^="/menyu"] .menu-reference-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-route^="/menyu"] .menu-reference-card,
+  [data-route^="/menyu"] input,
+  [data-route^="/menyu"] select,
+  [data-route^="/menyu"] textarea {
+    scroll-margin-top: calc(5rem + env(safe-area-inset-top));
+  }
+
+  [data-route^="/menyu"] .settings-page-hero {
+    min-height: 210px;
+  }
+
+  /* Transcript: stats/tabs/table stack natively and official CTA stays full width. */
+  [data-route="/menyu/transkript"] .transcript-page-header {
+    min-height: 245px;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-semester-tabs {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-semester-tabs > button {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-dashboard-grid,
+  [data-route="/menyu/transkript"] .transcript-dashboard-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-route="/menyu/transkript"] .transcript-dashboard-main .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-official-card button {
+    min-height: 44px;
+    width: 100%;
+  }
+
+  /* Role-based pages must remain usable on phone after Prompt 9. */
+  .role-workspace-page {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .role-workspace-page .role-workspace-table-wrap,
+  .role-workspace-page .overflow-x-auto {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  .role-workspace-page [role="dialog"] {
+    width: calc(100vw - 16px) !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .portal-main {
+    padding-inline: 10px;
+  }
+
+  .portal-mobile-brand-copy {
+    max-width: 122px;
+  }
+
+  .student-home-card,
+  .office-main-column,
+  .notification-reference-main,
+  .menu-reference-section {
+    border-radius: 14px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .portal-header__inner {
+    gap: 0.35rem;
+    padding-inline: 0.5rem;
+  }
+
+  .portal-mobile-brand-copy {
+    max-width: 102px;
+  }
+
+  .portal-header__icon-button,
+  .portal-mobile-notification-button,
+  .portal-mobile-profile-button {
+    min-width: 42px;
+    width: 42px;
+    flex-basis: 42px;
+  }
+
+  [data-route="/ev"] .student-home-hero,
+  [data-route="/ev"] .student-home-skeleton__hero {
+    min-height: 282px;
+    height: 282px;
+  }
+
+  [data-route="/ev"] .student-home-innovation {
+    min-height: 238px;
+  }
+
+  [data-route="/imtahanlar"] .exam-redesign-tabs__list [role="tab"] {
+    min-width: 138px;
+  }
+}
+
+@media (max-width: 359px) {
+  .portal-main {
+    padding-inline: 8px;
+  }
+
+  .portal-mobile-brand-copy > span:last-child {
+    display: none;
+  }
+
+  .portal-mobile-brand-copy {
+    max-width: 88px;
+  }
+
+  .portal-header__icon-button,
+  .portal-mobile-notification-button,
+  .portal-mobile-profile-button {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    flex-basis: 40px;
+  }
+
+  .portal-mobile-bottom-nav {
+    padding-inline: 2px;
+  }
+
+  .portal-mobile-bottom-nav__item {
+    font-size: 8px;
+  }
+
+  [data-route="/ev"] .student-home-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  [data-route="/ev"] .student-home-service {
+    min-height: 78px;
+    padding-inline: 8px;
+  }
+
+  [data-route="/teqvim"] .calendar-month-nav__today {
+    display: none;
+  }
+
+  [data-route="/kitabxana"] .library-featured-grid {
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-mobile-search-panel,
+  .portal-mobile-bottom-nav__item--featured,
+  .portal-mobile-drawer {
+    transition: none !important;
+    transform: none !important;
+  }
+}

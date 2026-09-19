@@ -11,7 +11,7 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,6 +42,8 @@ export function AppHeader({
   const roleLabel = roleCabinetLabel(locale, primaryRole);
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const notificationRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const initials = name
@@ -63,6 +65,21 @@ export function AppHeader({
     document.addEventListener("pointerdown", handleOutsidePointerDown);
     return () => document.removeEventListener("pointerdown", handleOutsidePointerDown);
   }, [open]);
+
+  useEffect(() => {
+    setMobileSearchOpen(false);
+    setOpen(false);
+    setProfileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileSearchOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileSearchOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileSearchOpen]);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -132,7 +149,7 @@ export function AppHeader({
             <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary p-1.5">
               <img src={atuLogo} alt="ATU" className="size-full object-contain" />
             </span>
-            <span className="hidden min-w-0 sm:block">
+            <span className="portal-mobile-brand-copy min-w-0">
               <span className="block truncate font-display text-lg font-semibold text-primary">
                 {t("app.name")}
               </span>
@@ -153,9 +170,15 @@ export function AppHeader({
           <button
             type="button"
             aria-label={t("common.search")}
-            className="portal-header__icon-button md:hidden"
+            aria-expanded={mobileSearchOpen}
+            onClick={() => {
+              setOpen(false);
+              setProfileOpen(false);
+              setMobileSearchOpen((value) => !value);
+            }}
+            className="portal-header__icon-button portal-mobile-search-toggle md:hidden"
           >
-            <Search className="size-5" />
+            {mobileSearchOpen ? <X className="size-5" /> : <Search className="size-5" />}
           </button>
           <button
             type="button"
@@ -171,10 +194,11 @@ export function AppHeader({
               aria-label={t("nav.notifications")}
               aria-expanded={open}
               onClick={() => {
+                setMobileSearchOpen(false);
                 setProfileOpen(false);
                 setOpen((v) => !v);
               }}
-              className="relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground shadow-sm transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-11"
+              className="portal-mobile-notification-button relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground shadow-sm transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-11"
             >
               <Bell className={open ? "size-5 text-primary" : "size-5"} />
               {unreadCount > 0 ? (
@@ -297,10 +321,11 @@ export function AppHeader({
               aria-label={t("nav.profile")}
               aria-expanded={profileOpen}
               onClick={() => {
+                setMobileSearchOpen(false);
                 setOpen(false);
                 setProfileOpen((v) => !v);
               }}
-              className={`flex min-w-0 items-center gap-2 rounded-xl border bg-card px-2 py-1.5 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3 ${profileOpen ? "border-primary/25 bg-accent shadow-[0_8px_24px_rgba(61,15,28,0.10)]" : "border-border"}`}
+              className={`portal-mobile-profile-button flex min-w-0 items-center gap-2 rounded-xl border bg-card px-2 py-1.5 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3 ${profileOpen ? "border-primary/25 bg-accent shadow-[0_8px_24px_rgba(61,15,28,0.10)]" : "border-border"}`}
             >
               <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary text-[11px] font-bold text-primary-foreground sm:size-9 sm:text-xs">
                 {avatarUrl ? (
@@ -370,6 +395,18 @@ export function AppHeader({
             </div>
           </div>
         </div>
+      </div>
+
+      <div
+        className={`portal-mobile-search-panel md:hidden ${mobileSearchOpen ? "is-open" : ""}`}
+        aria-hidden={!mobileSearchOpen}
+      >
+        <PortalSearch
+          autoFocus={mobileSearchOpen}
+          tabIndex={mobileSearchOpen ? 0 : -1}
+          placeholder="Fənn, müəllim, sənəd və ya xidmət axtar..."
+          aria-label={t("common.search")}
+        />
       </div>
     </header>
   );

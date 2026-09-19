@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { useLegacyPageI18nBridge } from "@/lib/legacy-page-i18n";
 import "@/role-workspace-redesign.css";
+import "@/mobile-native.css";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -157,7 +158,7 @@ function AuthenticatedLayout() {
   }, [locale, t]);
 
   return (
-    <div className="portal-app-shell">
+    <div className="portal-app-shell" data-route={pathname}>
       <Sidebar
         istifadeciAdi={ad}
         avatarUrl={avatarUrl}

@@ -332,7 +332,7 @@ export function Sidebar({
 
       <div
         className={cn(
-          "fixed inset-0 z-[9998] md:hidden",
+          "portal-mobile-drawer-layer fixed inset-0 z-[9998] md:hidden",
           acıq ? "pointer-events-auto" : "pointer-events-none",
         )}
         aria-hidden={!acıq}
@@ -347,12 +347,15 @@ export function Sidebar({
           )}
         />
         <aside
+          role="dialog"
+          aria-modal={acıq ? true : undefined}
+          aria-label={t("nav.menu")}
           className={cn(
-            "absolute inset-y-0 left-0 flex w-[min(88vw,330px)] flex-col border-r border-border/80 bg-background shadow-[24px_0_70px_rgb(35_9_18/0.18)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]",
+            "portal-mobile-drawer absolute inset-y-0 left-0 flex w-[min(86vw,330px)] flex-col border-r border-border/80 bg-background shadow-[24px_0_70px_rgb(35_9_18/0.18)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]",
             acıq ? "translate-x-0" : "-translate-x-full",
           )}
         >
-          <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-border/70 px-3">
+          <div className="portal-mobile-drawer__header flex h-[68px] shrink-0 items-center justify-between border-b border-border/70 px-3">
             <Link
               to="/ev"
               onClick={() => setAcıq(false)}
@@ -380,7 +383,7 @@ export function Sidebar({
             </button>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+          <div className="portal-mobile-drawer__body min-h-0 flex-1 overflow-y-auto px-3 py-3">
             <nav className="space-y-1">{dinamikUstBolme.map(drawerLink)}</nav>
             <div className="my-3 h-px bg-border/70" />
             <nav className="space-y-1">{dinamikOrtaBolme.map(drawerLink)}</nav>
@@ -388,7 +391,7 @@ export function Sidebar({
             <nav className="space-y-1">{dinamikAltBolme.map(drawerLink)}</nav>
           </div>
 
-          <div className="shrink-0 border-t border-border/70 p-3">
+          <div className="portal-mobile-drawer__footer shrink-0 border-t border-border/70 p-3">
             <Link
               to="/menyu"
               onClick={() => setAcıq(false)}
