@@ -51,7 +51,8 @@ function pageKeyForPath(pathname: string) {
   if (pathname.startsWith("/fakulte-icmali")) return "page.facultyOverview";
   if (pathname.startsWith("/fennler/")) return "page.course";
   if (pathname.startsWith("/muellim/")) return "page.teacherWorkspace";
-  if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/"))\n    return "page.tutorWorkspace";
+  if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/"))
+    return "page.tutorWorkspace";
   if (pathname.startsWith("/admin")) return "page.admin";
   return null;
 }
