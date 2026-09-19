@@ -83,3 +83,15 @@ Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 be
 The release workflow is the final automated gate. A green `Prompt 13 production readiness` run means clean install, production audit, prior QA contracts, route completeness, dependency-tree validation, typecheck, lint-baseline protection, regression tests, built Nitro SSR route smoke and Vercel-compatible build all completed successfully.
 
 Authenticated production-data E2E and a live Vercel deployment are not fabricated when credentials/project access are unavailable.
+
+---
+
+## Prompt 17 final release gate — 2026-09-19
+
+Prompt 17 adds `scripts/prompt17-conformance-audit.mjs`, `npm run qa:prompt17` and `.github/workflows/prompt17-validation.yml`. The final gate composes the Prompt 11, 12, 13 and 16 checks with route coverage, contextual hero coverage, representative AZ/TR/EN/RU parity, root-width protection, remediation-period backend-lock protection, typecheck, regression tests, production build, built-SSR smoke and Vercel compatibility build.
+
+Prompt 16 reduced inherited repository lint debt to **6532 problems (6520 errors, 12 warnings)**, so the older Prompt 13 baseline of 6548/6536 is superseded and its workflow gate is refreshed accordingly.
+
+Live authenticated visual acceptance remains **BLOCKED**. A successful GitHub Vercel status is build/deployment-status evidence only; because the connected Vercel project list is empty and no safe authenticated preview/reference fixture is retrievable, Prompt 17 does not claim screenshots, pixel diffs, authenticated mutation E2E or measured Web Vitals.
+
+The release is source/build-conformant when the Prompt 17 workflow is green; visual acceptance remains a separately documented blocker rather than a false PASS.

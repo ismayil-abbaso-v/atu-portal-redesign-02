@@ -50,3 +50,11 @@ These items require an interactive authenticated browser session and are not rep
 
 The complete Prompt 16 change log and acceptance boundary are documented in
 [`TYPOGRAPHY_RESPONSIVE_A11Y_AUDIT.md`](./TYPOGRAPHY_RESPONSIVE_A11Y_AUDIT.md).
+
+---
+
+## Prompt 17 final accessibility update — 2026-09-19
+
+The final pass closes the residual root minimum-width inconsistency and adds a guard that fails if a fixed >=300px body minimum is reintroduced. Representative AZ/TR/EN/RU action/empty-state key parity is also checked.
+
+Keyboard-only traversal, screen-reader announcements, third-party dialog focus trapping, virtual-keyboard behavior and 200% rendered zoom remain **BLOCKED** without an authenticated reachable browser session. These are not marked PASS from static source evidence.

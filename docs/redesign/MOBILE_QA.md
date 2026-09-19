@@ -50,3 +50,11 @@ The shell is designed around a compact fixed header, five-slot bottom navigation
 ## Acceptance boundary
 
 The matrix remains `BLOCKED`, not `PASS`, until screenshots are produced from the exact reviewed commit in an authenticated session. A retry must populate the screenshot path, final URL, overflow measurements and issue/result fields in the manifest without changing the viewport list.
+
+---
+
+## Prompt 17 final mobile update — 2026-09-19
+
+Prompt 17 removed the remaining base `body min-width:320px` declaration from `src/styles.css`. The root can now shrink below 320 CSS pixels during zoom/narrow embedded viewports without depending on a mobile-media override. Existing safe-area, `100dvh`, bottom-navigation clearance and 44×44 control contracts remain unchanged.
+
+The rendered viewport matrix is still **BLOCKED** because no reachable exact authenticated preview is available. Static guards do not replace the missing 320×568 / 390×844 / 412×915 / tablet / desktop screenshots.

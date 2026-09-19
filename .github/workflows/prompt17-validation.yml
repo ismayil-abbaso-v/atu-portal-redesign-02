@@ -1,4 +1,4 @@
-name: Prompt 13 production readiness
+name: Prompt 17 final conformance
 
 on:
   push:
@@ -11,9 +11,11 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -27,43 +29,39 @@ jobs:
       - name: Clean install
         run: npm ci --no-audit --no-fund
 
-      - name: Production security/config audit
-        run: node scripts/prompt13-release-audit.mjs
-
-      - name: Revalidate visual/mobile/accessibility contracts
+      - name: Prompt 11 visual/accessibility static contracts
         run: node scripts/prompt11-static-qa.mjs
 
-      - name: Revalidate route completeness
+      - name: Prompt 12 route completeness
         run: node scripts/prompt12-route-completeness.mjs
 
-      - name: Dependency tree
-        run: npm ls --omit=dev --depth=0
+      - name: Prompt 13 release audit
+        run: node scripts/prompt13-release-audit.mjs
 
-      - name: Production dependency audit
-        continue-on-error: true
-        run: npm audit --omit=dev --audit-level=high
+      - name: Prompt 16 responsive/accessibility guard
+        run: npm run qa:responsive-a11y
+
+      - name: Prompt 17 conformance audit
+        run: npm run qa:prompt17
 
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Lint Prompt 13 changes
-        run: >
-          npx eslint --rule 'prettier/prettier: off'
-          src/routes/index.tsx
-          scripts/prompt13-release-audit.mjs
+      - name: Lint Prompt 17 script
+        run: npx eslint --rule 'prettier/prettier: off' scripts/prompt17-conformance-audit.mjs
 
-      - name: Repository lint baseline gate
+      - name: Repository lint inherited-debt gate
         shell: bash
         run: |
           set +e
-          npm run lint > /tmp/release-lint.log 2>&1
+          npm run lint > /tmp/prompt17-lint.log 2>&1
           lint_status=$?
           set -e
-          cat /tmp/release-lint.log
+          cat /tmp/prompt17-lint.log
           if [ "$lint_status" -eq 0 ]; then
             exit 0
           fi
-          grep -q "6532 problems (6520 errors, 12 warnings)" /tmp/release-lint.log
+          grep -q "6532 problems (6520 errors, 12 warnings)" /tmp/prompt17-lint.log
 
       - name: Regression tests
         run: npm test
@@ -106,6 +104,12 @@ jobs:
             "/ofis",
             "/bildirisler",
             "/menyu",
+            "/menyu/transkript",
+            "/menyu/profil",
+            "/menyu/tehlukesizlik",
+            "/menyu/bildiris",
+            "/menyu/gorunus",
+            "/menyu/yardim",
             "/admin",
           ];
 

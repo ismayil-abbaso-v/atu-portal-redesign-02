@@ -67,3 +67,9 @@ The built-in image-generation workflow was used with twelve separate route-speci
 - [x] No backend files changed
 - [x] Login asset unchanged
 - [ ] Authenticated browser screenshot matrix (deferred to Prompt 15; no credentials are committed)
+
+---
+
+## Prompt 17 final image-coverage check — 2026-09-19
+
+The final conformance audit enforces all fifteen primary contextual WebP hero references and rejects reintroduction of the twelve replaced placeholder SVGs. Asset-level coverage is PASS. Authenticated desktop/mobile crop screenshots remain BLOCKED for the reasons documented in `VISUAL_QA.md`; no asset-level inspection is presented as a rendered-route screenshot.

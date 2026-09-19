@@ -47,3 +47,11 @@ Recommended staging verification:
 - verify explicit image aspect ratios/dimensions in the rendered route
 - inspect network duplication for hero assets
 - inspect layout shift during user/profile and dashboard query hydration
+
+---
+
+## Prompt 17 final performance/image update — 2026-09-19
+
+The earlier reference to lightweight contextual SVG heroes is superseded by Prompt 14. The current contextual hero set is WebP. The fifteen primary contextual hero assets range from 28,786 B to 67,692 B; the twelve Prompt 14 replacement assets are all 1600×600 and remain below the 250 KB hard limit. The old placeholder SVG assets are absent.
+
+Prompt 17 adds a static guard for hero existence, source references, legacy SVG reintroduction and the 250 KB ceiling. Exact LCP, CLS, duplicate-request behavior and eager/lazy network timing remain **BLOCKED** until a reachable authenticated deployment can be measured. No synthetic Web Vitals value is reported.

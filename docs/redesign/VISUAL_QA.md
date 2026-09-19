@@ -57,3 +57,13 @@ Static checks are not a substitute for screenshots. Final visual acceptance requ
 5. inspection for overflow, clipping, fixed-element overlap, hero collisions, touch targets and reference drift.
 
 Until those inputs exist, Prompt 15 is **engineering-complete but visual acceptance BLOCKED**. No global `overflow-x: hidden` workaround was added and no speculative CSS change was made from an unrendered page.
+
+---
+
+## Prompt 17 final conformance update — 2026-09-19
+
+Prompt 17 re-audited the current target after Prompts 14–16 and found one source-level inconsistency: the base `src/styles.css` still imposed `body { min-width: 320px; }` even though the responsive audit described the root minimum width as removed. The final remediation changes that base rule to `min-width: 0`; mobile-specific containment remains component-scoped.
+
+The final browser verdict remains **BLOCKED**, not PASS. GitHub reports a successful Vercel status on the Prompt 16 parent commit, but the connected Vercel API currently returns no discoverable project and no retrievable deployment URL. The repository also contains no safe authenticated QA identity and no machine-readable original reference fixture set. Therefore no new 1536×864, tablet or mobile screenshot/pixel-diff claim is fabricated.
+
+Final source/build evidence is centralized in `PROMPT_CONFORMANCE_MATRIX.md` and enforced by `scripts/prompt17-conformance-audit.mjs`.

@@ -113,3 +113,11 @@ Authenticated production-data browser E2E is not claimed here because no test cr
 **34/34 user-facing routes: PASS.**
 
 **0 PARTIAL, 0 FAIL.** Redirect-only legacy aliases are PASS for routing/functionality and N/A only for independent visual design.
+
+---
+
+## Prompt 17 final route-conformance clarification — 2026-09-19
+
+The existing **34/34 PASS** statement refers to route-tree/source/build coverage and automated error/redirect contracts. It must not be read as 34/34 rendered visual acceptance.
+
+Prompt 17 keeps source/build route coverage at PASS while the 15 principal authenticated routes remain **BLOCKED for real visual browser evidence**. This distinction is recorded in `PROMPT_CONFORMANCE_MATRIX.md`. No missing route, new fake data source or backend-contract change was introduced by the final remediation.
