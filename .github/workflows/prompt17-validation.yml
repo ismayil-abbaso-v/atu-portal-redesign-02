@@ -48,7 +48,9 @@ jobs:
         run: npm run typecheck
 
       - name: Lint Prompt 17 script
-        run: npx eslint --rule 'prettier/prettier: off' scripts/prompt17-conformance-audit.mjs
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          scripts/prompt17-conformance-audit.mjs
 
       - name: Repository lint inherited-debt gate
         shell: bash
