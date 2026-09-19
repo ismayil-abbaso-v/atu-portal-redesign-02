@@ -1,20 +1,56 @@
-import { Bell, CheckCheck, ChevronRight, LogOut, Menu, User, UserRound, X } from "lucide-react";
+import {
+  Bell,
+  CheckCheck,
+  ChevronRight,
+  LogOut,
+  Menu,
+  Moon,
+  Search,
+  Sun,
+  User,
+  UserRound,
+  X,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useNotifications } from "@/hooks/use-notifications";
 import { supabase } from "@/integrations/supabase/client";
 import { SignedAvatarImg } from "@/components/common/SignedAvatar";
+import { PortalSearch } from "@/components/portal/PortalPrimitives";
+import atuLogo from "@/assets/atu-logo-cropped.svg";
+import { usePrimaryRole } from "@/hooks/use-user-role";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
+import { roleCabinetLabel } from "@/lib/tutor-panel-i18n";
 import "@/notification-panel.css";
 
-export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false }: { name: string; avatarUrl?: string | null; onMenuClick?: () => void; mobileMenuOpen?: boolean }) {
+export function AppHeader({
+  name,
+  avatarUrl,
+  onMenuClick,
+  mobileMenuOpen = false,
+}: {
+  name: string;
+  avatarUrl?: string | null;
+  onMenuClick?: () => void;
+  mobileMenuOpen?: boolean;
+}) {
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead } = useNotifications();
-  const { t, intlLocale } = useI18n();
+  const { t, intlLocale, locale } = useI18n();
+  const { primaryRole } = usePrimaryRole();
+  const { mode, setMode } = useTheme();
+  const roleLabel = roleCabinetLabel(locale, primaryRole);
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
-  const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
   const recent = notifications.slice(0, 5);
 
   useEffect(() => {
@@ -44,11 +80,12 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
     const data = notification.elave_data;
     const metadata = data && typeof data === "object" && !Array.isArray(data) ? data : null;
     const route = metadata && typeof metadata["route"] === "string" ? metadata["route"] : null;
-    const chatGroupId = metadata && typeof metadata["chat_group_id"] === "string"
-      ? metadata["chat_group_id"]
-      : metadata && typeof metadata["group_id"] === "string"
-        ? metadata["group_id"]
-        : null;
+    const chatGroupId =
+      metadata && typeof metadata["chat_group_id"] === "string"
+        ? metadata["chat_group_id"]
+        : metadata && typeof metadata["group_id"] === "string"
+          ? metadata["group_id"]
+          : null;
 
     if (route?.startsWith("/")) {
       setOpen(false);
@@ -74,26 +111,60 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/92 px-3 py-2.5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/78 sm:px-6 sm:py-3">
-      <div className="mx-auto flex min-h-14 w-full max-w-[1600px] items-center justify-between gap-3">
+    <header className="portal-header">
+      <div className="portal-header__inner">
         <div className="flex min-w-0 items-center gap-2.5">
           <button
             type="button"
             aria-label={mobileMenuOpen ? `${t("nav.menu")} — ${t("common.close")}` : t("nav.menu")}
             aria-expanded={mobileMenuOpen}
             onClick={() => onMenuClick?.()}
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground shadow-sm transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 md:hidden"
+            className="portal-header__icon-button shrink-0 md:hidden"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
 
-          <Link to="/ev" aria-label={t("app.name")} className="min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-            <p className="truncate font-display text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("app.name")}</p>
-            <p className="hidden truncate text-xs text-muted-foreground sm:block">{t("app.subtitle")}</p>
+          <Link
+            to="/ev"
+            aria-label={t("app.name")}
+            className="flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+          >
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary p-1.5">
+              <img src={atuLogo} alt="ATU" className="size-full object-contain" />
+            </span>
+            <span className="hidden min-w-0 sm:block">
+              <span className="block truncate font-display text-lg font-semibold text-primary">
+                {t("app.name")}
+              </span>
+              <span className="block truncate text-[10px] font-semibold text-muted-foreground">
+                {roleLabel}
+              </span>
+            </span>
           </Link>
         </div>
 
+        <PortalSearch
+          className="portal-header__search"
+          placeholder="Tələbə, fənn, sənəd və ya xidmət axtar..."
+          aria-label={t("common.search")}
+        />
+
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            aria-label={t("common.search")}
+            className="portal-header__icon-button md:hidden"
+          >
+            <Search className="size-5" />
+          </button>
+          <button
+            type="button"
+            aria-label={mode === "dark" ? "İşıqlı mövzu" : "Qaranlıq mövzu"}
+            onClick={() => setMode(mode === "dark" ? "light" : "dark")}
+            className="portal-header__icon-button hidden md:inline-flex"
+          >
+            {mode === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          </button>
           <div ref={notificationRef} className="relative">
             <button
               type="button"
@@ -120,7 +191,9 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
 
               <div className="notification-panel__header flex items-center justify-between border-b border-border/70 px-4 py-3.5">
                 <div className="notification-panel__header-copy">
-                  <p className="font-display text-base font-semibold text-foreground">{t("nav.notifications")}</p>
+                  <p className="font-display text-base font-semibold text-foreground">
+                    {t("nav.notifications")}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {unreadCount > 0 ? `${unreadCount} ${t("header.unread")}` : t("header.allRead")}
                   </p>
@@ -143,7 +216,11 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
                 {isLoading ? (
                   <div className="space-y-2 py-1">
                     {Array.from({ length: 3 }).map((_, index) => (
-                      <div key={index} className="notification-panel__skeleton rounded-xl p-3" style={{ animationDelay: `${index * 80}ms` }}>
+                      <div
+                        key={index}
+                        className="notification-panel__skeleton rounded-xl p-3"
+                        style={{ animationDelay: `${index * 80}ms` }}
+                      >
                         <div className="flex gap-3">
                           <span className="notification-panel__skeleton-line mt-1 size-2.5 shrink-0" />
                           <div className="min-w-0 flex-1 space-y-2">
@@ -167,12 +244,21 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
                     >
                       <span className="notification-panel__dot mt-1.5 size-2 shrink-0 rounded-full bg-primary transition-transform group-hover:scale-125" />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-foreground">{notification.baslıq}</span>
+                        <span className="block truncate text-sm font-semibold text-foreground">
+                          {notification.baslıq}
+                        </span>
                         {notification.metin ? (
-                          <span className="mt-0.5 block line-clamp-2 text-xs leading-5 text-muted-foreground">{notification.metin}</span>
+                          <span className="mt-0.5 block line-clamp-2 text-xs leading-5 text-muted-foreground">
+                            {notification.metin}
+                          </span>
                         ) : null}
                         <span className="mt-1.5 block text-[10px] font-medium text-muted-foreground">
-                          {notification.tarix ? new Date(notification.tarix).toLocaleString(intlLocale, { dateStyle: "medium", timeStyle: "short" }) : ""}
+                          {notification.tarix
+                            ? new Date(notification.tarix).toLocaleString(intlLocale, {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                              })
+                            : ""}
                         </span>
                       </span>
                     </button>
@@ -182,8 +268,12 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
                     <span className="notification-panel__empty-icon mb-3 flex size-11 items-center justify-center rounded-2xl bg-primary/8 text-primary/55">
                       <Bell className="size-6" />
                     </span>
-                    <p className="text-sm font-semibold text-foreground">{t("header.noNotifications")}</p>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{t("header.newNotifications")}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {t("header.noNotifications")}
+                    </p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      {t("header.newNotifications")}
+                    </p>
                   </div>
                 )}
               </div>
@@ -213,27 +303,68 @@ export function AppHeader({ name, avatarUrl, onMenuClick, mobileMenuOpen = false
               className={`flex min-w-0 items-center gap-2 rounded-xl border bg-card px-2 py-1.5 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3 ${profileOpen ? "border-primary/25 bg-accent shadow-[0_8px_24px_rgba(61,15,28,0.10)]" : "border-border"}`}
             >
               <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary text-[11px] font-bold text-primary-foreground sm:size-9 sm:text-xs">
-                {avatarUrl ? <SignedAvatarImg src={avatarUrl} alt={name || t("nav.profile")} className="size-full object-cover" /> : initials || <User className="size-4" />}
+                {avatarUrl ? (
+                  <SignedAvatarImg
+                    src={avatarUrl}
+                    alt={name || t("nav.profile")}
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  initials || <User className="size-4" />
+                )}
               </span>
-              <span className="hidden max-w-48 truncate text-sm font-semibold sm:block">{name}</span>
-              <ChevronRight className={`hidden size-4 text-muted-foreground transition-transform duration-200 sm:block ${profileOpen ? "rotate-90 text-primary" : ""}`} />
+              <span className="hidden max-w-48 text-left md:block">
+                <span className="block truncate text-sm font-semibold">{name}</span>
+                <span className="block truncate text-[10px] font-semibold text-muted-foreground">
+                  {roleLabel}
+                </span>
+              </span>
+              <ChevronRight
+                className={`hidden size-4 text-muted-foreground transition-transform duration-200 sm:block ${profileOpen ? "rotate-90 text-primary" : ""}`}
+              />
             </button>
 
-            <div className={profileOpen ? "absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_20px_60px_rgba(61,15,28,0.16)] opacity-100 scale-100 translate-y-0 transition-[opacity,transform] duration-200 ease-out" : "pointer-events-none absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_20px_60px_rgba(61,15,28,0.16)] opacity-0 scale-95 -translate-y-1 transition-[opacity,transform] duration-200 ease-out"}>
-              <Link to="/menyu/profil" onClick={() => setProfileOpen(false)} className="group flex items-center gap-4 border-b border-border/70 px-5 py-4 transition-colors duration-200 hover:bg-accent/70">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105"><UserRound className="size-6" /></span>
+            <div
+              className={
+                profileOpen
+                  ? "absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_20px_60px_rgba(61,15,28,0.16)] opacity-100 scale-100 translate-y-0 transition-[opacity,transform] duration-200 ease-out"
+                  : "pointer-events-none absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_20px_60px_rgba(61,15,28,0.16)] opacity-0 scale-95 -translate-y-1 transition-[opacity,transform] duration-200 ease-out"
+              }
+            >
+              <Link
+                to="/menyu/profil"
+                onClick={() => setProfileOpen(false)}
+                className="group flex items-center gap-4 border-b border-border/70 px-5 py-4 transition-colors duration-200 hover:bg-accent/70"
+              >
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105">
+                  <UserRound className="size-6" />
+                </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] font-semibold text-foreground">{t("header.myProfile")}</span>
-                  <span className="mt-0.5 block text-sm text-muted-foreground">{t("header.viewPersonalData")}</span>
+                  <span className="block text-[15px] font-semibold text-foreground">
+                    {t("header.myProfile")}
+                  </span>
+                  <span className="mt-0.5 block text-sm text-muted-foreground">
+                    {t("header.viewPersonalData")}
+                  </span>
                 </span>
                 <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-primary" />
               </Link>
 
-              <button type="button" onClick={() => void cixisEt()} className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-red-50 dark:hover:bg-red-950/20">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-500 transition-transform duration-200 group-hover:scale-105 dark:bg-red-950/40 dark:text-red-400"><LogOut className="size-6" /></span>
+              <button
+                type="button"
+                onClick={() => void cixisEt()}
+                className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-red-50 dark:hover:bg-red-950/20"
+              >
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-500 transition-transform duration-200 group-hover:scale-105 dark:bg-red-950/40 dark:text-red-400">
+                  <LogOut className="size-6" />
+                </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] font-semibold text-red-500 dark:text-red-400">{t("nav.logout")}</span>
-                  <span className="mt-0.5 block text-sm text-muted-foreground">{t("header.safeLogout")}</span>
+                  <span className="block text-[15px] font-semibold text-red-500 dark:text-red-400">
+                    {t("nav.logout")}
+                  </span>
+                  <span className="mt-0.5 block text-sm text-muted-foreground">
+                    {t("header.safeLogout")}
+                  </span>
                 </span>
               </button>
             </div>

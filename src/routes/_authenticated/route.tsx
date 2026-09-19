@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect, useRouterState } from "@tanstack/rea
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { AppHeader } from "@/components/layout/AppHeader";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { useActivityLogger } from "@/hooks/use-activity-logger";
 import { supabase } from "@/integrations/supabase/client";
@@ -145,79 +146,27 @@ function AuthenticatedLayout() {
   }, [locale, t]);
 
   return (
-    <div className="flex min-h-screen w-full max-w-[100vw] overflow-x-clip bg-background md:h-dvh md:min-h-0 md:overflow-hidden">
-      <style>{`
-        @media (max-width: 767px) {
-          header.sticky.top-0 {
-            position: fixed !important;
-            inset-inline: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            z-index: 50 !important;
-          }
-
-          main {
-            padding-top: 5.75rem !important;
-            padding-bottom: max(6rem, calc(4.5rem + env(safe-area-inset-bottom))) !important;
-            overflow-x: clip !important;
-          }
-
-          main input,
-          main textarea,
-          main select,
-          main button {
-            scroll-margin-block-end: 9rem;
-          }
-
-          main .sticky.bottom-0 {
-            padding-bottom: max(.625rem, env(safe-area-inset-bottom)) !important;
-          }
-        }
-
-        @media (min-width: 640px) and (max-width: 767px) {
-          main {
-            padding-top: 6.25rem !important;
-          }
-        }
-
-        @media (min-width: 768px) {
-          html,
-          body,
-          #root {
-            height: 100% !important;
-            overflow: hidden !important;
-          }
-
-          aside.sticky.top-4 {
-            position: fixed !important;
-            left: 1.25rem !important;
-            top: 1rem !important;
-            height: calc(100dvh - 2rem) !important;
-            margin-left: 0 !important;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          main *,
-          main *::before,
-          main *::after {
-            scroll-behavior: auto !important;
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
-      <Sidebar istifadeciAdi={ad} avatarUrl={avatarUrl} acıq={sidebarAcıq} setAcıq={setSidebarAcıq} />
-      <div
-        ref={contentScrollRef}
-        className={`min-w-0 flex-1 overflow-x-clip transition-[margin-left] duration-300 ease-in-out md:h-dvh md:overflow-y-auto md:overscroll-contain ${sidebarAcıq ? "md:ml-[255px]" : "md:ml-[104px]"}`}
-      >
-        <AppHeader name={ad} avatarUrl={avatarUrl} mobileMenuOpen={sidebarAcıq} onMenuClick={() => setSidebarAcıq((v) => !v)} />
-        <main className="min-w-0 overflow-x-clip px-3 pb-24 pt-4 sm:px-5 sm:pt-5 md:pb-8 lg:px-7">
-          <div className="mx-auto min-w-0 w-full max-w-[1600px]"><Outlet /></div>
+    <div className="portal-app-shell">
+      <Sidebar
+        istifadeciAdi={ad}
+        avatarUrl={avatarUrl}
+        acıq={sidebarAcıq}
+        setAcıq={setSidebarAcıq}
+      />
+      <div ref={contentScrollRef} className="portal-content-scroll">
+        <AppHeader
+          name={ad}
+          avatarUrl={avatarUrl}
+          mobileMenuOpen={sidebarAcıq}
+          onMenuClick={() => setSidebarAcıq((v) => !v)}
+        />
+        <main className="portal-main">
+          <div className="portal-main-inner">
+            <Outlet />
+          </div>
         </main>
       </div>
+      <MobileBottomNav />
     </div>
   );
 }
