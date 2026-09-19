@@ -68,42 +68,214 @@
 
 .portal-desktop-sidebar {
   position: fixed;
-  inset: 0 auto 0 0;
+  top: 1rem;
+  bottom: 1rem;
+  left: 1.25rem;
   z-index: 45;
   display: none;
-  width: 252px;
+  width: 84px;
+  min-width: 0;
   flex-direction: column;
   overflow: hidden;
-  border-right: 1px solid var(--border-subtle);
-  background: var(--surface);
-  padding: 1.5rem 1rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 88%, transparent);
+  border-radius: 26px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface) 98%, var(--primary) 2%) 0%,
+      var(--surface) 24%,
+      var(--surface) 100%
+    );
+  padding: var(--sb-pad-y) 0.5rem 0.65rem;
+  box-shadow:
+    0 18px 52px rgb(50 19 29 / 0.08),
+    0 2px 10px rgb(50 19 29 / 0.035),
+    inset 0 1px 0 rgb(255 255 255 / 0.55);
+  transition:
+    width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+  backdrop-filter: blur(18px);
 }
+
+.portal-desktop-sidebar[data-expanded="true"] {
+  width: 235px;
+  border-color: color-mix(in srgb, var(--primary) 12%, var(--border-subtle));
+  box-shadow:
+    0 22px 62px rgb(50 19 29 / 0.105),
+    0 3px 12px rgb(50 19 29 / 0.045),
+    inset 0 1px 0 rgb(255 255 255 / 0.6);
+}
+
+.portal-sidebar-brand {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: calc(var(--sb-logo) + 10px);
+  flex: 0 0 auto;
+  margin-bottom: var(--sb-header-mb);
+  overflow: visible;
+  border-bottom: 1px solid var(--border-subtle);
+  color: inherit;
+  text-decoration: none;
+}
+
+.portal-sidebar-brand__logo {
+  position: absolute;
+  top: -4px;
+  left: var(--sb-logo-left);
+  display: flex;
+  width: var(--sb-logo);
+  height: var(--sb-logo);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  border-radius: 999px;
+  background: var(--primary);
+  padding: 0.5rem;
+  box-shadow:
+    0 7px 20px color-mix(in srgb, var(--primary) 20%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.18);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease;
+}
+
+.portal-sidebar-brand:hover .portal-sidebar-brand__logo {
+  transform: translateY(-1px);
+  box-shadow:
+    0 9px 24px color-mix(in srgb, var(--primary) 24%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.2);
+}
+
+.portal-sidebar-brand__copy {
+  pointer-events: none;
+  position: absolute;
+  top: -2px;
+  left: calc(var(--sb-logo) + 0.9rem);
+  display: flex;
+  height: var(--sb-logo);
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    max-width 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+
 .portal-desktop-sidebar .portal-sidebar-link {
   position: relative;
   display: flex;
-  min-height: 46px;
   width: 100%;
+  height: var(--sb-icon);
+  min-height: var(--sb-icon);
+  flex: 0 0 auto;
   align-items: center;
-  gap: 0.75rem;
-  border-radius: 12px;
-  padding: 0.65rem 0.75rem;
-  color: var(--text-soft);
-  font-size: 0.875rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--sb-text);
   font-weight: 650;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  -webkit-tap-highlight-color: transparent;
 }
+
 .portal-desktop-sidebar .portal-sidebar-link:hover {
-  background: var(--surface-muted);
+  border-color: color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: color-mix(in srgb, var(--surface-muted) 86%, transparent);
   color: var(--text-strong);
 }
-.portal-desktop-sidebar .portal-sidebar-link[data-active="true"] {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--primary) 20%, transparent);
+
+.portal-desktop-sidebar .portal-sidebar-link:active {
+  transform: scale(0.985);
 }
+
+.portal-desktop-sidebar .portal-sidebar-link:focus-visible,
+.portal-sidebar-brand:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  outline-offset: 2px;
+}
+
+.portal-desktop-sidebar .portal-sidebar-link[data-active="true"] {
+  border-color: color-mix(in srgb, var(--primary) 72%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--primary) 96%, white 4%),
+      var(--primary)
+    );
+  color: var(--primary-foreground);
+  box-shadow:
+    0 8px 22px color-mix(in srgb, var(--primary) 18%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.16);
+}
+
+.portal-sidebar-toggle {
+  margin-bottom: var(--sb-menu-mb);
+}
+
+.portal-desktop-sidebar .portal-sidebar-toggle:hover {
+  color: var(--primary);
+}
+
+.portal-desktop-sidebar .portal-sidebar-logout:hover {
+  border-color: color-mix(in srgb, var(--negative) 18%, transparent);
+  background: var(--negative-soft);
+  color: var(--negative);
+}
+
+.portal-sidebar-scroll {
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+
+.portal-sidebar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .portal-sidebar-art {
-  margin-top: auto;
-  padding: 0.75rem 0.35rem 0;
-  color: color-mix(in srgb, var(--primary) 62%, transparent);
+  display: grid;
+  min-height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  margin-top: 0.45rem;
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.7rem 0.1rem 0.1rem;
+  transition:
+    min-height 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease;
+}
+
+.portal-sidebar-art.is-expanded {
+  min-height: clamp(72px, 13vh, 112px);
+}
+
+.portal-sidebar-art.is-collapsed {
+  border-top-color: color-mix(in srgb, var(--border-subtle) 72%, transparent);
+  padding-top: 0.55rem;
+}
+
+.portal-sidebar-art img {
+  max-height: clamp(34px, 11vh, 106px);
+  filter: drop-shadow(0 4px 10px rgb(50 19 29 / 0.05));
+}
+
+.portal-sidebar-art.is-collapsed img {
+  max-height: 42px;
+  filter: none;
 }
 
 .portal-header {
@@ -424,9 +596,13 @@
   }
   .portal-content-scroll {
     height: 100dvh;
-    margin-left: 252px;
+    margin-left: 104px;
     overflow-y: auto;
     overscroll-behavior: contain;
+    transition: margin-left 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .portal-app-shell[data-sidebar-expanded="true"] .portal-content-scroll {
+    margin-left: 255px;
   }
   .portal-main {
     padding: 1.75rem 2rem 3rem;
@@ -459,6 +635,16 @@
 @media (prefers-reduced-motion: reduce) {
   .portal-page {
     animation: none;
+  }
+  .portal-desktop-sidebar,
+  .portal-content-scroll,
+  .portal-sidebar-brand__logo,
+  .portal-sidebar-brand__copy,
+  .portal-sidebar-art,
+  .portal-sidebar-art img,
+  .portal-quick-action:hover,
+  .portal-mobile-bottom-nav__item--featured {
+    transition: none !important;
   }
   .portal-quick-action:hover,
   .portal-mobile-bottom-nav__item--featured {
