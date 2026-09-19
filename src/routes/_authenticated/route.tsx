@@ -176,7 +176,12 @@ function AuthenticatedLayout() {
         setAcıq={setSidebarAcıq}
       />
       <div ref={contentScrollRef} className="portal-content-scroll">
-        <AppHeader name={ad} avatarUrl={avatarUrl} />
+        <AppHeader
+          name={ad}
+          avatarUrl={avatarUrl}
+          mobileMenuOpen={sidebarAcıq}
+          onMenuClick={() => setSidebarAcıq((v) => !v)}
+        />
         <main className="portal-main">
           <div className="portal-main-inner">
             {roleWorkspaceClass ? (
