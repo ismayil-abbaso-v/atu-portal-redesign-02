@@ -80,7 +80,8 @@ export function AppHeader({
     };
 
     window.addEventListener("portal:mobile-secondary-menu-open", closeHeaderOverlays);
-    return () => window.removeEventListener("portal:mobile-secondary-menu-open", closeHeaderOverlays);
+    return () =>
+      window.removeEventListener("portal:mobile-secondary-menu-open", closeHeaderOverlays);
   }, []);
 
   useEffect(() => {
