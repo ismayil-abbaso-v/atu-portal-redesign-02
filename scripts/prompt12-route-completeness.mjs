@@ -155,7 +155,10 @@ for (const key of [
 const rootRoute = readFileSync(join(root, "src/routes/__root.tsx"), "utf8");
 assert(rootRoute.includes("notFoundComponent: NotFoundComponent"), "Root 404 boundary missing");
 assert(rootRoute.includes("errorComponent: ErrorComponent"), "Root error boundary missing");
-assert(rootRoute.includes("overflow-x: hidden"), "Root horizontal-overflow protection missing");
+assert(
+  !/overflow-x:\s*(?:hidden|clip)/i.test(rootRoute),
+  "Root shell must not hide horizontal overflow; fix the overflowing component instead",
+);
 
 const mobile = readFileSync(join(root, "src/mobile-native.css"), "utf8");
 for (const signal of ["env(safe-area-inset-top)", "env(safe-area-inset-bottom)", "100dvh"]) {
