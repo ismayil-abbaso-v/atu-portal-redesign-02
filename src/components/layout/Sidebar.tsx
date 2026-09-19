@@ -334,7 +334,13 @@ export function Sidebar({
           <hr className="mb-[var(--sb-section-gap)] w-full border-border/70" />
           <nav className="flex w-full flex-col items-stretch gap-[var(--sb-row-gap)]">
             {dinamikAltBolme.map((item) =>
-              item.to === "/menyu" ? <span key={item.to}>{desktopProfile}</span> : link(item),
+              item.to === "/menyu" ? (
+                <span key={item.to} className="block w-full">
+                  {desktopProfile}
+                </span>
+              ) : (
+                link(item)
+              ),
             )}
             <button
               type="button"
