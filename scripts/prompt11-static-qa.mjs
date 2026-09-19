@@ -112,4 +112,20 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log(`Prompt 11 static QA passed: ${referenceRoutes.length} reference routes, ${heroAssets.length} contextual visual assets, responsive/accessibility contracts verified.`);
+const requiredDocs = [
+  "docs/redesign/IMPLEMENTATION_SUMMARY.md",
+  "docs/redesign/VISUAL_QA.md",
+  "docs/redesign/MOBILE_QA.md",
+  "docs/redesign/ACCESSIBILITY_QA.md",
+  "docs/redesign/REGRESSION_QA.md",
+  "docs/redesign/PERFORMANCE_QA.md",
+];
+for (const doc of requiredDocs) {
+  if (!existsSync(join(root, doc))) failures.push(`Missing Prompt 11 QA documentation: ${doc}`);
+}
+if (failures.length) {
+  console.error("Prompt 11 documentation QA failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+console.log(`Prompt 11 static QA passed: ${referenceRoutes.length} reference routes, ${heroAssets.length} contextual visual assets, responsive/accessibility contracts and QA documentation verified.`);
