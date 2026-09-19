@@ -53,4 +53,15 @@ describe("mobile navigation information architecture", () => {
     });
     expect(getMobileRouteContext("/menyu/tehlukesizlik", model).secondaryActive).toBe(true);
   });
+
+  test("services panel is not mounted while the menu is closed", async () => {
+    const source = await Bun.file("src/components/layout/MobileBottomNav.tsx").text();
+
+    expect(source).toContain("const [menuOpen, setMenuOpen] = useState(false)");
+    expect(source).toContain("{menuOpen ? (");
+    expect(source).not.toContain("aria-hidden={!menuOpen}");
+    expect(source).not.toContain("inert={!menuOpen}");
+    expect(source).toContain('window.addEventListener("pageshow", resetMenu)');
+  });
+
 });
