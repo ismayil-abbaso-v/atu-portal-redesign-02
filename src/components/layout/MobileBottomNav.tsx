@@ -173,6 +173,8 @@ export function MobileBottomNav() {
       <section
         ref={panelRef}
         id={MENU_ID}
+        role="dialog"
+        aria-modal="false"
         aria-labelledby={MENU_TITLE_ID}
         aria-hidden={!menuOpen}
         inert={!menuOpen}
@@ -232,7 +234,7 @@ export function MobileBottomNav() {
           type="button"
           aria-expanded={menuOpen}
           aria-controls={MENU_ID}
-          aria-haspopup="menu"
+          aria-haspopup="dialog"
           aria-label={menuOpen ? t("nav.closeAdditionalMenu") : t("nav.openAdditionalMenu")}
           onClick={toggleMenu}
           className={cn(
