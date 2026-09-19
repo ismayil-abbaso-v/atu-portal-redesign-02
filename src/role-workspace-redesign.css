@@ -13,3 +13,10 @@
 @media(max-width:359px){.role-workspace-admin [class*="grid-cols-2"]{grid-template-columns:1fr!important}}
 @media(prefers-reduced-motion:reduce){.role-workspace-page *,.role-workspace-page *::before,.role-workspace-page *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @keyframes rwEnter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* Prompt 9 coverage hardening: announcements + portal dialogs rendered outside route subtree. */
+.role-workspace-announcements [class*="rounded-3xl"],.role-workspace-announcements [class*="rounded-[28px]"],.role-workspace-announcements [class*="rounded-[30px]"]{border-radius:var(--rw-feature)!important}
+.role-workspace-announcements [class*="shadow-sm"]{box-shadow:var(--rw-shadow)!important}.role-workspace-announcements [class*="grid"]{min-width:0}
+body:has(.role-workspace-page) [data-slot="dialog-content"]{border-radius:16px;border-color:color-mix(in oklch,var(--primary) 8%,var(--border));box-shadow:0 18px 54px color-mix(in oklch,var(--primary) 10%,transparent)}
+body:has(.role-workspace-page) [data-slot="dialog-title"]{font-family:var(--font-display,"Fraunces",Georgia,serif);font-weight:650}
+body:has(.role-workspace-page) [data-slot="dialog-content"] :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea,button[role="combobox"]){min-height:44px;border-radius:11px}
+@media(max-width:767px){body:has(.role-workspace-page) [data-slot="dialog-content"]{width:calc(100vw - 16px);max-width:none;max-height:calc(100dvh - 16px);overflow-y:auto;border-radius:14px}}

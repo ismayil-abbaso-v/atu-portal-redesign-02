@@ -25,6 +25,20 @@ jobs:
           test -f 'src/routes/_authenticated/muellim_.$groupId.$courseId.tsx'
           test -f src/routes/_authenticated/tyutor-paneli.tsx
           test -f 'src/routes/_authenticated/tyutor_.$groupId.tsx'
+      - name: Role workspace coverage
+        run: |
+          grep -q 'pathname === "/elanlar"' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-admin' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-groups' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-faculty' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-course' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-teacher' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-tutor' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-announcements' src/routes/_authenticated/route.tsx
+          grep -q 'role-workspace-home' src/components/dashboard/AdminDashboard.tsx
+          grep -q 'role-workspace-home' src/components/dashboard/TeacherDashboard.tsx
+          grep -q 'role-workspace-home' src/components/dashboard/TutorDashboard.tsx
+          grep -q 'role-workspace-home' src/components/dashboard/DeanDashboard.tsx
       - name: Typecheck
         run: npm run typecheck
       - name: Lint Prompt 9 changes

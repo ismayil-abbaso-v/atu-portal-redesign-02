@@ -68,6 +68,7 @@ function AuthenticatedLayout() {
     if (pathname.startsWith("/fennler/")) return "role-workspace-page role-workspace-course";
     if (pathname.startsWith("/muellim/")) return "role-workspace-page role-workspace-teacher";
     if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/")) return "role-workspace-page role-workspace-tutor";
+    if (pathname === "/elanlar") return "role-workspace-page role-workspace-announcements";
     return "";
   }, [pathname]);
 
