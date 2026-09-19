@@ -94,8 +94,12 @@
 }
 .student-home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr) minmax(260px, 0.72fr);
-  gap: 18px;
+  grid-template-areas:
+    "progress week side"
+    "services services side";
+  grid-template-columns: minmax(0, 1.5fr) minmax(290px, 0.95fr) minmax(270px, 0.85fr);
+  grid-template-rows: minmax(300px, auto) auto;
+  gap: 14px;
   align-items: stretch;
 }
 .student-home-card {
@@ -111,7 +115,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 .student-home-card__heading h2 {
   font-family: "Fraunces", Georgia, serif;
@@ -138,39 +142,75 @@
   font-weight: 750;
   white-space: nowrap;
 }
+.student-home-heading-link {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 5px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.student-home-heading-link svg {
+  width: 14px;
+}
 .student-home-progress {
+  position: relative;
+  isolation: isolate;
   display: flex;
-  min-height: 390px;
+  min-height: 300px;
+  grid-area: progress;
+  overflow: hidden;
   flex-direction: column;
-  background: linear-gradient(
-    145deg,
-    var(--surface) 60%,
-    color-mix(in srgb, var(--primary-soft) 42%, var(--surface))
-  );
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #62051f 0%, #7d0a2b 52%, #94123b 100%);
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(86, 5, 31, 0.2);
+}
+.student-home-progress::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -7%;
+  bottom: -1px;
+  width: 54%;
+  height: 44%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 224, 234, 0.72));
+  clip-path: polygon(0 100%, 31% 28%, 47% 62%, 76% 0, 100% 100%);
+  opacity: 0.64;
+}
+.student-home-progress .student-home-card__heading h2 {
+  color: #fff;
+}
+.student-home-progress .student-home-pill {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 .student-home-progress__body {
   display: flex;
   flex: 1;
   align-items: center;
-  gap: clamp(18px, 2.2vw, 34px);
+  gap: clamp(18px, 2vw, 30px);
 }
 .student-home-ring {
   display: grid;
-  width: 150px;
-  height: 150px;
+  width: 132px;
+  height: 132px;
   flex: none;
   place-items: center;
   border-radius: 50%;
-  background: conic-gradient(var(--primary) var(--progress), var(--surface-muted) 0);
+  background: conic-gradient(#fff var(--progress), rgba(255, 255, 255, 0.22) 0);
   position: relative;
   transition: background 1s var(--ease-standard);
 }
 .student-home-ring::after {
   content: "";
   position: absolute;
-  inset: 13px;
+  inset: 12px;
   border-radius: 50%;
-  background: var(--surface);
+  background: #790a2a;
 }
 .student-home-ring > div {
   position: relative;
@@ -180,13 +220,13 @@
 .student-home-ring strong {
   display: block;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 27px;
-  color: var(--primary);
+  font-size: 26px;
+  color: #fff;
 }
 .student-home-ring span {
   display: block;
   margin-top: 2px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 10px;
   font-weight: 750;
   text-transform: uppercase;
@@ -198,14 +238,14 @@
   gap: 10px;
 }
 .student-home-progress__metrics > div {
-  border-left: 2px solid var(--border-strong);
-  padding: 8px 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 7px 10px;
 }
 .student-home-progress__metrics > div.is-positive {
-  border-color: var(--positive);
+  border-color: rgba(255, 255, 255, 0.55);
 }
 .student-home-progress__metrics > div.is-warning {
-  border-color: var(--warning-semantic);
+  border-color: rgba(255, 220, 151, 0.75);
 }
 .student-home-progress__metrics strong {
   display: block;
@@ -215,37 +255,39 @@
 .student-home-progress__metrics span {
   display: block;
   margin-top: 3px;
-  color: var(--text-muted);
-  font-size: 10px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 11px;
 }
 .student-home-progress__quote {
-  margin-top: 18px;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 15px;
-  color: var(--primary);
+  width: min(45%, 220px);
+  margin: 10px 0 0 auto;
+  border-top: 2px solid rgba(255, 255, 255, 0.82);
+  padding-top: 10px;
+  color: rgba(255, 255, 255, 0.88);
   font-family: "Fraunces", Georgia, serif;
-  font-size: 15px;
+  font-size: 14px;
   font-style: italic;
 }
 .student-home-week {
-  min-height: 390px;
+  min-height: 300px;
+  grid-area: week;
 }
 .student-home-week__days {
   display: flex;
-  gap: 7px;
+  gap: 5px;
   overflow-x: auto;
   padding: 0 0 12px;
   scrollbar-width: none;
 }
 .student-home-week__days span {
   display: flex;
-  min-width: 42px;
+  min-width: 38px;
   flex: 1;
   flex-direction: column;
   align-items: center;
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--surface-muted);
-  padding: 7px 5px;
+  padding: 6px 4px;
   color: var(--text-muted);
 }
 .student-home-week__days b {
@@ -264,12 +306,14 @@
 }
 .student-home-schedule {
   display: grid;
-  gap: 6px;
+  gap: 5px;
+  max-height: 202px;
+  overflow: auto;
 }
 .student-home-schedule__row {
   display: grid;
-  grid-template-columns: 42px 2px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 36px 6px minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
   opacity: 0;
   animation: student-home-row-in 0.38s var(--ease-standard) forwards;
@@ -287,21 +331,38 @@
   animation-delay: 0.24s;
 }
 .student-home-schedule__row time {
+  display: grid;
+  place-items: center;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
+  text-align: center;
+}
+.student-home-schedule__row time b,
+.student-home-schedule__row time span {
+  display: block;
+}
+.student-home-schedule__row time b {
+  text-transform: uppercase;
+}
+.student-home-schedule__row time span {
+  margin-top: 1px;
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 800;
 }
 .student-home-schedule__line {
-  width: 2px;
-  height: 42px;
-  border-radius: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   background: var(--primary);
 }
 .student-home-schedule__row > div {
   min-width: 0;
-  border-radius: 12px;
-  background: var(--surface-muted);
-  padding: 9px 11px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: transparent;
+  padding: 7px 9px;
 }
 .student-home-schedule__row strong,
 .student-home-schedule__row span {
@@ -320,49 +381,59 @@
 }
 .student-home-side {
   display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 18px;
+  grid-area: side;
+  grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
 }
-.student-home-summary__row {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  border-top: 1px solid var(--border-subtle);
-  padding: 11px 0;
+.student-home-finance {
+  min-height: 0;
 }
-.student-home-summary__row:first-of-type {
-  border-top: 0;
-}
-.student-home-summary__row > span {
+.student-home-finance__content {
   display: grid;
-  width: 36px;
-  height: 36px;
+  min-height: 128px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px 12px;
+  align-content: center;
+}
+.student-home-finance__icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
   flex: none;
   place-items: center;
-  border-radius: 10px;
-  background: var(--primary-soft);
-  color: var(--primary);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #68071f, #94123b);
+  color: #fff;
 }
-.student-home-summary__row svg {
-  width: 17px;
+.student-home-finance__icon svg {
+  width: 20px;
 }
-.student-home-summary__row p {
-  min-width: 0;
-}
-.student-home-summary__row small,
-.student-home-summary__row strong {
+.student-home-finance__amount strong,
+.student-home-finance__amount span,
+.student-home-finance__status small,
+.student-home-finance__status strong {
   display: block;
 }
-.student-home-summary__row small {
+.student-home-finance__amount strong {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 22px;
+  line-height: 1.1;
+}
+.student-home-finance__amount span,
+.student-home-finance__status small {
+  margin-top: 3px;
   color: var(--text-muted);
   font-size: 11px;
 }
-.student-home-summary__row strong {
+.student-home-finance__status {
+  grid-column: 1/-1;
+  border-radius: 10px;
+  background: var(--surface-muted);
+  padding: 9px 11px;
+}
+.student-home-finance__status strong {
   margin-top: 2px;
-  overflow: hidden;
-  font-size: 13px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 12px;
 }
 .student-home-chat .student-home-card__heading a {
   display: flex;
@@ -420,21 +491,25 @@
   font-size: 10px;
 }
 .student-home-services {
-  padding-bottom: 18px;
+  grid-area: services;
+  padding: 16px;
+}
+.student-home-services .student-home-card__heading {
+  margin-bottom: 10px;
 }
 .student-home-services__grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 .student-home-service {
-  display: grid;
-  min-height: 108px;
-  grid-template-columns: 1fr auto;
-  align-content: space-between;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 9px;
   border: 1px solid var(--border-subtle);
-  border-radius: 15px;
-  padding: 14px;
+  border-radius: 13px;
+  padding: 9px 10px;
   color: var(--text-strong);
   transition:
     transform var(--motion-fast),
@@ -443,9 +518,9 @@
 }
 .student-home-service > span {
   display: grid;
-  width: 39px;
-  height: 39px;
-  grid-column: 1/3;
+  width: 38px;
+  height: 38px;
+  flex: none;
   place-items: center;
   border-radius: 11px;
   background: var(--primary-soft);
@@ -455,11 +530,12 @@
   width: 18px;
 }
 .student-home-service strong {
-  align-self: end;
+  min-width: 0;
+  flex: 1;
   font-size: 11px;
 }
 .student-home-service > svg {
-  align-self: end;
+  flex: none;
   width: 15px;
   color: var(--text-muted);
   transition: transform var(--motion-fast);
@@ -616,12 +692,16 @@
     transform: translateX(4px);
   }
 }
-@media (max-width: 1180px) {
+@media (max-width: 1199px) {
   .student-home-grid {
+    grid-template-areas:
+      "progress week"
+      "side side"
+      "services services";
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
   }
   .student-home-side {
-    grid-column: 1/-1;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: none;
   }
@@ -680,6 +760,11 @@
     font-size: 10px;
   }
   .student-home-grid {
+    grid-template-areas:
+      "progress"
+      "week"
+      "side"
+      "services";
     grid-template-columns: 1fr;
   }
   .student-home-card {
@@ -692,6 +777,7 @@
   }
   .student-home-progress__body {
     flex-direction: column;
+    align-items: flex-start;
   }
   .student-home-ring {
     width: 138px;
@@ -699,6 +785,10 @@
   }
   .student-home-progress__metrics {
     width: 100%;
+  }
+  .student-home-progress__quote {
+    width: 100%;
+    margin-left: 0;
   }
   .student-home-side {
     grid-column: auto;
@@ -744,7 +834,7 @@
     grid-column: auto;
   }
   .student-home-progress__metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .student-home-hero__words {
     display: none;

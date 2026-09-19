@@ -4,25 +4,21 @@ import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { az, enUS, ru, tr } from "date-fns/locale";
 import {
   ArrowRight,
-  BellRing,
   BookOpen,
   Building2,
   CalendarDays,
-  CheckCircle2,
-  Clock3,
   FileText,
-  GraduationCap,
   Library,
   Loader2,
   MessageCircle,
   RefreshCw,
   Sparkles,
+  WalletCards,
 } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 import studentHero from "@/assets/student-home-hero.webp";
 import innovationLab from "@/assets/student-innovation-lab.webp";
-import { useNotifications } from "@/hooks/use-notifications";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useI18n } from "@/lib/i18n";
@@ -50,10 +46,14 @@ const copy = {
     subjects: "Fənn",
     smallSteps: "Kiçik addımlar böyük nəticələr yaradır.",
     week: "Bu həftə",
+    showAll: "Hamısını göstər",
     noWeek: "Bu həftə üçün dərs planı yoxdur.",
     lesson: "Dərs",
     room: "Otaq",
-    summary: "Akademik xülasə",
+    finance: "Təhsil haqqı və ödənişlər",
+    tuition: "Təhsil haqqı",
+    financeStatus: "Ödəniş statusu",
+    noFinance: "Maliyyə məlumatı mövcud deyil.",
     group: "Tədris qrupu",
     average: "Orta bal",
     notices: "Yeni bildiriş",
@@ -86,10 +86,14 @@ const copy = {
     subjects: "Ders",
     smallSteps: "Küçük adımlar büyük sonuçlar yaratır.",
     week: "Bu hafta",
+    showAll: "Tümünü göster",
     noWeek: "Bu hafta için ders planı yok.",
     lesson: "Ders",
     room: "Oda",
-    summary: "Akademik özet",
+    finance: "Öğrenim ücreti ve ödemeler",
+    tuition: "Öğrenim ücreti",
+    financeStatus: "Ödeme durumu",
+    noFinance: "Finansal bilgi mevcut değil.",
     group: "Eğitim grubu",
     average: "Ortalama",
     notices: "Yeni bildirim",
@@ -122,10 +126,14 @@ const copy = {
     subjects: "Courses",
     smallSteps: "Small steps create great results.",
     week: "This week",
+    showAll: "Show all",
     noWeek: "There are no classes planned for this week.",
     lesson: "Class",
     room: "Room",
-    summary: "Academic summary",
+    finance: "Tuition and payments",
+    tuition: "Tuition fee",
+    financeStatus: "Payment status",
+    noFinance: "Financial information is unavailable.",
     group: "Study group",
     average: "Average score",
     notices: "New notifications",
@@ -158,10 +166,14 @@ const copy = {
     subjects: "Предметы",
     smallSteps: "Маленькие шаги приводят к большим результатам.",
     week: "Эта неделя",
+    showAll: "Показать все",
     noWeek: "На эту неделю занятий не запланировано.",
     lesson: "Занятие",
     room: "Аудитория",
-    summary: "Академическая сводка",
+    finance: "Обучение и платежи",
+    tuition: "Стоимость обучения",
+    financeStatus: "Статус оплаты",
+    noFinance: "Финансовая информация недоступна.",
     group: "Учебная группа",
     average: "Средний балл",
     notices: "Новые уведомления",
@@ -218,7 +230,6 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const lang = locale as Locale;
   const c = copy[lang];
   const dateLocale = dateLocales[lang];
-  const { unreadCount } = useNotifications();
 
   const profileQuery = useQuery({
     queryKey: ["student-profile", userId],
@@ -357,12 +368,6 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const ongoing = Math.max(0, courses.length - completed);
   const remaining = Math.max(0, courses.length - completed - ongoing);
   const progress = courses.length ? Math.round((completed / courses.length) * 100) : 0;
-  const graded = scores
-    .map((score) => score.yekun_qiymet)
-    .filter((value): value is number => value != null);
-  const average = graded.length
-    ? graded.reduce((sum, value) => sum + value, 0) / graded.length
-    : null;
   const isLoading =
     profileQuery.isLoading ||
     groupsQuery.isLoading ||
@@ -430,6 +435,11 @@ export function StudentDashboard({ userId }: { userId: string }) {
             <div
               className="student-home-ring"
               style={{ "--progress": `${progress * 3.6}deg` } as CSSProperties}
+              role="progressbar"
+              aria-label={c.progress as string}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
             >
               <div>
                 <strong>{animatedProgress}%</strong>
@@ -452,6 +462,12 @@ export function StudentDashboard({ userId }: { userId: string }) {
           <CardHeading
             title={c.week as string}
             subtitle={`${format(weekStart, "d MMM", { locale: dateLocale })} — ${format(weekEnd, "d MMM", { locale: dateLocale })}`}
+            action={
+              <Link className="student-home-heading-link" to="/teqvim">
+                {c.showAll as string}
+                <ArrowRight />
+              </Link>
+            }
           />
           <div className="student-home-week__days" aria-label={c.week as string}>
             {Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)).map((day) => (
@@ -474,12 +490,21 @@ export function StudentDashboard({ userId }: { userId: string }) {
             <div className="student-home-schedule">
               {weekEvents.slice(0, 5).map((event) => (
                 <div key={event.id} className="student-home-schedule__row">
-                  <time>{event.baslangic_saat.slice(0, 5)}</time>
+                  <time dateTime={event.tarix}>
+                    <b>
+                      {format(new Date(`${event.tarix}T12:00:00`), "EEE", { locale: dateLocale })}
+                    </b>
+                    <span>{format(new Date(`${event.tarix}T12:00:00`), "d")}</span>
+                  </time>
                   <span className="student-home-schedule__line" />
                   <div>
                     <strong>{event.courses?.ad ?? event.baslıq}</strong>
                     <span>
-                      {[c.lesson, event.courses?.otaq ? `${c.room} ${event.courses.otaq}` : null]
+                      {[
+                        c.lesson,
+                        `${event.baslangic_saat.slice(0, 5)}–${event.bitme_saat.slice(0, 5)}`,
+                        event.courses?.otaq ? `${c.room} ${event.courses.otaq}` : null,
+                      ]
                         .filter(Boolean)
                         .join(" · ")}
                     </span>
@@ -493,23 +518,29 @@ export function StudentDashboard({ userId }: { userId: string }) {
         </section>
 
         <div className="student-home-side">
-          <section className="student-home-card student-home-summary">
-            <CardHeading title={c.summary as string} />
-            <SummaryRow
-              icon={<GraduationCap />}
-              label={c.group as string}
-              value={profile?.qrup || "—"}
-            />
-            <SummaryRow
-              icon={<CheckCircle2 />}
-              label={c.average as string}
-              value={average == null ? "—" : average.toFixed(1)}
-            />
-            <SummaryRow
-              icon={<BellRing />}
-              label={c.notices as string}
-              value={String(unreadCount)}
-            />
+          <section className="student-home-card student-home-finance">
+            <CardHeading title={c.finance as string} />
+            {profile?.tehsil_haqqi != null || profile?.tehsil_haqqi_statusu ? (
+              <div className="student-home-finance__content">
+                <span className="student-home-finance__icon">
+                  <WalletCards />
+                </span>
+                {profile.tehsil_haqqi != null ? (
+                  <div className="student-home-finance__amount">
+                    <strong>{profile.tehsil_haqqi.toLocaleString(locale)} AZN</strong>
+                    <span>{c.tuition as string}</span>
+                  </div>
+                ) : null}
+                {profile.tehsil_haqqi_statusu ? (
+                  <div className="student-home-finance__status">
+                    <small>{c.financeStatus as string}</small>
+                    <strong>{profile.tehsil_haqqi_statusu}</strong>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <Empty icon={<WalletCards />} label={c.noFinance as string} />
+            )}
           </section>
           <section className="student-home-card student-home-chat">
             <CardHeading
@@ -543,18 +574,18 @@ export function StudentDashboard({ userId }: { userId: string }) {
             )}
           </section>
         </div>
-      </div>
 
-      <section className="student-home-card student-home-services">
-        <CardHeading title={c.services as string} />
-        <div className="student-home-services__grid">
-          <Service to="/elektron-jurnal" icon={<BookOpen />} label={c.journal as string} />
-          <Service to="/imtahanlar" icon={<CalendarDays />} label={c.exams as string} />
-          <Service to="/ofis" icon={<FileText />} label={c.office as string} />
-          <Service to="/kitabxana" icon={<Library />} label={c.library as string} />
-          <Service to="/ofis" icon={<Building2 />} label={c.studentOffice as string} />
-        </div>
-      </section>
+        <section className="student-home-card student-home-services">
+          <CardHeading title={c.services as string} />
+          <div className="student-home-services__grid">
+            <Service to="/elektron-jurnal" icon={<BookOpen />} label={c.journal as string} />
+            <Service to="/imtahanlar" icon={<CalendarDays />} label={c.exams as string} />
+            <Service to="/ofis" icon={<FileText />} label={c.office as string} />
+            <Service to="/kitabxana" icon={<Library />} label={c.library as string} />
+            <Service to="/ofis" icon={<Building2 />} label={c.studentOffice as string} />
+          </div>
+        </section>
+      </div>
 
       <section
         className="student-home-innovation"
@@ -599,18 +630,6 @@ function Metric({ value, label, tone }: { value: number; label: string; tone?: s
     <div className={tone ? `is-${tone}` : ""}>
       <strong>{value}</strong>
       <span>{label}</span>
-    </div>
-  );
-}
-
-function SummaryRow({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
-  return (
-    <div className="student-home-summary__row">
-      <span>{icon}</span>
-      <p>
-        <small>{label}</small>
-        <strong>{value}</strong>
-      </p>
     </div>
   );
 }
