@@ -1,7 +1,6 @@
 import { BookMarked } from "lucide-react";
 
 import type { Database } from "@/integrations/supabase/types";
-import { usePageI18n } from "@/lib/i18n-extra";
 
 export type LibraryBook = Database["public"]["Tables"]["library_books"]["Row"];
 
@@ -14,10 +13,6 @@ export function BookCard({
   yeni?: boolean;
   onClick: () => void;
 }) {
-  const { locale } = usePageI18n();
-  const newLabel =
-    locale === "tr" ? "Yeni" : locale === "en" ? "New" : locale === "ru" ? "Новое" : "Yeni";
-
   return (
     <button
       type="button"
@@ -45,20 +40,14 @@ export function BookCard({
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/22 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         {yeni ? (
           <span className="absolute left-2.5 top-2.5 rounded-full border border-white/20 bg-primary px-2 py-1 text-[11px] font-extrabold uppercase tracking-[0.08em] text-primary-foreground shadow-sm">
-            {newLabel}
+            Yeni
           </span>
         ) : null}
       </div>
       <p className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary">
         {kitab.ad}
       </p>
-      <p className="library-book-card__author mt-1 line-clamp-1 text-xs text-muted-foreground">
-        {kitab.muellif}
-      </p>
-      <div className="library-book-card__meta" aria-label={`${kitab.format}, ${kitab.kateqoriya}`}>
-        <span>{kitab.format}</span>
-        <span>{kitab.kateqoriya}</span>
-      </div>
+      <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{kitab.muellif}</p>
     </button>
   );
 }

@@ -41,7 +41,7 @@ function KitabxanaSehifesi() {
   const [modalAçıq, setModalAçıq] = useState(false);
   const axtarisAktivdir = axtaris.trim().length > 0;
   const siyahiRejimi = axtarisAktivdir || !!kateqoriya;
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["library-books-list", axtaris, kateqoriya, sehife],
     queryFn: async () => {
       const basdan = (sehife - 1) * SEHIFE_OLCUSU;
@@ -77,7 +77,7 @@ function KitabxanaSehifesi() {
     setModalAçıq(true);
   }
   return (
-    <div className="library-redesign-page flex flex-1 flex-col gap-4 pb-20 md:gap-5 md:pb-0">
+    <div className="flex flex-1 flex-col gap-4 pb-20 md:gap-5 md:pb-0">
       {siyahiRejimi ? (
         <PageHeader
           baslıq={axtarisAktivdir ? t("library.searchResults") : (kateqoriya ?? t("library.title"))}
@@ -102,8 +102,6 @@ function KitabxanaSehifesi() {
           <BookResultsGrid
             kitablar={kitablar}
             yuklenir={isLoading}
-            xetaVar={isError}
-            onYenidenCeht={() => void refetch()}
             sehife={sehife}
             sehifeSayi={sehifeSayi}
             onSehifeDeyis={setSehife}
