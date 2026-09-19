@@ -87,7 +87,6 @@ function RootShell({ children }: { children: ReactNode }) {
       min-width: 0;
       max-width: 100%;
       margin: 0;
-      overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
