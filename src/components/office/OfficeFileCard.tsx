@@ -1,5 +1,5 @@
-import { az } from "date-fns/locale";
 import { formatDistanceToNow } from "date-fns";
+import { az, enUS, ru, tr } from "date-fns/locale";
 import { Download, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -39,14 +39,51 @@ export function OfficeFileCard({
 }) {
   const [tesdiqAcıq, setTesdiqAcıq] = useState(false);
   const { locale } = usePageI18n();
-  const labels = locale === "tr" ? { download: "İndir", remove: "Sil", confirm: "Dosyayı silmeyi onaylayın", cancel: "İptal", yes: "Evet, sil" } : locale === "en" ? { download: "Download", remove: "Delete", confirm: "Confirm file deletion", cancel: "Cancel", yes: "Yes, delete" } : locale === "ru" ? { download: "Скачать", remove: "Удалить", confirm: "Подтвердите удаление файла", cancel: "Отмена", yes: "Да, удалить" } : { download: "Yüklə", remove: "Sil", confirm: "Faylı silməyi təsdiqləyin", cancel: "İmtina", yes: "Bəli, sil" };
+  const labels =
+    locale === "tr"
+      ? {
+          download: "İndir",
+          remove: "Sil",
+          confirm: "Dosyayı silmeyi onaylayın",
+          cancel: "İptal",
+          yes: "Evet, sil",
+        }
+      : locale === "en"
+        ? {
+            download: "Download",
+            remove: "Delete",
+            confirm: "Confirm file deletion",
+            cancel: "Cancel",
+            yes: "Yes, delete",
+          }
+        : locale === "ru"
+          ? {
+              download: "Скачать",
+              remove: "Удалить",
+              confirm: "Подтвердите удаление файла",
+              cancel: "Отмена",
+              yes: "Да, удалить",
+            }
+          : {
+              download: "Yüklə",
+              remove: "Sil",
+              confirm: "Faylı silməyi təsdiqləyin",
+              cancel: "İmtina",
+              yes: "Bəli, sil",
+            };
   const nov = faylNovunuTeyinEt(fayl.fayl_novu);
   const Ikon = faylIkonuAl(nov);
+  const dateLocale = locale === "tr" ? tr : locale === "en" ? enUS : locale === "ru" ? ru : az;
 
   return (
     <div className="office-file-card flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border/60">
       <div className="flex items-start gap-3">
-        <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl", faylRengiAl(nov))}>
+        <div
+          className={cn(
+            "flex size-11 shrink-0 items-center justify-center rounded-xl",
+            faylRengiAl(nov),
+          )}
+        >
           <Ikon className="size-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -54,8 +91,8 @@ export function OfficeFileCard({
             {fayl.ad}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            {olcuFormatla(fayl.olcusu)} ·{" "}
-            {formatDistanceToNow(new Date(fayl.tarix), { addSuffix: true, locale: az })}
+            {nov.toUpperCase()} · {olcuFormatla(fayl.olcusu)} ·{" "}
+            {formatDistanceToNow(new Date(fayl.tarix), { addSuffix: true, locale: dateLocale })}
           </p>
         </div>
       </div>
@@ -85,7 +122,11 @@ export function OfficeFileCard({
             onClick={() => setTesdiqAcıq(true)}
             className="gap-1.5 rounded-xl font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
-            {silinir ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+            {silinir ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Trash2 className="size-3.5" />
+            )}
             {labels.remove}
           </Button>
         ) : null}

@@ -23,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { OFIS_BUCKET, olcuFormatla } from "@/lib/office-files";
 import { usePageI18n } from "@/lib/i18n-extra";
 import "@/office-notifications-redesign.css";
+import "@/library-office-content-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/ofis")({
   head: () => ({
@@ -58,9 +59,14 @@ const OFFICE_COPY = {
     storage: "Görünən həcm",
     support: "Dəstək",
     supportText: "Əlavə müraciət və ya texniki yardım üçün yardım mərkəzindən istifadə edin.",
-    backendNote: "Hazırkı Ofis modulu rəqəmsal faylların yüklənməsi, axtarışı, endirilməsi və icazəli silinməsini dəstəkləyir. Müraciət, transkript sifarişi və dəstək bileti üçün ayrıca backend müqaviləsi bu modulda mövcud deyil.",
+    backendNote:
+      "Hazırkı Ofis modulu rəqəmsal faylların yüklənməsi, axtarışı, endirilməsi və icazəli silinməsini dəstəkləyir. Müraciət, transkript sifarişi və dəstək bileti üçün ayrıca backend müqaviləsi bu modulda mövcud deyil.",
     noFiles: "Ofis sənədi yoxdur",
     searchPlaceholder: "Sənəd adında axtar...",
+    noSearchResults: "Axtarışa uyğun sənəd tapılmadı.",
+    clearSearch: "Axtarışı sıfırla",
+    loadError: "Sənədləri yükləmək mümkün olmadı.",
+    retry: "Yenidən cəhd et",
   },
   tr: {
     title: "Ofis hizmetleri",
@@ -83,9 +89,14 @@ const OFFICE_COPY = {
     storage: "Görünen boyut",
     support: "Destek",
     supportText: "Ek yardım için destek merkezini kullanın.",
-    backendNote: "Mevcut Ofis modülü dijital dosya yükleme, arama, indirme ve izinli silmeyi destekler. Başvuru, transkript siparişi ve destek bileti için ayrı bir backend sözleşmesi bu modülde yoktur.",
+    backendNote:
+      "Mevcut Ofis modülü dijital dosya yükleme, arama, indirme ve izinli silmeyi destekler. Başvuru, transkript siparişi ve destek bileti için ayrı bir backend sözleşmesi bu modülde yoktur.",
     noFiles: "Ofis belgesi yok",
     searchPlaceholder: "Belge adında ara...",
+    noSearchResults: "Aramayla eşleşen belge bulunamadı.",
+    clearSearch: "Aramayı temizle",
+    loadError: "Belgeler yüklenemedi.",
+    retry: "Tekrar dene",
   },
   en: {
     title: "Office services",
@@ -108,9 +119,14 @@ const OFFICE_COPY = {
     storage: "Visible size",
     support: "Support",
     supportText: "Use the help center for additional assistance.",
-    backendNote: "The current Office module supports digital file upload, search, download and permitted deletion. This module does not currently expose a separate backend contract for applications, transcript orders or support tickets.",
+    backendNote:
+      "The current Office module supports digital file upload, search, download and permitted deletion. This module does not currently expose a separate backend contract for applications, transcript orders or support tickets.",
     noFiles: "No office documents",
     searchPlaceholder: "Search document names...",
+    noSearchResults: "No documents match your search.",
+    clearSearch: "Clear search",
+    loadError: "Documents could not be loaded.",
+    retry: "Try again",
   },
   ru: {
     title: "Офисные услуги",
@@ -133,9 +149,14 @@ const OFFICE_COPY = {
     storage: "Объём",
     support: "Поддержка",
     supportText: "Для дополнительной помощи используйте центр поддержки.",
-    backendNote: "Текущий модуль «Офис» поддерживает загрузку, поиск, скачивание и разрешённое удаление цифровых файлов. Отдельного backend-контракта для заявлений, заказа транскрипта или тикетов поддержки в этом модуле нет.",
+    backendNote:
+      "Текущий модуль «Офис» поддерживает загрузку, поиск, скачивание и разрешённое удаление цифровых файлов. Отдельного backend-контракта для заявлений, заказа транскрипта или тикетов поддержки в этом модуле нет.",
     noFiles: "Офисных документов нет",
     searchPlaceholder: "Поиск по названию документа...",
+    noSearchResults: "Документы по вашему запросу не найдены.",
+    clearSearch: "Очистить поиск",
+    loadError: "Не удалось загрузить документы.",
+    retry: "Повторить",
   },
 } as const;
 
@@ -156,7 +177,12 @@ function OfisSehifesi() {
     return () => clearTimeout(timer);
   }, [axtarisDeyeri]);
 
-  const { data: fayllar = [], isLoading } = useQuery({
+  const {
+    data: fayllar = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["ofis-fayllar", axtaris],
     queryFn: async () => {
       let query = supabase.from("office_files").select("*").order("tarix", { ascending: false });
@@ -172,7 +198,9 @@ function OfisSehifesi() {
 
   const silMutasiyasi = useMutation({
     mutationFn: async (fayl: OfisFayli) => {
-      const { error: storageError } = await supabase.storage.from(OFIS_BUCKET).remove([fayl.fayl_url]);
+      const { error: storageError } = await supabase.storage
+        .from(OFIS_BUCKET)
+        .remove([fayl.fayl_url]);
       if (storageError) throw storageError;
       const { error } = await supabase.from("office_files").delete().eq("id", fayl.id);
       if (error) throw error;
@@ -199,8 +227,14 @@ function OfisSehifesi() {
     }
   }
 
-  const mineCount = useMemo(() => fayllar.filter((file) => file.sahib_id === userId).length, [fayllar, userId]);
-  const visibleBytes = useMemo(() => fayllar.reduce((sum, file) => sum + Number(file.olcusu || 0), 0), [fayllar]);
+  const mineCount = useMemo(
+    () => fayllar.filter((file) => file.sahib_id === userId).length,
+    [fayllar, userId],
+  );
+  const visibleBytes = useMemo(
+    () => fayllar.reduce((sum, file) => sum + Number(file.olcusu || 0), 0),
+    [fayllar],
+  );
 
   return (
     <div className="office-redesign-page animate-page-enter">
@@ -211,23 +245,50 @@ function OfisSehifesi() {
           <p>{copy.subtitle}</p>
         </div>
         <blockquote>“{copy.quote}”</blockquote>
-        <span className="office-reference-hero__mark" aria-hidden><FileArchive /></span>
+        <span className="office-reference-hero__mark" aria-hidden>
+          <FileArchive />
+        </span>
       </section>
 
       <section className="office-services">
-        <div className="office-section-heading"><h2>{copy.popular}</h2></div>
+        <div className="office-section-heading">
+          <h2>{copy.popular}</h2>
+        </div>
         <div className="office-service-grid">
           <button type="button" onClick={() => setYukleModalAcıq(true)}>
-            <span><UploadCloud aria-hidden /></span><strong>{copy.upload}</strong><small>{copy.uploadHint}</small><ArrowRight aria-hidden />
+            <span>
+              <UploadCloud aria-hidden />
+            </span>
+            <strong>{copy.upload}</strong>
+            <small>{copy.uploadHint}</small>
+            <ArrowRight aria-hidden />
           </button>
           <button type="button" onClick={() => searchRef.current?.focus()}>
-            <span><FileSearch aria-hidden /></span><strong>{copy.search}</strong><small>{copy.searchHint}</small><ArrowRight aria-hidden />
+            <span>
+              <FileSearch aria-hidden />
+            </span>
+            <strong>{copy.search}</strong>
+            <small>{copy.searchHint}</small>
+            <ArrowRight aria-hidden />
           </button>
-          <button type="button" onClick={() => filesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-            <span><FolderOpen aria-hidden /></span><strong>{copy.files}</strong><small>{copy.filesHint}</small><ArrowRight aria-hidden />
+          <button
+            type="button"
+            onClick={() => filesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          >
+            <span>
+              <FolderOpen aria-hidden />
+            </span>
+            <strong>{copy.files}</strong>
+            <small>{copy.filesHint}</small>
+            <ArrowRight aria-hidden />
           </button>
           <Link to="/menyu/yardim">
-            <span><HelpCircle aria-hidden /></span><strong>{copy.help}</strong><small>{copy.helpHint}</small><ArrowRight aria-hidden />
+            <span>
+              <HelpCircle aria-hidden />
+            </span>
+            <strong>{copy.help}</strong>
+            <small>{copy.helpHint}</small>
+            <ArrowRight aria-hidden />
           </Link>
         </div>
       </section>
@@ -241,14 +302,31 @@ function OfisSehifesi() {
             </div>
             <label>
               <Search aria-hidden />
-              <input ref={searchRef} aria-label={copy.search} placeholder={copy.searchPlaceholder} maxLength={120} value={axtarisDeyeri} onChange={(event) => setAxtarisDeyeri(event.target.value)} />
+              <input
+                ref={searchRef}
+                aria-label={copy.search}
+                placeholder={copy.searchPlaceholder}
+                maxLength={120}
+                value={axtarisDeyeri}
+                onChange={(event) => setAxtarisDeyeri(event.target.value)}
+              />
             </label>
           </div>
 
           <section ref={filesRef} className="office-documents-panel">
             {isLoading ? (
               <div className="office-file-grid">
-                {Array.from({ length: 4 }).map((_, index) => <div key={index} className="office-file-skeleton" />)}
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="office-file-skeleton" />
+                ))}
+              </div>
+            ) : isError ? (
+              <div className="office-content-state" role="alert">
+                <FileX aria-hidden />
+                <p>{copy.loadError}</p>
+                <button type="button" onClick={() => void refetch()}>
+                  {copy.retry}
+                </button>
               </div>
             ) : fayllar.length > 0 ? (
               <div className="office-file-grid animate-stagger">
@@ -265,25 +343,54 @@ function OfisSehifesi() {
                 ))}
               </div>
             ) : (
-              <div className="office-empty"><EmptyState icon={FileX} mesaj={axtaris ? t("library.emptySearch") : copy.noFiles} /></div>
+              <div className="office-empty">
+                <EmptyState icon={FileX} mesaj={axtaris ? copy.noSearchResults : copy.noFiles} />
+                {axtaris ? (
+                  <button
+                    type="button"
+                    className="office-clear-search"
+                    onClick={() => setAxtarisDeyeri("")}
+                  >
+                    {copy.clearSearch}
+                  </button>
+                ) : null}
+              </div>
             )}
           </section>
         </main>
 
         <aside className="office-side-column">
           <section>
-            <div className="office-side-heading"><h3>{copy.overview}</h3><FileText aria-hidden /></div>
-            <div className="office-stat-grid">
-              <div><strong>{fayllar.length}</strong><small>{copy.total}</small></div>
-              <div><strong>{mineCount}</strong><small>{copy.mine}</small></div>
+            <div className="office-side-heading">
+              <h3>{copy.overview}</h3>
+              <FileText aria-hidden />
             </div>
-            <div className="office-storage-stat"><span>{copy.storage}</span><strong>{olcuFormatla(visibleBytes)}</strong></div>
+            <div className="office-stat-grid">
+              <div>
+                <strong>{fayllar.length}</strong>
+                <small>{copy.total}</small>
+              </div>
+              <div>
+                <strong>{mineCount}</strong>
+                <small>{copy.mine}</small>
+              </div>
+            </div>
+            <div className="office-storage-stat">
+              <span>{copy.storage}</span>
+              <strong>{olcuFormatla(visibleBytes)}</strong>
+            </div>
           </section>
 
           <section>
-            <div className="office-side-heading"><h3>{copy.support}</h3><HelpCircle aria-hidden /></div>
+            <div className="office-side-heading">
+              <h3>{copy.support}</h3>
+              <HelpCircle aria-hidden />
+            </div>
             <p className="office-side-copy">{copy.supportText}</p>
-            <Link to="/menyu/yardim" className="office-support-link">{copy.help}<ArrowRight aria-hidden /></Link>
+            <Link to="/menyu/yardim" className="office-support-link">
+              {copy.help}
+              <ArrowRight aria-hidden />
+            </Link>
           </section>
 
           <section className="office-backend-note">

@@ -1,0 +1,732 @@
+/* Enlarged, page-scoped content surfaces for Library and Office. Hero and shell remain untouched. */
+
+.library-redesign-page .library-reference-search {
+  gap: 12px;
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.library-redesign-page .library-reference-search__bar {
+  gap: 12px;
+  border-radius: 14px;
+  padding-left: 18px;
+}
+
+.library-redesign-page .library-reference-search__bar > svg {
+  width: 22px;
+  height: 22px;
+}
+
+.library-redesign-page .library-reference-search__bar input,
+.library-redesign-page .library-reference-search__bar button,
+.library-redesign-page .library-reference-search__advanced {
+  min-height: 56px;
+  font-size: 1rem;
+}
+
+.library-redesign-page .library-reference-search__bar button {
+  min-width: 142px;
+  border-radius: 13px;
+  padding-inline: 24px;
+}
+
+.library-redesign-page .library-reference-search__advanced {
+  gap: 10px;
+  border-radius: 13px;
+  padding-inline: 20px;
+}
+
+.library-redesign-page .library-reference-search__advanced svg {
+  width: 20px;
+  height: 20px;
+}
+
+.library-redesign-page .library-reference-search__bar:focus-within,
+.library-redesign-page .library-reference-search__advanced:focus-visible,
+.library-redesign-page .library-reference-search__categories button:focus-visible,
+.library-redesign-page .library-category-strip__scroller button:focus-visible,
+.library-redesign-page .library-book-card:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 28%, transparent);
+  outline-offset: 3px;
+}
+
+.library-redesign-page .library-reference-search__categories {
+  gap: 10px;
+  padding: 6px 2px 2px;
+}
+
+.library-redesign-page .library-reference-search__categories button {
+  min-height: 44px;
+  border-radius: 12px;
+  padding-inline: 16px;
+  font-size: 0.875rem;
+}
+
+.library-redesign-page .library-category-strip {
+  align-items: flex-start;
+  gap: 18px;
+  border-radius: 20px;
+  padding: 16px 18px;
+}
+
+.library-redesign-page .library-category-strip__heading {
+  gap: 10px;
+  padding-right: 18px;
+}
+
+.library-redesign-page .library-category-strip__heading > span {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+}
+
+.library-redesign-page .library-category-strip__heading svg {
+  width: 20px;
+}
+
+.library-redesign-page .library-category-strip__heading h2 {
+  font-size: clamp(1.25rem, 1.4vw, 1.5rem);
+}
+
+.library-redesign-page .library-category-strip__scroller {
+  flex-wrap: wrap;
+  gap: 10px;
+  overflow: visible;
+}
+
+.library-redesign-page .library-category-strip__scroller button {
+  min-height: 46px;
+  gap: 9px;
+  border-radius: 12px;
+  padding-inline: 14px;
+  font-size: 0.875rem;
+}
+
+.library-redesign-page .library-category-strip__scroller button > span {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.library-redesign-page .library-category-strip__scroller svg {
+  width: 16px;
+  height: 16px;
+}
+
+.library-redesign-page .library-reference-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 25%);
+  gap: 20px;
+}
+
+.library-redesign-page .library-reference-main,
+.library-redesign-page .library-reference-side > section,
+.library-redesign-page .library-reference-overview {
+  border-radius: 22px;
+}
+
+.library-redesign-page .library-reference-main,
+.library-redesign-page .library-reference-overview {
+  padding: clamp(20px, 2vw, 30px);
+}
+
+.library-redesign-page .library-reference-section-heading {
+  margin-bottom: 20px;
+}
+
+.library-redesign-page .library-reference-section-heading > div {
+  gap: 12px;
+}
+
+.library-redesign-page .library-reference-section-heading > div > span {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+}
+
+.library-redesign-page .library-reference-section-heading svg {
+  width: 21px;
+}
+
+.library-redesign-page .library-reference-section-heading h2,
+.library-redesign-page .library-side-heading h3 {
+  font-size: clamp(1.4rem, 1.7vw, 1.75rem);
+}
+
+.library-redesign-page .library-reference-section-heading > small {
+  font-size: 0.875rem;
+}
+
+.library-redesign-page .library-featured-grid,
+.library-redesign-page .library-results-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(16px, 1.4vw, 24px);
+}
+
+.library-redesign-page .library-book-card {
+  min-width: 0;
+  border-radius: 18px;
+  padding: 6px 6px 12px;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.library-redesign-page .library-book-card > p:first-of-type,
+.library-redesign-page .library-featured-grid .library-book-card > p:first-of-type {
+  margin-top: 14px;
+  font-size: 1rem;
+  line-height: 1.42;
+}
+
+.library-redesign-page .library-book-card__author,
+.library-redesign-page .library-featured-grid .library-book-card__author {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.library-book-card__meta {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.library-book-card__meta span {
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 7%, var(--card));
+  padding: 5px 9px;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.library-redesign-page .library-latest-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.library-redesign-page .library-latest-list > button {
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  gap: 12px;
+  min-height: 82px;
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.library-redesign-page .library-latest-list__cover {
+  width: 58px;
+  height: 66px;
+}
+
+.library-redesign-page .library-latest-list__copy strong {
+  font-size: 0.9375rem;
+}
+
+.library-redesign-page .library-latest-list__copy small,
+.library-redesign-page .library-latest-list__format {
+  font-size: 0.75rem;
+}
+
+.library-redesign-page .library-reference-side {
+  gap: 16px;
+}
+
+.library-redesign-page .library-reference-side > section {
+  padding: 22px;
+}
+
+.library-redesign-page .library-side-heading {
+  margin-bottom: 18px;
+}
+
+.library-redesign-page .library-side-stats {
+  gap: 12px;
+}
+
+.library-redesign-page .library-side-stats > div {
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.library-redesign-page .library-side-stats > div > span {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+}
+
+.library-redesign-page .library-side-stats strong {
+  font-size: 1.35rem;
+}
+
+.library-redesign-page .library-side-stats small,
+.library-redesign-page .library-format-summary small,
+.library-redesign-page .library-format-summary strong,
+.library-redesign-page .library-database-note {
+  font-size: 0.875rem;
+}
+
+.library-redesign-page .library-format-summary {
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.library-redesign-page .library-database-note {
+  border-radius: 14px;
+  padding: 16px;
+  line-height: 1.6;
+}
+
+.library-content-state,
+.office-content-state {
+  display: flex;
+  min-height: 260px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.library-content-state > span,
+.office-content-state > svg {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--primary) 9%, var(--card));
+  color: var(--primary);
+  padding: 15px;
+}
+
+.library-content-state p,
+.office-content-state p {
+  max-width: 42ch;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.library-redesign-page .library-category-results__pagination {
+  margin-top: 28px;
+}
+
+.library-redesign-page .library-category-results__pagination > span {
+  font-size: 0.9375rem;
+}
+
+.office-redesign-page .office-services,
+.office-redesign-page .office-main-column,
+.office-redesign-page .office-side-column > section {
+  border-radius: 22px;
+}
+
+.office-redesign-page .office-services {
+  padding: clamp(20px, 2vw, 28px);
+}
+
+.office-redesign-page .office-section-heading {
+  margin-bottom: 18px;
+}
+
+.office-redesign-page .office-section-heading h2,
+.office-redesign-page .office-documents-toolbar h2 {
+  font-size: clamp(1.4rem, 1.7vw, 1.75rem);
+}
+
+.office-redesign-page .office-service-grid {
+  gap: 16px;
+}
+
+.office-redesign-page .office-service-grid > a,
+.office-redesign-page .office-service-grid > button {
+  min-height: 178px;
+  grid-template-columns: 58px minmax(0, 1fr);
+  column-gap: 16px;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.office-redesign-page .office-service-grid > a > span,
+.office-redesign-page .office-service-grid > button > span {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+}
+
+.office-redesign-page .office-service-grid span svg {
+  width: 25px;
+  height: 25px;
+}
+
+.office-redesign-page .office-service-grid strong {
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.office-redesign-page .office-service-grid small {
+  margin-top: 7px;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.office-redesign-page .office-service-grid > a > svg,
+.office-redesign-page .office-service-grid > button > svg {
+  right: 18px;
+  bottom: 18px;
+  width: 20px;
+}
+
+.office-redesign-page .office-service-grid > a:focus-visible,
+.office-redesign-page .office-service-grid > button:focus-visible,
+.office-redesign-page .office-documents-toolbar input:focus-visible,
+.office-redesign-page .office-file-card button:focus-visible,
+.office-redesign-page .office-support-link:focus-visible,
+.office-redesign-page .office-clear-search:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 28%, transparent);
+  outline-offset: 3px;
+}
+
+.office-redesign-page .office-main-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 24%);
+  gap: 20px;
+}
+
+.office-redesign-page .office-main-column {
+  padding: clamp(20px, 2vw, 28px);
+}
+
+.office-redesign-page .office-documents-toolbar {
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.office-redesign-page .office-documents-toolbar p {
+  margin-top: 6px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.office-redesign-page .office-documents-toolbar label {
+  width: min(44%, 420px);
+}
+
+.office-redesign-page .office-documents-toolbar label > svg {
+  left: 16px;
+  width: 20px;
+}
+
+.office-redesign-page .office-documents-toolbar input {
+  height: 54px;
+  border-radius: 14px;
+  padding: 0 16px 0 46px;
+  font-size: 1rem;
+}
+
+.office-redesign-page .office-file-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.office-redesign-page .office-file-card {
+  min-height: 174px;
+  gap: 18px;
+  border-radius: 18px !important;
+  padding: 18px;
+}
+
+.office-redesign-page .office-file-card > div:first-child > div:first-child {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+}
+
+.office-redesign-page .office-file-card > div:first-child > div:first-child svg {
+  width: 24px;
+  height: 24px;
+}
+
+.office-redesign-page .office-file-card p:first-child {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.office-redesign-page .office-file-card p:nth-child(2) {
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.office-redesign-page .office-file-card button {
+  min-height: 44px;
+  font-size: 0.875rem;
+}
+
+.office-redesign-page .office-file-skeleton {
+  height: 174px;
+  border-radius: 18px;
+}
+
+.office-redesign-page .office-empty {
+  min-height: 330px;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.office-clear-search,
+.office-content-state button {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  padding-inline: 18px;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 750;
+}
+
+.office-redesign-page .office-side-column {
+  gap: 16px;
+}
+
+.office-redesign-page .office-side-column > section {
+  padding: 22px;
+}
+
+.office-redesign-page .office-side-heading {
+  margin-bottom: 18px;
+}
+
+.office-redesign-page .office-side-heading h3 {
+  font-size: 1.35rem;
+}
+
+.office-redesign-page .office-side-heading > svg {
+  width: 21px;
+  height: 21px;
+}
+
+.office-redesign-page .office-stat-grid {
+  gap: 12px;
+}
+
+.office-redesign-page .office-stat-grid > div {
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.office-redesign-page .office-stat-grid strong {
+  font-size: 1.65rem;
+}
+
+.office-redesign-page .office-stat-grid small,
+.office-redesign-page .office-storage-stat span,
+.office-redesign-page .office-storage-stat strong,
+.office-redesign-page .office-side-copy,
+.office-redesign-page .office-backend-note p {
+  font-size: 0.875rem;
+}
+
+.office-redesign-page .office-storage-stat {
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.office-redesign-page .office-support-link {
+  min-height: 46px;
+  margin-top: 16px;
+  border-radius: 12px;
+  padding-inline: 16px;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .library-redesign-page .library-featured-grid,
+  .library-redesign-page .library-results-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .library-redesign-page .library-reference-layout,
+  .office-redesign-page .office-main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .library-redesign-page .library-reference-side,
+  .office-redesign-page .office-side-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .library-redesign-page .library-featured-grid,
+  .library-redesign-page .library-results-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991px) {
+  .library-redesign-page .library-reference-layout,
+  .office-redesign-page .office-main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .library-redesign-page .library-reference-side,
+  .office-redesign-page .office-side-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .library-redesign-page .library-reference-search {
+    grid-template-columns: 1fr;
+  }
+
+  .library-redesign-page .library-reference-search__advanced {
+    justify-content: center;
+  }
+
+  .office-redesign-page .office-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .office-redesign-page .office-side-column > section:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 991px) {
+  .library-redesign-page .library-featured-grid,
+  .library-redesign-page .library-results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .library-redesign-page .library-reference-search,
+  .library-redesign-page .library-category-strip,
+  .library-redesign-page .library-reference-main,
+  .library-redesign-page .library-reference-side > section,
+  .office-redesign-page .office-services,
+  .office-redesign-page .office-main-column,
+  .office-redesign-page .office-side-column > section {
+    border-radius: 18px;
+  }
+
+  .library-redesign-page .library-reference-search {
+    padding: 10px;
+  }
+
+  .library-redesign-page .library-reference-search__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 0 10px 10px 14px;
+  }
+
+  .library-redesign-page .library-reference-search__bar input {
+    min-width: 0;
+  }
+
+  .library-redesign-page .library-reference-search__bar button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .library-redesign-page .library-category-strip {
+    display: block;
+    padding: 14px;
+  }
+
+  .library-redesign-page .library-category-strip__heading {
+    margin-bottom: 12px;
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .library-redesign-page .library-category-strip__scroller {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+  }
+
+  .library-redesign-page .library-category-strip__scroller button {
+    scroll-snap-align: start;
+  }
+
+  .library-redesign-page .library-reference-side,
+  .office-redesign-page .office-side-column,
+  .office-redesign-page .office-service-grid,
+  .office-redesign-page .office-file-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .office-redesign-page .office-side-column > section:last-child {
+    grid-column: auto;
+  }
+
+  .library-redesign-page .library-latest-list {
+    grid-template-columns: 1fr;
+  }
+
+  .office-redesign-page .office-services,
+  .office-redesign-page .office-main-column {
+    padding: 16px;
+  }
+
+  .office-redesign-page .office-service-grid > a,
+  .office-redesign-page .office-service-grid > button {
+    min-height: 142px;
+  }
+
+  .office-redesign-page .office-documents-toolbar {
+    align-items: stretch;
+  }
+
+  .office-redesign-page .office-documents-toolbar label {
+    width: 100%;
+  }
+}
+
+@media (max-width: 639px) {
+  .library-redesign-page .library-featured-grid,
+  .library-redesign-page .library-results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .library-redesign-page .library-book-card {
+    width: min(100%, 340px);
+    justify-self: center;
+  }
+}
+
+@media (min-width: 1920px) {
+  .library-redesign-page .library-reference-main,
+  .office-redesign-page .office-main-column {
+    padding: 32px;
+  }
+
+  .library-redesign-page .library-reference-search__bar input,
+  .library-redesign-page .library-reference-search__bar button,
+  .library-redesign-page .library-reference-search__advanced,
+  .office-redesign-page .office-documents-toolbar input {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .library-redesign-page .library-book-card,
+  .office-redesign-page .office-service-grid > a,
+  .office-redesign-page .office-service-grid > button,
+  .office-redesign-page .office-file-card {
+    transition: none !important;
+  }
+}
