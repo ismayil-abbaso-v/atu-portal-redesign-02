@@ -108,6 +108,13 @@ if (/body\s*\{[^}]*min-width:\s*(?:[3-9]\d{2,}|\d{4,})px/i.test(styles)) {
   fail("src/styles.css — body keeps a fixed >=300px minimum width");
 }
 
+const rootRoute = read("src/routes/__root.tsx");
+if (/overflow-x:\s*(?:hidden|clip)/i.test(rootRoute)) {
+  fail(
+    "src/routes/__root.tsx — RootShell globally clips horizontal overflow instead of fixing the responsible component",
+  );
+}
+
 const requiredDocs = [
   "docs/redesign/PROMPT_CONFORMANCE_MATRIX.md",
   "docs/redesign/IMAGE_ASSET_AUDIT.md",
