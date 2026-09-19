@@ -3,7 +3,6 @@ import {
   CheckCheck,
   ChevronRight,
   LogOut,
-  Menu,
   Moon,
   Search,
   Sun,
@@ -27,13 +26,9 @@ import "@/notification-panel.css";
 export function AppHeader({
   name,
   avatarUrl,
-  onMenuClick,
-  mobileMenuOpen = false,
 }: {
   name: string;
   avatarUrl?: string | null;
-  onMenuClick?: () => void;
-  mobileMenuOpen?: boolean;
 }) {
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead } = useNotifications();
   const { t, intlLocale, locale } = useI18n();
@@ -145,21 +140,11 @@ export function AppHeader({
   return (
     <header className="portal-header">
       <div className="portal-header__inner">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <button
-            type="button"
-            aria-label={mobileMenuOpen ? `${t("nav.menu")} — ${t("common.close")}` : t("nav.menu")}
-            aria-expanded={mobileMenuOpen}
-            onClick={() => onMenuClick?.()}
-            className="portal-header__icon-button shrink-0 md:hidden"
-          >
-            {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-
+        <div className="portal-header__leading flex min-w-0 items-center">
           <Link
             to="/ev"
             aria-label={t("app.name")}
-            className="flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+            className="portal-header__mobile-brand flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
           >
             <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary p-1.5">
               <img src={atuLogo} alt="ATU" className="size-full object-contain" />
@@ -181,7 +166,7 @@ export function AppHeader({
           aria-label={t("common.search")}
         />
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="portal-header__actions flex shrink-0 items-center gap-2 sm:gap-3">
           <button
             type="button"
             aria-label={t("common.search")}
@@ -200,7 +185,7 @@ export function AppHeader({
             type="button"
             aria-label={mode === "dark" ? "İşıqlı mövzu" : "Qaranlıq mövzu"}
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
-            className="portal-header__icon-button hidden md:inline-flex"
+            className="portal-header__icon-button portal-header__desktop-action hidden md:inline-flex"
           >
             {mode === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
           </button>
@@ -215,7 +200,7 @@ export function AppHeader({
                 setProfileOpen(false);
                 setOpen((v) => !v);
               }}
-              className="portal-mobile-notification-button relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground shadow-sm transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-11"
+              className="portal-mobile-notification-button portal-header__notification-button relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground shadow-sm transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-11"
             >
               <Bell className={open ? "size-5 text-primary" : "size-5"} />
               {unreadCount > 0 ? (
@@ -346,7 +331,7 @@ export function AppHeader({
                 setOpen(false);
                 setProfileOpen((v) => !v);
               }}
-              className={`portal-mobile-profile-button flex min-w-0 items-center gap-2 rounded-xl border bg-card px-2 py-1.5 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3 ${profileOpen ? "border-primary/25 bg-accent shadow-[0_8px_24px_rgba(61,15,28,0.10)]" : "border-border"}`}
+              className={`portal-mobile-profile-button portal-header__profile-button flex min-w-0 items-center gap-2 rounded-xl border bg-card px-2 py-1.5 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:pr-3 ${profileOpen ? "border-primary/25 bg-accent shadow-[0_8px_24px_rgba(61,15,28,0.10)]" : "border-border"}`}
             >
               <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary text-[11px] font-bold text-primary-foreground sm:size-9 sm:text-xs">
                 {avatarUrl ? (
