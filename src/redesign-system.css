@@ -292,6 +292,7 @@
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   backdrop-filter: blur(18px);
 }
+
 .portal-header__inner {
   display: flex;
   min-height: 72px;
@@ -302,10 +303,16 @@
   margin-inline: auto;
   padding: 0.75rem 1rem;
 }
+
 .portal-header__search {
   display: none;
   width: clamp(430px, 38vw, 520px);
 }
+
+.portal-header__actions {
+  min-width: 0;
+}
+
 .portal-header__icon-button {
   display: inline-flex;
   min-height: 44px;
@@ -316,11 +323,24 @@
   border-radius: 12px;
   background: var(--surface);
   color: var(--text-soft);
+  box-shadow: 0 1px 2px rgb(16 24 40 / 0.035);
+  transition:
+    border-color var(--motion-fast),
+    background-color var(--motion-fast),
+    color var(--motion-fast),
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
 }
+
 .portal-header__icon-button:hover {
-  border-color: var(--border-strong);
-  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 22%, var(--border-strong));
   background: var(--surface-muted);
+  color: var(--primary);
+  box-shadow: 0 5px 16px rgb(50 19 29 / 0.06);
+}
+
+.portal-header__icon-button:active {
+  transform: translateY(1px);
 }
 
 .portal-mobile-bottom-nav {
@@ -611,14 +631,114 @@
     margin-left: 255px;
   }
   .portal-main {
-    padding: 1.75rem 2rem 3rem;
+    padding: 1.5rem 2rem 3rem;
   }
+
+  .portal-header {
+    top: 0;
+    border-bottom: 0;
+    background: transparent;
+    padding: 1rem 1.25rem 0;
+    backdrop-filter: none;
+  }
+
   .portal-header__inner {
-    padding-inline: 2rem;
+    width: 100%;
+    min-height: 74px;
+    max-width: 1600px;
+    gap: 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 88%, transparent);
+    border-radius: 22px;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface) 98%, var(--primary) 2%) 0%,
+        color-mix(in srgb, var(--surface) 96%, transparent) 100%
+      );
+    padding: 0.65rem 0.7rem 0.65rem 0.9rem;
+    box-shadow:
+      0 14px 38px rgb(50 19 29 / 0.075),
+      0 2px 8px rgb(50 19 29 / 0.035),
+      inset 0 1px 0 rgb(255 255 255 / 0.5);
+    backdrop-filter: blur(20px);
   }
+
+  .portal-header__leading {
+    display: none !important;
+  }
+
+  .portal-header__mobile-menu-button,
+  .portal-mobile-search-toggle {
+    display: none !important;
+  }
+
   .portal-header__search {
-    display: block;
+    display: flex;
+    min-width: 320px;
+    width: min(54vw, 720px);
+    min-height: 50px;
+    flex: 1 1 640px;
+    max-width: 720px;
+    border-color: color-mix(in srgb, var(--border-subtle) 90%, transparent);
+    border-radius: 15px;
+    background: color-mix(in srgb, var(--surface-muted) 78%, var(--surface));
+    padding-inline: 1rem;
   }
+
+  .portal-header__search:hover {
+    border-color: color-mix(in srgb, var(--primary) 16%, var(--border-strong));
+    background: color-mix(in srgb, var(--surface-muted) 62%, var(--surface));
+  }
+
+  .portal-header__search:focus-within {
+    border-color: color-mix(in srgb, var(--primary) 38%, var(--border-strong));
+    background: var(--surface);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--primary) 9%, transparent),
+      0 7px 20px rgb(50 19 29 / 0.045);
+  }
+
+  .portal-header__search .portal-search__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .portal-header__search .portal-search__input {
+    font-size: 0.95rem;
+  }
+
+  .portal-header__actions {
+    gap: 0.55rem !important;
+    margin-left: auto;
+  }
+
+  .portal-header__desktop-action,
+  .portal-header__notification-button {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 14px;
+  }
+
+  .portal-header__profile-button {
+    min-height: 50px;
+    border-radius: 15px;
+    padding: 0.3rem 0.65rem 0.3rem 0.35rem;
+    border-color: color-mix(in srgb, var(--border-subtle) 92%, transparent);
+    background: color-mix(in srgb, var(--surface) 98%, transparent);
+  }
+
+  .portal-header__profile-button:hover {
+    border-color: color-mix(in srgb, var(--primary) 18%, var(--border-strong));
+    background: var(--surface);
+    box-shadow: 0 8px 22px rgb(50 19 29 / 0.065);
+  }
+
+  .portal-header__profile-button > span:first-child {
+    border-radius: 12px;
+  }
+
   .portal-mobile-bottom-nav {
     display: none;
   }
