@@ -62,7 +62,7 @@ Until those inputs exist, Prompt 15 is **engineering-complete but visual accepta
 
 ## Prompt 17 final conformance update — 2026-09-19
 
-Prompt 17 re-audited the current target after Prompts 14–16 and found one source-level inconsistency: the base `src/styles.css` still imposed `body { min-width: 320px; }` even though the responsive audit described the root minimum width as removed. The final remediation changes that base rule to `min-width: 0`; mobile-specific containment remains component-scoped.
+Prompt 17 re-audited the current target after Prompts 14–16 and closed two source-level responsive inconsistencies: the base `src/styles.css` still imposed `body { min-width: 320px; }`, and `src/routes/__root.tsx` still globally hid horizontal overflow on `html, body`. The final remediation changes the base minimum width to `0` and removes the RootShell clipping workaround. Intentional horizontal scrolling/containment remains component-scoped, so overflow defects cannot be hidden globally.
 
 The final browser verdict remains **BLOCKED**, not PASS. GitHub reports a successful Vercel status on the Prompt 16 parent commit, but the connected Vercel API currently returns no discoverable project and no retrievable deployment URL. The repository also contains no safe authenticated QA identity and no machine-readable original reference fixture set. Therefore no new 1536×864, tablet or mobile screenshot/pixel-diff claim is fabricated.
 
