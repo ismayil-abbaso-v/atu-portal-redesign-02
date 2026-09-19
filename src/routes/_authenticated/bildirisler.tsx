@@ -2,9 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNow, isToday } from "date-fns";
 import { az, enUS, ru, tr } from "date-fns/locale";
-import { Bell, BellDot, BellOff, CheckCheck, Megaphone, Search, SlidersHorizontal } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  BellDot,
+  BellOff,
+  CalendarDays,
+  CheckCheck,
+  ChevronRight,
+  Megaphone,
+  Search,
+  Settings2,
+  SlidersHorizontal,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import notificationsHero from "@/assets/notifications-hero.svg";
 import { AnnouncementCard } from "@/components/announcements/AnnouncementCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,15 +35,14 @@ import { cn } from "@/lib/utils";
 import "@/announcements-premium.css";
 import "@/notifications-premium.css";
 import "@/notifications-hub-refinement.css";
+import "@/office-notifications-redesign.css";
 
-type HubTab = "announcements" | "notifications";
-type BildirislerSearch = { tab?: HubTab };
+type HubView = "all" | "announcements" | "system" | "warnings" | "reminders";
+type BildirislerSearch = { tab?: "announcements" | "notifications" };
 
 export const Route = createFileRoute("/_authenticated/bildirisler")({
   validateSearch: (search: Record<string, unknown>): BildirislerSearch =>
-    search.tab === "notifications" || search.tab === "announcements"
-      ? { tab: search.tab }
-      : {},
+    search.tab === "notifications" || search.tab === "announcements" ? { tab: search.tab } : {},
   head: () => ({
     meta: [
       { title: "ATU Portal" },
@@ -42,39 +54,102 @@ export const Route = createFileRoute("/_authenticated/bildirisler")({
   component: BildirislerSehifesi,
 });
 
+const HUB_COPY = {
+  az: {
+    title: "Bildirişlər",
+    subtitle: "Vacib yeniliklərdən daim xəbərdar olun və heç bir fürsəti qaçırmayın!",
+    quote: "Məlumatlı tələbə daha güclü gələcək qurur.",
+    all: "Bütün bildirişlər",
+    announcements: "Elanlar",
+    system: "Sistem bildirişləri",
+    warnings: "Xəbərdarlıqlar",
+    reminders: "Xatırlatmalar",
+    stats: "Qısa statistika",
+    unread: "Oxunmamış",
+    systemCount: "Sistem",
+    reminderCount: "Xatırlatma",
+    settings: "Bildiriş ayarları",
+    settingsHint: "Bildiriş seçimlərinizi Menyu bölməsindən idarə edin.",
+    category: "Kateqoriya",
+  },
+  tr: {
+    title: "Bildirimler",
+    subtitle: "Önemli gelişmeleri takip edin ve hiçbir fırsatı kaçırmayın.",
+    quote: "Bilgili öğrenci daha güçlü bir gelecek kurar.",
+    all: "Tüm bildirimler",
+    announcements: "Duyurular",
+    system: "Sistem bildirimleri",
+    warnings: "Uyarılar",
+    reminders: "Hatırlatmalar",
+    stats: "Kısa istatistik",
+    unread: "Okunmamış",
+    systemCount: "Sistem",
+    reminderCount: "Hatırlatma",
+    settings: "Bildirim ayarları",
+    settingsHint: "Bildirim tercihlerinizi Menü bölümünden yönetin.",
+    category: "Kategori",
+  },
+  en: {
+    title: "Notifications",
+    subtitle: "Stay informed about important updates and do not miss opportunities.",
+    quote: "An informed student builds a stronger future.",
+    all: "All notifications",
+    announcements: "Announcements",
+    system: "System notifications",
+    warnings: "Warnings",
+    reminders: "Reminders",
+    stats: "Quick statistics",
+    unread: "Unread",
+    systemCount: "System",
+    reminderCount: "Reminders",
+    settings: "Notification settings",
+    settingsHint: "Manage notification preferences from Menu.",
+    category: "Category",
+  },
+  ru: {
+    title: "Уведомления",
+    subtitle: "Следите за важными обновлениями и не упускайте возможности.",
+    quote: "Информированный студент строит более сильное будущее.",
+    all: "Все уведомления",
+    announcements: "Объявления",
+    system: "Системные",
+    warnings: "Предупреждения",
+    reminders: "Напоминания",
+    stats: "Краткая статистика",
+    unread: "Непрочитанные",
+    systemCount: "Системные",
+    reminderCount: "Напоминания",
+    settings: "Настройки уведомлений",
+    settingsHint: "Управляйте уведомлениями в разделе Меню.",
+    category: "Категория",
+  },
+} as const;
+
 function BildirisTarixi({ tarix }: { tarix: string }) {
   const { locale } = useNotificationHubI18n();
-  const d = new Date(tarix);
+  const date = new Date(tarix);
   const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
-  return <span>{isToday(d) ? formatDistanceToNow(d, { addSuffix: true, locale: dateLocale }) : format(d, "d MMMM, HH:mm", { locale: dateLocale })}</span>;
+  return <span>{isToday(date) ? formatDistanceToNow(date, { addSuffix: true, locale: dateLocale }) : format(date, "d MMMM, HH:mm", { locale: dateLocale })}</span>;
 }
 
 function BildirisSetri({ bildiris, onOxu, index }: { bildiris: Notification; onOxu: (id: string) => void; index: number }) {
-  const { icon: Icon, renk, fon } = bildirisKonfiqurasiyasiniAl(bildiris.tip);
-  const oxunmamis = !bildiris.oxunub_mu;
+  const { icon: Icon, etiket } = bildirisKonfiqurasiyasiniAl(bildiris.tip);
+  const unread = !bildiris.oxunub_mu;
 
   return (
-    <li className="notifications-row" style={{ animationDelay: `${70 + index * 55}ms` }}>
-      <button
-        type="button"
-        onClick={() => oxunmamis && onOxu(bildiris.id)}
-        className={cn(
-          "notifications-row__button",
-          oxunmamis ? "notifications-row__button--unread" : "notifications-row__button--read",
-        )}
-      >
-        {oxunmamis ? <span aria-hidden className="notifications-row__edge" /> : null}
-        <span className={cn("mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-xl", fon, renk)}>
-          <Icon className="size-5" />
+    <li className={cn("notification-reference-row", unread && "is-unread")} style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}>
+      <button type="button" onClick={() => unread && onOxu(bildiris.id)} className="notification-reference-row__button">
+        <span className="notification-reference-row__check" aria-hidden />
+        <span className="notification-reference-row__icon"><Icon aria-hidden /></span>
+        <span className="notification-reference-row__body">
+          <span className="notification-reference-row__top">
+            <strong>{bildiris.baslıq}</strong>
+            <time><BildirisTarixi tarix={bildiris.tarix} /></time>
+          </span>
+          {bildiris.metin ? <span className="notification-reference-row__preview">{bildiris.metin}</span> : null}
+          <span className="notification-reference-row__meta"><span>{etiket}</span>{unread ? <i aria-label="Unread" /> : null}</span>
         </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-sm font-bold text-foreground">{bildiris.baslıq}</p>
-            {oxunmamis ? <span className="mt-1 size-2 shrink-0 rounded-full bg-primary" aria-hidden /> : null}
-          </div>
-          {bildiris.metin ? <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{bildiris.metin}</p> : null}
-          <p className="mt-1.5 text-xs text-muted-foreground/80"><BildirisTarixi tarix={bildiris.tarix} /></p>
-        </div>
+        <ChevronRight aria-hidden className="notification-reference-row__arrow" />
       </button>
     </li>
   );
@@ -83,95 +158,53 @@ function BildirisSetri({ bildiris, onOxu, index }: { bildiris: Notification; onO
 function BildirislerSehifesi() {
   const { locale, t } = useNotificationHubI18n();
   const { tab } = Route.useSearch();
-  const [activeTab, setActiveTab] = useState<HubTab>(tab ?? "announcements");
+  const copy = HUB_COPY[locale as keyof typeof HUB_COPY] ?? HUB_COPY.az;
+  const [activeView, setActiveView] = useState<HubView>(tab === "announcements" ? "announcements" : "all");
 
   useEffect(() => {
-    document.title = `${t("hub.title")} — ATU Portal`;
+    document.title = `${copy.title} — ATU Portal`;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
-    meta.content = t("hub.subtitle");
-  }, [locale, t]);
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      document.head.appendChild(meta);
+    }
+    meta.content = copy.subtitle;
+  }, [copy]);
 
   useEffect(() => {
-    setActiveTab(tab ?? "announcements");
+    setActiveView(tab === "announcements" ? "announcements" : "all");
   }, [tab]);
 
+  const tabs = [
+    { id: "all" as const, label: copy.all, icon: Bell },
+    { id: "announcements" as const, label: copy.announcements, icon: Megaphone },
+    { id: "system" as const, label: copy.system, icon: Settings2 },
+    { id: "warnings" as const, label: copy.warnings, icon: AlertTriangle },
+    { id: "reminders" as const, label: copy.reminders, icon: CalendarDays },
+  ];
+
   return (
-    <div className="notifications-page">
-      <section className="notifications-hero">
-        <span aria-hidden className="notifications-hero__pattern" />
-        <span aria-hidden className="notifications-hero__glow notifications-hero__glow--one" />
-        <span aria-hidden className="notifications-hero__glow notifications-hero__glow--two" />
-        <span aria-hidden className="notifications-hero__accent" />
-        <span aria-hidden className="notifications-hero__sweep" />
-
-        <div className="notifications-hero__layout">
-          <div className="notifications-hero__copy">
-            <div className="notifications-hero__eyebrow">
-              <span aria-hidden className="notifications-hero__pulse" />
-              {t("hub.infoCenter")}
-            </div>
-            <h1 className="notifications-hero__title">{t("hub.title")}</h1>
-            <p className="notifications-hero__subtitle">
-              {t("hub.subtitle")}
-            </p>
-          </div>
-
-          <div className="notifications-hero__visual" aria-hidden>
-            <span className="notifications-hub__halo" />
-            <span className="notifications-hub__core" />
-            <span className="notifications-hub__orbit notifications-hub__orbit--one" />
-            <span className="notifications-hub__orbit notifications-hub__orbit--two" />
-            <span className="notifications-hub__node notifications-hub__node--one" />
-            <span className="notifications-hub__node notifications-hub__node--two" />
-            <span className="notifications-hub__node notifications-hub__node--three" />
-            <span className="notifications-hero__bell">
-              {activeTab === "announcements" ? <Megaphone className="size-8" /> : <Bell className="size-8" />}
-            </span>
-          </div>
+    <div className="notification-redesign-page animate-page-enter">
+      <section className="notification-reference-hero" style={{ backgroundImage: `url(${notificationsHero})` }}>
+        <div className="notification-reference-hero__shade" aria-hidden />
+        <div className="notification-reference-hero__copy">
+          <h1>{copy.title}</h1>
+          <p>{copy.subtitle}</p>
         </div>
+        <blockquote>“{copy.quote}”</blockquote>
+        <span className="notification-reference-hero__mark" aria-hidden><Bell /></span>
       </section>
 
-      <div
-        role="tablist"
-        aria-label={t("hub.sectionsAria")}
-        className="mb-5 grid grid-cols-2 gap-1.5 rounded-[22px] border border-border bg-card p-1.5 shadow-sm"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "announcements"}
-          aria-controls="announcements-panel"
-          onClick={() => setActiveTab("announcements")}
-          className={cn(
-            "flex min-h-12 items-center justify-center gap-2 rounded-[16px] px-3 text-sm font-bold transition-[background-color,color,box-shadow] duration-200",
-            activeTab === "announcements"
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
-          )}
-        >
-          <Megaphone className="size-4" />
-          <span>{t("hub.announcements")}</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "notifications"}
-          aria-controls="notifications-panel"
-          onClick={() => setActiveTab("notifications")}
-          className={cn(
-            "flex min-h-12 items-center justify-center gap-2 rounded-[16px] px-3 text-sm font-bold transition-[background-color,color,box-shadow] duration-200",
-            activeTab === "notifications"
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
-          )}
-        >
-          <Bell className="size-4" />
-          <span>{t("hub.notifications")}</span>
-        </button>
+      <div className="notification-category-tabs" role="tablist" aria-label={t("hub.sectionsAria")}>
+        {tabs.map(({ id, label, icon: Icon }) => (
+          <button key={id} type="button" role="tab" aria-selected={activeView === id} className={activeView === id ? "is-active" : ""} onClick={() => setActiveView(id)}>
+            <Icon aria-hidden /><span>{label}</span>
+          </button>
+        ))}
       </div>
 
-      {activeTab === "announcements" ? <AnnouncementsPanel /> : <NotificationsPanel />}
+      {activeView === "announcements" ? <AnnouncementsPanel /> : <NotificationsPanel view={activeView} />}
     </div>
   );
 }
@@ -234,19 +267,17 @@ function AnnouncementsPanel() {
         void queryClient.invalidateQueries({ queryKey: ["student-announcement-reads", userId] });
       })
       .subscribe();
-    return () => { void supabase.removeChannel(channel); };
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
   }, [queryClient, userId]);
 
-  const announcementItems = useMemo(
-    () => Array.isArray(announcementsQuery.data) ? announcementsQuery.data : [],
-    [announcementsQuery.data],
-  );
-  const readItems = useMemo(
-    () => Array.isArray(readsQuery.data) ? readsQuery.data : [],
-    [readsQuery.data],
-  );
+  const announcementItems = useMemo(() => Array.isArray(announcementsQuery.data) ? announcementsQuery.data : [], [announcementsQuery.data]);
+  const readItems = useMemo(() => Array.isArray(readsQuery.data) ? readsQuery.data : [], [readsQuery.data]);
   const readIds = useMemo(() => new Set(readItems.map((item) => item.announcement_id)), [readItems]);
   const searchLocale = locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
+
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase(searchLocale);
     return announcementItems.filter((item) => {
@@ -261,29 +292,17 @@ function AnnouncementsPanel() {
   const standard = filtered.filter((item) => !item.is_featured);
 
   return (
-    <section id="announcements-panel" role="tabpanel" className="announcement-shell pb-8">
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
-        <div className="announcement-admin-stat">
-          <span className="text-[10px] font-extrabold uppercase tracking-[.12em] text-muted-foreground">{t("announcements.active")}</span>
-          <div className="mt-1.5 flex items-end gap-2"><b className="font-data text-2xl text-foreground">{announcementItems.length}</b><Megaphone className="mb-1 size-4 text-primary" /></div>
-        </div>
-        <div className="announcement-admin-stat">
-          <span className="text-[10px] font-extrabold uppercase tracking-[.12em] text-muted-foreground">{t("announcements.unread")}</span>
-          <div className="mt-1.5 flex items-end gap-2"><b className="font-data text-2xl text-foreground">{unreadCount}</b><BellDot className="mb-1 size-4 text-primary" /></div>
-        </div>
-        <div className="announcement-admin-stat">
-          <span className="text-[10px] font-extrabold uppercase tracking-[.12em] text-muted-foreground">{t("announcements.featured")}</span>
-          <div className="mt-1.5 flex items-end gap-2"><b className="font-data text-2xl text-foreground">{featured.length}</b><SlidersHorizontal className="mb-1 size-4 text-primary" /></div>
-        </div>
+    <section id="announcements-panel" role="tabpanel" className="announcement-reference-panel">
+      <div className="announcement-reference-stats">
+        <div><span><Megaphone aria-hidden /></span><p><strong>{announcementItems.length}</strong><small>{t("announcements.active")}</small></p></div>
+        <div><span><BellDot aria-hidden /></span><p><strong>{unreadCount}</strong><small>{t("announcements.unread")}</small></p></div>
+        <div><span><SlidersHorizontal aria-hidden /></span><p><strong>{featured.length}</strong><small>{t("announcements.featured")}</small></p></div>
       </div>
 
-      <div className="mb-5 flex flex-col gap-3 rounded-3xl border border-border bg-card p-3 shadow-sm sm:flex-row sm:items-center sm:p-4">
-        <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("announcements.searchPlaceholder")} className="rounded-2xl pl-9" />
-        </div>
+      <div className="announcement-reference-filters">
+        <label><Search aria-hidden /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("announcements.searchPlaceholder")} /></label>
         <Select value={category} onValueChange={(value) => setCategory(value as "all" | AnnouncementCategory)}>
-          <SelectTrigger className="w-full rounded-2xl sm:w-52"><SelectValue /></SelectTrigger>
+          <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("announcements.allCategories")}</SelectItem>
             {(Object.keys(notificationCategoryKeys) as AnnouncementCategory[]).map((value) => <SelectItem key={value} value={value}>{t(notificationCategoryKeys[value])}</SelectItem>)}
@@ -292,87 +311,94 @@ function AnnouncementsPanel() {
       </div>
 
       {announcementsQuery.isLoading || userQuery.isLoading ? (
-        <div className="grid gap-4 lg:grid-cols-2"><div className="h-72 animate-pulse rounded-3xl bg-muted" /><div className="h-72 animate-pulse rounded-3xl bg-muted" /></div>
+        <div className="announcement-reference-loading"><div /><div /></div>
       ) : userQuery.isError || announcementsQuery.isError || readsQuery.isError ? (
-        <div className="announcement-empty flex min-h-64 items-center justify-center p-8 text-center"><div className="relative z-10"><AnnouncementMessage title={t("announcements.loadErrorTitle")} body={t("announcements.loadErrorBody")} /></div></div>
+        <div className="announcement-reference-empty"><AnnouncementMessage title={t("announcements.loadErrorTitle")} body={t("announcements.loadErrorBody")} /></div>
       ) : filtered.length === 0 ? (
-        <div className="announcement-empty flex min-h-72 items-center justify-center p-8 text-center"><div className="relative z-10"><AnnouncementMessage title={t("announcements.emptyTitle")} body={search || category !== "all" ? t("announcements.changeFilters") : t("announcements.noActive")} /></div></div>
+        <div className="announcement-reference-empty"><AnnouncementMessage title={t("announcements.emptyTitle")} body={search || category !== "all" ? t("announcements.changeFilters") : t("announcements.noActive")} /></div>
       ) : (
-        <div className="space-y-6">
-          {featured.length ? (
-            <section>
-              <div className="mb-3 flex items-center gap-2"><span className="text-xs font-extrabold uppercase tracking-[.12em] text-primary">{t("announcements.selected")}</span><span className="h-px flex-1 bg-border" /></div>
-              <div className="grid gap-4 xl:grid-cols-2">{featured.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} featured />)}</div>
-            </section>
-          ) : null}
-          {standard.length ? (
-            <section>
-              <div className="mb-3 flex items-center gap-2"><span className="text-xs font-extrabold uppercase tracking-[.12em] text-muted-foreground">{t("announcements.all")}</span><span className="h-px flex-1 bg-border" /></div>
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{standard.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} compact />)}</div>
-            </section>
-          ) : null}
+        <div className="announcement-reference-content">
+          {featured.length ? <section><div className="announcement-reference-heading"><span>{t("announcements.selected")}</span></div><div className="grid gap-4 xl:grid-cols-2">{featured.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} featured />)}</div></section> : null}
+          {standard.length ? <section><div className="announcement-reference-heading"><span>{t("announcements.all")}</span></div><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{standard.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} compact />)}</div></section> : null}
         </div>
       )}
     </section>
   );
 }
 
-function NotificationsPanel() {
-  const { t } = useNotificationHubI18n();
-  const notificationState = useNotifications();
-  const notifications = Array.isArray(notificationState.notifications) ? notificationState.notifications : [];
-  const { isLoading, unreadCount, markAsRead, markAllAsRead } = notificationState;
+function NotificationsPanel({ view }: { view: Exclude<HubView, "announcements"> }) {
+  const { locale, t } = useNotificationHubI18n();
+  const copy = HUB_COPY[locale as keyof typeof HUB_COPY] ?? HUB_COPY.az;
+  const state = useNotifications();
+  const notifications = Array.isArray(state.notifications) ? state.notifications : [];
+  const { isLoading, unreadCount, markAsRead, markAllAsRead } = state;
+
+  const filtered = useMemo(() => {
+    if (view === "system") return notifications.filter((item) => item.tip === "sistem");
+    if (view === "warnings") return notifications.filter((item) => item.tip === "xeberdarliq");
+    if (view === "reminders") return notifications.filter((item) => item.tip === "tedbir" || item.tip === "xususi_gun");
+    return notifications;
+  }, [notifications, view]);
+
+  const systemCount = notifications.filter((item) => item.tip === "sistem").length;
+  const reminderCount = notifications.filter((item) => item.tip === "tedbir" || item.tip === "xususi_gun").length;
 
   return (
-    <section id="notifications-panel" role="tabpanel" className="notifications-panel">
-      <div className="mb-3 flex items-center justify-between gap-3 border-b border-border/70 px-1 pb-3">
-        <div>
-          <p className="text-sm font-bold text-foreground">{t("notifications.title")}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">{t("notifications.subtitle")}</p>
-        </div>
-        {unreadCount > 0 ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => markAllAsRead.mutate()}
-            disabled={markAllAsRead.isPending}
-            className="rounded-full"
-          >
-            <CheckCheck className="size-3.5" />
-            {t("notifications.markAllRead")}
-          </Button>
-        ) : null}
-      </div>
-
-      {isLoading ? (
-        <div className="notifications-loading" aria-label={t("common.loading")}>
-          {Array.from({ length: 5 }).map((_, index) => <div key={index} className="notifications-loading__item" />)}
-        </div>
-      ) : notifications.length === 0 ? (
-        <div className="notifications-empty">
-          <div className="notifications-empty__content">
-            <span className="notifications-empty__icon"><BellOff className="size-8" /></span>
-            <p className="notifications-empty__title">{t("notifications.empty")}</p>
-            <p className="notifications-empty__text">{t("notifications.emptyBody")}</p>
+    <section id="notifications-panel" role="tabpanel" className="notification-reference-layout">
+      <main className="notification-reference-main">
+        <div className="notification-list-toolbar">
+          <div>
+            <h2>{t("notifications.title")}</h2>
+            <p>{t("notifications.subtitle")}</p>
           </div>
+          {unreadCount > 0 ? (
+            <Button type="button" size="sm" variant="outline" onClick={() => markAllAsRead.mutate()} disabled={markAllAsRead.isPending}>
+              <CheckCheck aria-hidden />{t("notifications.markAllRead")}
+            </Button>
+          ) : null}
         </div>
-      ) : (
-        <ul className="notifications-list">
-          {notifications.map((bildiris, index) => (
-            <BildirisSetri
-              key={bildiris.id}
-              bildiris={bildiris}
-              index={index}
-              onOxu={(id) => markAsRead.mutate(id)}
-            />
-          ))}
-        </ul>
-      )}
+
+        {isLoading ? (
+          <div className="notification-reference-loading" aria-label={t("common.loading")}>{Array.from({ length: 5 }).map((_, index) => <div key={index} />)}</div>
+        ) : filtered.length === 0 ? (
+          <div className="notification-reference-empty">
+            <span><BellOff aria-hidden /></span><h3>{t("notifications.empty")}</h3><p>{t("notifications.emptyBody")}</p>
+          </div>
+        ) : (
+          <ul className="notification-reference-list">
+            {filtered.map((notification, index) => <BildirisSetri key={notification.id} bildiris={notification} index={index} onOxu={(id) => markAsRead.mutate(id)} />)}
+          </ul>
+        )}
+      </main>
+
+      <aside className="notification-reference-side">
+        <section>
+          <div className="notification-side-heading"><h3>{copy.stats}</h3></div>
+          <div className="notification-stat-grid">
+            <div><span><BellDot aria-hidden /></span><strong>{unreadCount}</strong><small>{copy.unread}</small></div>
+            <div><span><Settings2 aria-hidden /></span><strong>{systemCount}</strong><small>{copy.systemCount}</small></div>
+            <div><span><CalendarDays aria-hidden /></span><strong>{reminderCount}</strong><small>{copy.reminderCount}</small></div>
+            <div><span><Bell aria-hidden /></span><strong>{notifications.length}</strong><small>{copy.all}</small></div>
+          </div>
+        </section>
+
+        <section className="notification-settings-card">
+          <span><Settings2 aria-hidden /></span>
+          <h3>{copy.settings}</h3>
+          <p>{copy.settingsHint}</p>
+          <a href="/menyu/bildiris">{copy.settings}<ChevronRight aria-hidden /></a>
+        </section>
+      </aside>
     </section>
   );
 }
 
 function AnnouncementMessage({ title, body }: { title: string; body: string }) {
-  return <><span className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Megaphone className="size-6" /></span><h2 className="text-base font-bold text-foreground">{title}</h2><p className="mx-auto mt-1 max-w-md text-sm leading-6 text-muted-foreground">{body}</p></>;
+  return (
+    <>
+      <span><Megaphone aria-hidden /></span>
+      <h2>{title}</h2>
+      <p>{body}</p>
+    </>
+  );
 }

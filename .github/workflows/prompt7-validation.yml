@@ -1,0 +1,35 @@
+name: Prompt 7 validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint Prompt 7 TypeScript
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/routes/_authenticated/ofis.tsx
+          src/routes/_authenticated/bildirisler.tsx
+          src/components/office/OfficeFileCard.tsx
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build

@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import type { Database } from "@/integrations/supabase/types";
 import { faylIkonuAl, faylNovunuTeyinEt, faylRengiAl, olcuFormatla } from "@/lib/office-files";
 import { cn } from "@/lib/utils";
+import { usePageI18n } from "@/lib/i18n-extra";
 
 export type OfisFayli = Database["public"]["Tables"]["office_files"]["Row"];
 
@@ -37,11 +38,13 @@ export function OfficeFileCard({
   onSil: () => void;
 }) {
   const [tesdiqAcıq, setTesdiqAcıq] = useState(false);
+  const { locale } = usePageI18n();
+  const labels = locale === "tr" ? { download: "İndir", remove: "Sil", confirm: "Dosyayı silmeyi onaylayın", cancel: "İptal", yes: "Evet, sil" } : locale === "en" ? { download: "Download", remove: "Delete", confirm: "Confirm file deletion", cancel: "Cancel", yes: "Yes, delete" } : locale === "ru" ? { download: "Скачать", remove: "Удалить", confirm: "Подтвердите удаление файла", cancel: "Отмена", yes: "Да, удалить" } : { download: "Yüklə", remove: "Sil", confirm: "Faylı silməyi təsdiqləyin", cancel: "İmtina", yes: "Bəli, sil" };
   const nov = faylNovunuTeyinEt(fayl.fayl_novu);
   const Ikon = faylIkonuAl(nov);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border/60">
+    <div className="office-file-card flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border/60">
       <div className="flex items-start gap-3">
         <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl", faylRengiAl(nov))}>
           <Ikon className="size-5" />
@@ -71,7 +74,7 @@ export function OfficeFileCard({
           ) : (
             <Download className="size-3.5" />
           )}
-          Yüklə
+          {labels.download}
         </Button>
         {silmeIcazesiVar ? (
           <Button
@@ -83,7 +86,7 @@ export function OfficeFileCard({
             className="gap-1.5 rounded-xl font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
             {silinir ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
-            Sil
+            {labels.remove}
           </Button>
         ) : null}
       </div>
@@ -92,19 +95,19 @@ export function OfficeFileCard({
         <AlertDialogContent className="rounded-3xl bg-card border-border">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-bold text-foreground">
-              Faylı silməyi təsdiqləyin
+              {labels.confirm}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-sm text-muted-foreground">
               "{fayl.ad}" faylı həmişəlik silinəcək. Bu əməliyyat geri qaytarıla bilməz.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="rounded-xl font-bold">İmtina</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl font-bold">{labels.cancel}</AlertDialogCancel>
             <AlertDialogAction
               onClick={onSil}
               className="rounded-xl bg-destructive font-bold text-destructive-foreground hover:bg-destructive/90"
             >
-              Bəli, Sil
+              {labels.yes}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
