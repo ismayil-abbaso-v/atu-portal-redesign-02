@@ -26,7 +26,7 @@ Read-only source reference: `ismayil-abbaso-v/Atu-portal@1d00870523497d272ee5490
 | 7 | P7-OFFICE | `/ofis`, `/bildirisler` | Real service/file/notification behavior | route completeness + i18n/static QA | BLOCKED | PASS static | PASS static | PASS static | PASS automated | **BLOCKED** | Authenticated mutations require browser evidence. |
 | 8 | P8-MENU | `/menyu/**` | Profile/security/notification/appearance/transcript/help | route completeness + i18n | BLOCKED | PASS static | PASS static | PASS static | PASS automated | **BLOCKED** | Security/auth mutations are not mocked. |
 | 9 | P9-ROLES | admin/dean/teacher/tutor | Dense institutional workspace and preserved permissions | role workspace CSS + route audit | BLOCKED | PASS static | PASS static | PASS static | PASS automated | **BLOCKED** | Dense CRUD pages intentionally avoid decorative full heroes. |
-| 10 | P10-MOBILE | shell + primary routes | Safe area, 100dvh, touch targets, no masked root overflow | `MOBILE_QA.md`, Prompt 16/17 guards | BLOCKED | N/A | BLOCKED | BLOCKED | PASS static | **BLOCKED** | Prompt 17 removes the remaining base `body min-width:320px`. |
+| 10 | P10-MOBILE | shell + primary routes | Safe area, 100dvh, touch targets, no masked root overflow | `MOBILE_QA.md`, Prompt 16/17 guards | BLOCKED | N/A | BLOCKED | BLOCKED | PASS static | **BLOCKED** | Prompt 17 removes the remaining base `body min-width:320px` and RootShell-level horizontal clipping. |
 | 11 | P11-QA | primary routes | Visual/accessibility/regression contract | `VISUAL_QA.md`, `ACCESSIBILITY_QA.md` | BLOCKED | BLOCKED | BLOCKED | BLOCKED | PASS automated | **BLOCKED** | Pixel comparison is still unavailable. |
 | 12 | P12-ROUTES | route tree | All routes and safe error/empty/redirect states | `ROUTE_COMPLETENESS.md` | BLOCKED for authenticated render | PASS source | PASS source | PASS source | PASS automated | **PASS** | 34/34 source/build coverage is distinct from rendered acceptance. |
 | 13 | P13-RELEASE | repository/release | Clean install, secret audit, lint-debt split, build/tests/smoke | `RELEASE_CHECKLIST.md`, workflow | No accessible live preview | N/A | N/A | N/A | PASS automated evidence | **PASS** | Prompt 17 refreshes the inherited lint baseline. |
@@ -63,6 +63,7 @@ The twelve Prompt 14 placeholder SVGs are absent. Dense admin/teacher/tutor/dean
 - Representative AZ/TR/EN/RU page/action/empty-state key parity is guarded.
 - No production credential, auth bypass, fake server session or backend mutation is added.
 - Prompt 17 rejects remediation changes under `supabase/`, `src/integrations/supabase/` and `src/server-functions/`.
+- The document root no longer uses `overflow-x:hidden`/clip as a global workaround; overflow must be resolved or intentionally contained by the responsible component.
 - Runtime-only pixel comparison, virtual keyboard behavior, authenticated mutations, screen-reader traversal and measured LCP/CLS remain BLOCKED until a reachable exact preview, safe QA identity and reference fixtures exist.
 
 There are **no known critical PARTIAL or FAIL rows** after the source-level correction. Outstanding items are explicit **BLOCKED browser evidence**.
