@@ -162,15 +162,15 @@ function BildirislerSehifesi() {
   const [activeView, setActiveView] = useState<HubView>(tab === "announcements" ? "announcements" : "all");
 
   useEffect(() => {
-    document.title = `${copy.title} — ATU Portal`;
+    document.title = `${t("hub.title")} — ATU Portal`;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!meta) {
       meta = document.createElement("meta");
       meta.name = "description";
       document.head.appendChild(meta);
     }
-    meta.content = copy.subtitle;
-  }, [copy]);
+    meta.content = t("hub.subtitle");
+  }, [copy, t]);
 
   useEffect(() => {
     setActiveView(tab === "announcements" ? "announcements" : "all");
