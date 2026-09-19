@@ -1,0 +1,29 @@
+name: Prompt 13 lockfile refresh
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Regenerate npm lockfile metadata
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Verify regenerated lockfile with clean install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prompt13-package-lock
+          path: package-lock.json
+          if-no-files-found: error
+          retention-days: 1
