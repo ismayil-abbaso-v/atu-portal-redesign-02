@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNow, isToday } from "date-fns";
 import { az, enUS, ru, tr } from "date-fns/locale";
@@ -14,14 +14,23 @@ import {
   Search,
   Settings2,
   SlidersHorizontal,
+  X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import notificationsHero from "@/assets/notifications-hero.webp";
 import { AnnouncementCard } from "@/components/announcements/AnnouncementCard";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useNotifications, type Notification } from "@/hooks/use-notifications";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -36,6 +45,7 @@ import "@/announcements-premium.css";
 import "@/notifications-premium.css";
 import "@/notifications-hub-refinement.css";
 import "@/office-notifications-redesign.css";
+import "@/notification-menu-content-redesign.css";
 
 type HubView = "all" | "announcements" | "system" | "warnings" | "reminders";
 type BildirislerSearch = { tab?: "announcements" | "notifications" };
@@ -71,6 +81,13 @@ const HUB_COPY = {
     settings: "Bildiriş ayarları",
     settingsHint: "Bildiriş seçimlərinizi Menyu bölməsindən idarə edin.",
     category: "Kateqoriya",
+    retry: "Yenidən cəhd et",
+    selected: "seçilib",
+    clearSelection: "Seçimi ləğv et",
+    markSelectedRead: "Seçilənləri oxunmuş et",
+    openNotification: "Bildirişi aç",
+    selectNotification: "Bildirişi seç",
+    actionError: "Əməliyyatı tamamlamaq mümkün olmadı.",
   },
   tr: {
     title: "Bildirimler",
@@ -88,6 +105,13 @@ const HUB_COPY = {
     settings: "Bildirim ayarları",
     settingsHint: "Bildirim tercihlerinizi Menü bölümünden yönetin.",
     category: "Kategori",
+    retry: "Tekrar dene",
+    selected: "seçildi",
+    clearSelection: "Seçimi temizle",
+    markSelectedRead: "Seçilenleri okundu yap",
+    openNotification: "Bildirimi aç",
+    selectNotification: "Bildirimi seç",
+    actionError: "İşlem tamamlanamadı.",
   },
   en: {
     title: "Notifications",
@@ -105,6 +129,13 @@ const HUB_COPY = {
     settings: "Notification settings",
     settingsHint: "Manage notification preferences from Menu.",
     category: "Category",
+    retry: "Try again",
+    selected: "selected",
+    clearSelection: "Clear selection",
+    markSelectedRead: "Mark selected as read",
+    openNotification: "Open notification",
+    selectNotification: "Select notification",
+    actionError: "The action could not be completed.",
   },
   ru: {
     title: "Уведомления",
@@ -122,6 +153,13 @@ const HUB_COPY = {
     settings: "Настройки уведомлений",
     settingsHint: "Управляйте уведомлениями в разделе Меню.",
     category: "Категория",
+    retry: "Повторить",
+    selected: "выбрано",
+    clearSelection: "Снять выделение",
+    markSelectedRead: "Отметить выбранные прочитанными",
+    openNotification: "Открыть уведомление",
+    selectNotification: "Выбрать уведомление",
+    actionError: "Не удалось выполнить действие.",
   },
 } as const;
 
@@ -129,7 +167,13 @@ function BildirisTarixi({ tarix }: { tarix: string }) {
   const { locale } = useNotificationHubI18n();
   const date = new Date(tarix);
   const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
-  return <span>{isToday(date) ? formatDistanceToNow(date, { addSuffix: true, locale: dateLocale }) : format(date, "d MMMM, HH:mm", { locale: dateLocale })}</span>;
+  return (
+    <span>
+      {isToday(date)
+        ? formatDistanceToNow(date, { addSuffix: true, locale: dateLocale })
+        : format(date, "d MMMM, HH:mm", { locale: dateLocale })}
+    </span>
+  );
 }
 
 function BildirisSetri({
@@ -137,26 +181,53 @@ function BildirisSetri({
   onOxu,
   index,
   unreadLabel,
+  selected,
+  onSelectedChange,
+  openLabel,
+  selectLabel,
 }: {
   bildiris: Notification;
   onOxu: (id: string) => void;
   index: number;
   unreadLabel: string;
+  selected: boolean;
+  onSelectedChange: (selected: boolean) => void;
+  openLabel: string;
+  selectLabel: string;
 }) {
   const { icon: Icon, etiket } = bildirisKonfiqurasiyasiniAl(bildiris.tip);
   const unread = !bildiris.oxunub_mu;
 
   return (
-    <li className={cn("notification-reference-row", unread && "is-unread")} style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}>
-      <button type="button" onClick={() => unread && onOxu(bildiris.id)} className="notification-reference-row__button">
-        <span className="notification-reference-row__check" aria-hidden />
-        <span className="notification-reference-row__icon"><Icon aria-hidden /></span>
-        <span className="notification-reference-row__body">
+    <li
+      className={cn("notification-reference-row", unread && "is-unread")}
+      style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}
+    >
+      <div className="notification-reference-row__button">
+        <Checkbox
+          checked={selected}
+          onCheckedChange={(checked) => onSelectedChange(checked === true)}
+          aria-label={`${selectLabel}: ${bildiris.baslıq}`}
+          className="notification-reference-row__check"
+        />
+        <span className="notification-reference-row__icon">
+          <Icon aria-hidden />
+        </span>
+        <button
+          type="button"
+          onClick={() => unread && onOxu(bildiris.id)}
+          className="notification-reference-row__body"
+          aria-label={`${openLabel}: ${bildiris.baslıq}`}
+        >
           <span className="notification-reference-row__top">
             <strong>{bildiris.baslıq}</strong>
-            <time><BildirisTarixi tarix={bildiris.tarix} /></time>
+            <time>
+              <BildirisTarixi tarix={bildiris.tarix} />
+            </time>
           </span>
-          {bildiris.metin ? <span className="notification-reference-row__preview">{bildiris.metin}</span> : null}
+          {bildiris.metin ? (
+            <span className="notification-reference-row__preview">{bildiris.metin}</span>
+          ) : null}
           <span className="notification-reference-row__meta">
             <span>{etiket}</span>
             {unread ? (
@@ -166,9 +237,16 @@ function BildirisSetri({
               </>
             ) : null}
           </span>
-        </span>
-        <ChevronRight aria-hidden className="notification-reference-row__arrow" />
-      </button>
+        </button>
+        <button
+          type="button"
+          onClick={() => unread && onOxu(bildiris.id)}
+          className="notification-reference-row__open"
+          aria-label={`${openLabel}: ${bildiris.baslıq}`}
+        >
+          <ChevronRight aria-hidden className="notification-reference-row__arrow" />
+        </button>
+      </div>
     </li>
   );
 }
@@ -177,7 +255,9 @@ function BildirislerSehifesi() {
   const { locale, t } = useNotificationHubI18n();
   const { tab } = Route.useSearch();
   const copy = HUB_COPY[locale as keyof typeof HUB_COPY] ?? HUB_COPY.az;
-  const [activeView, setActiveView] = useState<HubView>(tab === "announcements" ? "announcements" : "all");
+  const [activeView, setActiveView] = useState<HubView>(
+    tab === "announcements" ? "announcements" : "all",
+  );
 
   useEffect(() => {
     document.title = `${t("hub.title")} — ATU Portal`;
@@ -204,25 +284,45 @@ function BildirislerSehifesi() {
 
   return (
     <div className="notification-redesign-page animate-page-enter">
-      <section className="notification-reference-hero" style={{ backgroundImage: `url(${notificationsHero})` }}>
+      <section
+        className="notification-reference-hero"
+        style={{ backgroundImage: `url(${notificationsHero})` }}
+      >
         <div className="notification-reference-hero__shade" aria-hidden />
         <div className="notification-reference-hero__copy">
           <h1>{copy.title}</h1>
           <p>{copy.subtitle}</p>
         </div>
         <blockquote>“{copy.quote}”</blockquote>
-        <span className="notification-reference-hero__mark" aria-hidden><Bell /></span>
+        <span className="notification-reference-hero__mark" aria-hidden>
+          <Bell />
+        </span>
       </section>
 
       <div className="notification-category-tabs" role="tablist" aria-label={t("hub.sectionsAria")}>
         {tabs.map(({ id, label, icon: Icon }) => (
-          <button key={id} type="button" role="tab" aria-selected={activeView === id} className={activeView === id ? "is-active" : ""} onClick={() => setActiveView(id)}>
-            <Icon aria-hidden /><span>{label}</span>
+          <button
+            key={id}
+            id={`notification-tab-${id}`}
+            type="button"
+            role="tab"
+            aria-selected={activeView === id}
+            aria-controls={id === "announcements" ? "announcements-panel" : "notifications-panel"}
+            tabIndex={activeView === id ? 0 : -1}
+            className={activeView === id ? "is-active" : ""}
+            onClick={() => setActiveView(id)}
+          >
+            <Icon aria-hidden />
+            <span>{label}</span>
           </button>
         ))}
       </div>
 
-      {activeView === "announcements" ? <AnnouncementsPanel /> : <NotificationsPanel view={activeView} />}
+      {activeView === "announcements" ? (
+        <AnnouncementsPanel />
+      ) : (
+        <NotificationsPanel key={activeView} view={activeView} />
+      )}
     </div>
   );
 }
@@ -254,7 +354,7 @@ function AnnouncementsPanel() {
         .order("priority", { ascending: false })
         .order("starts_at", { ascending: false });
       if (error) throw error;
-      return Array.isArray(data) ? data as Announcement[] : [];
+      return Array.isArray(data) ? (data as Announcement[]) : [];
     },
     enabled: Boolean(userId),
     staleTime: 15_000,
@@ -268,7 +368,7 @@ function AnnouncementsPanel() {
         .select("announcement_id,user_id,first_read_at,last_read_at,open_count")
         .eq("user_id", userId);
       if (error) throw error;
-      return Array.isArray(data) ? data as AnnouncementRead[] : [];
+      return Array.isArray(data) ? (data as AnnouncementRead[]) : [];
     },
     enabled: Boolean(userId),
     staleTime: 15_000,
@@ -281,9 +381,18 @@ function AnnouncementsPanel() {
       .on("postgres_changes", { event: "*", schema: "public", table: "announcements" }, () => {
         void queryClient.invalidateQueries({ queryKey: ["student-announcements", userId] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "announcement_reads", filter: `user_id=eq.${userId}` }, () => {
-        void queryClient.invalidateQueries({ queryKey: ["student-announcement-reads", userId] });
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "announcement_reads",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          void queryClient.invalidateQueries({ queryKey: ["student-announcement-reads", userId] });
+        },
+      )
       .subscribe();
 
     return () => {
@@ -291,17 +400,29 @@ function AnnouncementsPanel() {
     };
   }, [queryClient, userId]);
 
-  const announcementItems = useMemo(() => Array.isArray(announcementsQuery.data) ? announcementsQuery.data : [], [announcementsQuery.data]);
-  const readItems = useMemo(() => Array.isArray(readsQuery.data) ? readsQuery.data : [], [readsQuery.data]);
-  const readIds = useMemo(() => new Set(readItems.map((item) => item.announcement_id)), [readItems]);
-  const searchLocale = locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
+  const announcementItems = useMemo(
+    () => (Array.isArray(announcementsQuery.data) ? announcementsQuery.data : []),
+    [announcementsQuery.data],
+  );
+  const readItems = useMemo(
+    () => (Array.isArray(readsQuery.data) ? readsQuery.data : []),
+    [readsQuery.data],
+  );
+  const readIds = useMemo(
+    () => new Set(readItems.map((item) => item.announcement_id)),
+    [readItems],
+  );
+  const searchLocale =
+    locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
 
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase(searchLocale);
     return announcementItems.filter((item) => {
       if (category !== "all" && item.category !== category) return false;
       if (!term) return true;
-      return `${item.title ?? ""} ${item.summary ?? ""} ${item.body ?? ""}`.toLocaleLowerCase(searchLocale).includes(term);
+      return `${item.title ?? ""} ${item.summary ?? ""} ${item.body ?? ""}`
+        .toLocaleLowerCase(searchLocale)
+        .includes(term);
     });
   }, [announcementItems, category, search, searchLocale]);
 
@@ -310,34 +431,139 @@ function AnnouncementsPanel() {
   const standard = filtered.filter((item) => !item.is_featured);
 
   return (
-    <section id="announcements-panel" role="tabpanel" className="announcement-reference-panel">
+    <section
+      id="announcements-panel"
+      role="tabpanel"
+      aria-labelledby="notification-tab-announcements"
+      className="announcement-reference-panel"
+    >
       <div className="announcement-reference-stats">
-        <div><span><Megaphone aria-hidden /></span><p><strong>{announcementItems.length}</strong><small>{t("announcements.active")}</small></p></div>
-        <div><span><BellDot aria-hidden /></span><p><strong>{unreadCount}</strong><small>{t("announcements.unread")}</small></p></div>
-        <div><span><SlidersHorizontal aria-hidden /></span><p><strong>{featured.length}</strong><small>{t("announcements.featured")}</small></p></div>
+        <div>
+          <span>
+            <Megaphone aria-hidden />
+          </span>
+          <p>
+            <strong>{announcementItems.length}</strong>
+            <small>{t("announcements.active")}</small>
+          </p>
+        </div>
+        <div>
+          <span>
+            <BellDot aria-hidden />
+          </span>
+          <p>
+            <strong>{unreadCount}</strong>
+            <small>{t("announcements.unread")}</small>
+          </p>
+        </div>
+        <div>
+          <span>
+            <SlidersHorizontal aria-hidden />
+          </span>
+          <p>
+            <strong>{featured.length}</strong>
+            <small>{t("announcements.featured")}</small>
+          </p>
+        </div>
       </div>
 
       <div className="announcement-reference-filters">
-        <label><Search aria-hidden /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("announcements.searchPlaceholder")} /></label>
-        <Select value={category} onValueChange={(value) => setCategory(value as "all" | AnnouncementCategory)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+        <label>
+          <Search aria-hidden />
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={t("announcements.searchPlaceholder")}
+          />
+        </label>
+        <Select
+          value={category}
+          onValueChange={(value) => setCategory(value as "all" | AnnouncementCategory)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("announcements.allCategories")}</SelectItem>
-            {(Object.keys(notificationCategoryKeys) as AnnouncementCategory[]).map((value) => <SelectItem key={value} value={value}>{t(notificationCategoryKeys[value])}</SelectItem>)}
+            {(Object.keys(notificationCategoryKeys) as AnnouncementCategory[]).map((value) => (
+              <SelectItem key={value} value={value}>
+                {t(notificationCategoryKeys[value])}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
       {announcementsQuery.isLoading || userQuery.isLoading ? (
-        <div className="announcement-reference-loading"><div /><div /></div>
+        <div className="announcement-reference-loading">
+          <div />
+          <div />
+        </div>
       ) : userQuery.isError || announcementsQuery.isError || readsQuery.isError ? (
-        <div className="announcement-reference-empty"><AnnouncementMessage title={t("announcements.loadErrorTitle")} body={t("announcements.loadErrorBody")} /></div>
+        <div className="announcement-reference-empty" role="alert">
+          <AnnouncementMessage
+            title={t("announcements.loadErrorTitle")}
+            body={t("announcements.loadErrorBody")}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              void userQuery.refetch();
+              void announcementsQuery.refetch();
+              void readsQuery.refetch();
+            }}
+          >
+            {HUB_COPY[locale as keyof typeof HUB_COPY]?.retry ?? HUB_COPY.az.retry}
+          </Button>
+        </div>
       ) : filtered.length === 0 ? (
-        <div className="announcement-reference-empty"><AnnouncementMessage title={t("announcements.emptyTitle")} body={search || category !== "all" ? t("announcements.changeFilters") : t("announcements.noActive")} /></div>
+        <div className="announcement-reference-empty">
+          <AnnouncementMessage
+            title={t("announcements.emptyTitle")}
+            body={
+              search || category !== "all"
+                ? t("announcements.changeFilters")
+                : t("announcements.noActive")
+            }
+          />
+        </div>
       ) : (
         <div className="announcement-reference-content">
-          {featured.length ? <section><div className="announcement-reference-heading"><span>{t("announcements.selected")}</span></div><div className="grid gap-4 xl:grid-cols-2">{featured.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} featured />)}</div></section> : null}
-          {standard.length ? <section><div className="announcement-reference-heading"><span>{t("announcements.all")}</span></div><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{standard.map((item) => <AnnouncementCard key={item.id} announcement={item} initiallyRead={readIds.has(item.id)} compact />)}</div></section> : null}
+          {featured.length ? (
+            <section>
+              <div className="announcement-reference-heading">
+                <span>{t("announcements.selected")}</span>
+              </div>
+              <div className="grid gap-4 xl:grid-cols-2">
+                {featured.map((item) => (
+                  <AnnouncementCard
+                    key={item.id}
+                    announcement={item}
+                    initiallyRead={readIds.has(item.id)}
+                    featured
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
+          {standard.length ? (
+            <section>
+              <div className="announcement-reference-heading">
+                <span>{t("announcements.all")}</span>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {standard.map((item) => (
+                  <AnnouncementCard
+                    key={item.id}
+                    announcement={item}
+                    initiallyRead={readIds.has(item.id)}
+                    compact
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
         </div>
       )}
     </section>
@@ -348,21 +574,59 @@ function NotificationsPanel({ view }: { view: Exclude<HubView, "announcements"> 
   const { locale, t } = useNotificationHubI18n();
   const copy = HUB_COPY[locale as keyof typeof HUB_COPY] ?? HUB_COPY.az;
   const state = useNotifications();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const notifications = Array.isArray(state.notifications) ? state.notifications : [];
-  const { isLoading, unreadCount, markAsRead, markAllAsRead } = state;
+  const { isLoading, isError, refetch, unreadCount, markAsRead, markAllAsRead } = state;
 
   const filtered = useMemo(() => {
     if (view === "system") return notifications.filter((item) => item.tip === "sistem");
     if (view === "warnings") return notifications.filter((item) => item.tip === "xeberdarliq");
-    if (view === "reminders") return notifications.filter((item) => item.tip === "tedbir" || item.tip === "xususi_gun");
+    if (view === "reminders")
+      return notifications.filter((item) => item.tip === "tedbir" || item.tip === "xususi_gun");
     return notifications;
   }, [notifications, view]);
 
   const systemCount = notifications.filter((item) => item.tip === "sistem").length;
-  const reminderCount = notifications.filter((item) => item.tip === "tedbir" || item.tip === "xususi_gun").length;
+  const reminderCount = notifications.filter(
+    (item) => item.tip === "tedbir" || item.tip === "xususi_gun",
+  ).length;
+  const activeLabel =
+    view === "system"
+      ? copy.system
+      : view === "warnings"
+        ? copy.warnings
+        : view === "reminders"
+          ? copy.reminders
+          : copy.all;
+  const selectedUnreadIds = filtered
+    .filter((item) => selectedIds.has(item.id) && !item.oxunub_mu)
+    .map((item) => item.id);
+
+  function toggleSelected(id: string, selected: boolean) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (selected) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  async function markSelectedAsRead() {
+    try {
+      await Promise.all(selectedUnreadIds.map((id) => markAsRead.mutateAsync(id)));
+      setSelectedIds(new Set());
+    } catch {
+      toast.error(copy.actionError);
+    }
+  }
 
   return (
-    <section id="notifications-panel" role="tabpanel" className="notification-reference-layout">
+    <section
+      id="notifications-panel"
+      role="tabpanel"
+      aria-labelledby={`notification-tab-${view}`}
+      className="notification-reference-layout"
+    >
       <main className="notification-reference-main">
         <div className="notification-list-toolbar">
           <div>
@@ -370,49 +634,142 @@ function NotificationsPanel({ view }: { view: Exclude<HubView, "announcements"> 
             <p>{t("notifications.subtitle")}</p>
           </div>
           {unreadCount > 0 ? (
-            <Button type="button" size="sm" variant="outline" onClick={() => markAllAsRead.mutate()} disabled={markAllAsRead.isPending}>
-              <CheckCheck aria-hidden />{t("notifications.markAllRead")}
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                markAllAsRead.mutate(undefined, { onError: () => toast.error(copy.actionError) })
+              }
+              disabled={markAllAsRead.isPending}
+            >
+              <CheckCheck aria-hidden />
+              {t("notifications.markAllRead")}
             </Button>
           ) : null}
         </div>
 
-        {isLoading ? (
-          <div className="notification-reference-loading" aria-label={t("common.loading")}>{Array.from({ length: 5 }).map((_, index) => <div key={index} />)}</div>
-        ) : filtered.length === 0 ? (
-          <div className="notification-reference-empty">
-            <span><BellOff aria-hidden /></span><h3>{t("notifications.empty")}</h3><p>{t("notifications.emptyBody")}</p>
+        {selectedIds.size > 0 ? (
+          <div className="notification-selection-bar" role="status" aria-live="polite">
+            <strong>
+              {selectedIds.size} {copy.selected}
+            </strong>
+            <div>
+              {selectedUnreadIds.length > 0 ? (
+                <Button
+                  type="button"
+                  onClick={() => void markSelectedAsRead()}
+                  disabled={markAsRead.isPending}
+                >
+                  <CheckCheck aria-hidden />
+                  {copy.markSelectedRead}
+                </Button>
+              ) : null}
+              <Button type="button" variant="ghost" onClick={() => setSelectedIds(new Set())}>
+                <X aria-hidden />
+                {copy.clearSelection}
+              </Button>
+            </div>
           </div>
-        ) : (
-          <ul className="notification-reference-list">
-            {filtered.map((notification, index) => (
-              <BildirisSetri
-                key={notification.id}
-                bildiris={notification}
-                index={index}
-                unreadLabel={copy.unread}
-                onOxu={(id) => markAsRead.mutate(id)}
-              />
-            ))}
-          </ul>
-        )}
+        ) : null}
+
+        <div aria-live="polite" aria-busy={isLoading}>
+          {isLoading ? (
+            <div className="notification-reference-loading" aria-label={t("common.loading")}>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} />
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="notification-reference-empty" role="alert">
+              <span>
+                <BellOff aria-hidden />
+              </span>
+              <h3>{t("announcements.loadErrorTitle")}</h3>
+              <p>{t("announcements.loadErrorBody")}</p>
+              <Button type="button" variant="outline" onClick={() => void refetch()}>
+                {copy.retry}
+              </Button>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="notification-reference-empty">
+              <span>
+                <BellOff aria-hidden />
+              </span>
+              <h3>
+                {activeLabel}: {t("notifications.empty")}
+              </h3>
+              <p>{t("notifications.emptyBody")}</p>
+            </div>
+          ) : (
+            <ul className="notification-reference-list">
+              {filtered.map((notification, index) => (
+                <BildirisSetri
+                  key={notification.id}
+                  bildiris={notification}
+                  index={index}
+                  unreadLabel={copy.unread}
+                  selected={selectedIds.has(notification.id)}
+                  onSelectedChange={(selected) => toggleSelected(notification.id, selected)}
+                  openLabel={copy.openNotification}
+                  selectLabel={copy.selectNotification}
+                  onOxu={(id) =>
+                    markAsRead.mutate(id, { onError: () => toast.error(copy.actionError) })
+                  }
+                />
+              ))}
+            </ul>
+          )}
+        </div>
       </main>
 
       <aside className="notification-reference-side">
         <section>
-          <div className="notification-side-heading"><h3>{copy.stats}</h3></div>
+          <div className="notification-side-heading">
+            <h3>{copy.stats}</h3>
+          </div>
           <div className="notification-stat-grid">
-            <div><span><BellDot aria-hidden /></span><strong>{unreadCount}</strong><small>{copy.unread}</small></div>
-            <div><span><Settings2 aria-hidden /></span><strong>{systemCount}</strong><small>{copy.systemCount}</small></div>
-            <div><span><CalendarDays aria-hidden /></span><strong>{reminderCount}</strong><small>{copy.reminderCount}</small></div>
-            <div><span><Bell aria-hidden /></span><strong>{notifications.length}</strong><small>{copy.all}</small></div>
+            <div>
+              <span>
+                <BellDot aria-hidden />
+              </span>
+              <strong>{unreadCount}</strong>
+              <small>{copy.unread}</small>
+            </div>
+            <div>
+              <span>
+                <Settings2 aria-hidden />
+              </span>
+              <strong>{systemCount}</strong>
+              <small>{copy.systemCount}</small>
+            </div>
+            <div>
+              <span>
+                <CalendarDays aria-hidden />
+              </span>
+              <strong>{reminderCount}</strong>
+              <small>{copy.reminderCount}</small>
+            </div>
+            <div>
+              <span>
+                <Bell aria-hidden />
+              </span>
+              <strong>{notifications.length}</strong>
+              <small>{copy.all}</small>
+            </div>
           </div>
         </section>
 
         <section className="notification-settings-card">
-          <span><Settings2 aria-hidden /></span>
+          <span>
+            <Settings2 aria-hidden />
+          </span>
           <h3>{copy.settings}</h3>
           <p>{copy.settingsHint}</p>
-          <a href="/menyu/bildiris">{copy.settings}<ChevronRight aria-hidden /></a>
+          <Link to="/menyu/bildiris">
+            {copy.settings}
+            <ChevronRight aria-hidden />
+          </Link>
         </section>
       </aside>
     </section>
@@ -422,7 +779,9 @@ function NotificationsPanel({ view }: { view: Exclude<HubView, "announcements"> 
 function AnnouncementMessage({ title, body }: { title: string; body: string }) {
   return (
     <>
-      <span><Megaphone aria-hidden /></span>
+      <span>
+        <Megaphone aria-hidden />
+      </span>
       <h2>{title}</h2>
       <p>{body}</p>
     </>

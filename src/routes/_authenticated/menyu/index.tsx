@@ -17,19 +17,23 @@ import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { usePrimaryRole } from "@/hooks/use-user-role";
 import { type MenuHubKey, useMenuHubI18n } from "@/lib/menu-hub-i18n";
 import "@/settings-redesign.css";
+import "@/notification-menu-content-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/")({
   head: () => ({
-    meta: [
-      { title: "ATU Portal" },
-      { name: "description", content: "ATU Portal" },
-    ],
+    meta: [{ title: "ATU Portal" }, { name: "description", content: "ATU Portal" }],
   }),
   component: MenyuSehifesi,
 });
 
 type MenuCard = {
-  to: "/menyu/profil" | "/menyu/tehlukesizlik" | "/menyu/bildiris" | "/menyu/gorunus" | "/menyu/transkript" | "/menyu/yardim";
+  to:
+    | "/menyu/profil"
+    | "/menyu/tehlukesizlik"
+    | "/menyu/bildiris"
+    | "/menyu/gorunus"
+    | "/menyu/transkript"
+    | "/menyu/yardim";
   titleKey: MenuHubKey;
   descriptionKey: MenuHubKey;
   tagKey: MenuHubKey;
@@ -38,12 +42,49 @@ type MenuCard = {
 };
 
 const kartlar: readonly MenuCard[] = [
-  { to: "/menyu/profil", titleKey: "profileTitle", descriptionKey: "profileDescription", tagKey: "profileTag", icon: UserRound },
-  { to: "/menyu/tehlukesizlik", titleKey: "securityTitle", descriptionKey: "securityDescription", tagKey: "securityTag", icon: Shield },
-  { to: "/menyu/bildiris", titleKey: "notificationsTitle", descriptionKey: "notificationsDescription", tagKey: "notificationsTag", icon: Bell },
-  { to: "/menyu/gorunus", titleKey: "appearanceTitle", descriptionKey: "appearanceDescription", tagKey: "appearanceTag", icon: Palette },
-  { to: "/menyu/transkript", titleKey: "transcriptTitle", descriptionKey: "transcriptDescription", tagKey: "transcriptTag", icon: FileText, studentOnly: true },
-  { to: "/menyu/yardim", titleKey: "helpTitle", descriptionKey: "helpDescription", tagKey: "helpTag", icon: CircleHelp },
+  {
+    to: "/menyu/profil",
+    titleKey: "profileTitle",
+    descriptionKey: "profileDescription",
+    tagKey: "profileTag",
+    icon: UserRound,
+  },
+  {
+    to: "/menyu/tehlukesizlik",
+    titleKey: "securityTitle",
+    descriptionKey: "securityDescription",
+    tagKey: "securityTag",
+    icon: Shield,
+  },
+  {
+    to: "/menyu/bildiris",
+    titleKey: "notificationsTitle",
+    descriptionKey: "notificationsDescription",
+    tagKey: "notificationsTag",
+    icon: Bell,
+  },
+  {
+    to: "/menyu/gorunus",
+    titleKey: "appearanceTitle",
+    descriptionKey: "appearanceDescription",
+    tagKey: "appearanceTag",
+    icon: Palette,
+  },
+  {
+    to: "/menyu/transkript",
+    titleKey: "transcriptTitle",
+    descriptionKey: "transcriptDescription",
+    tagKey: "transcriptTag",
+    icon: FileText,
+    studentOnly: true,
+  },
+  {
+    to: "/menyu/yardim",
+    titleKey: "helpTitle",
+    descriptionKey: "helpDescription",
+    tagKey: "helpTag",
+    icon: CircleHelp,
+  },
 ];
 
 const QUOTES = {
@@ -105,13 +146,17 @@ function MenyuSehifesi() {
                 className="menu-reference-card"
                 style={{ animationDelay: `${index * 35}ms` }}
               >
-                <span className="menu-reference-card__icon" aria-hidden><card.icon /></span>
+                <span className="menu-reference-card__icon" aria-hidden>
+                  <card.icon />
+                </span>
                 <span className="menu-reference-card__copy">
                   <strong>{title}</strong>
                   <span>{t(card.descriptionKey)}</span>
+                  <small className="menu-reference-card__detail">{t(card.tagKey)}</small>
                 </span>
-                <span className="menu-reference-card__arrow" aria-hidden><ChevronRight /></span>
-                <span className="menu-reference-card__detail">{t(card.tagKey)}</span>
+                <span className="menu-reference-card__arrow" aria-hidden>
+                  <ChevronRight />
+                </span>
               </Link>
             );
           })}
@@ -123,7 +168,10 @@ function MenyuSehifesi() {
           <h3>{t("helpTitle")}</h3>
           <p>{t("helpDescription")}</p>
         </div>
-        <Link to="/menyu/yardim">{t("helpTitle")}<LifeBuoy aria-hidden /></Link>
+        <Link to="/menyu/yardim">
+          {t("helpTitle")}
+          <LifeBuoy aria-hidden />
+        </Link>
       </section>
     </div>
   );

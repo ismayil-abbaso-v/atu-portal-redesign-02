@@ -18,7 +18,7 @@ export function useNotifications() {
 
   const queryKey = ["notifications", userId] as const;
 
-  const { data, isLoading } = useQuery({
+  const notificationsQuery = useQuery({
     queryKey,
     queryFn: async () => {
       if (!userId) return [];
@@ -34,6 +34,7 @@ export function useNotifications() {
     enabled: !!userId,
   });
 
+  const { data, isLoading, isError, refetch } = notificationsQuery;
   const notifications: Notification[] = data ?? [];
   const unreadCount = notifications.reduce((say, n) => say + (n.oxunub_mu ? 0 : 1), 0);
 
@@ -42,9 +43,7 @@ export function useNotifications() {
   // istifadə etdiyi üçün (artıq subscribe olunmuş kanala .on() əlavə etmək
   // "cannot add postgres_changes callbacks ... after subscribe()" xətası atır),
   // hər hook instansına unikal kanal adı verməliyik ki, toqquşma olmasın.
-  const channelIdRef = useRef(
-    `notifications-${Math.random().toString(36).slice(2)}-${Date.now()}`,
-  );
+  const channelIdRef = useRef(`notifications-${Math.random().toString(36).slice(2)}-${Date.now()}`);
 
   // Realtime: yeni bildiriş gələndə və ya mövcud bildiriş yenilənəndə (məs. başqa
   // tabda oxunmuş kimi işarələnəndə) cache-i səhifə yenilənmədən yeniləyirik.
@@ -89,7 +88,6 @@ export function useNotifications() {
     return () => {
       void supabase.removeChannel(channel);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const markAsRead = useMutation({
@@ -101,10 +99,17 @@ export function useNotifications() {
       if (error) throw error;
     },
     onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<Notification[]>(queryKey);
       queryClient.setQueryData(queryKey, (mevcud: Notification[] = []) =>
         mevcud.map((n) => (n.id === id ? { ...n, oxunub_mu: true } : n)),
       );
+      return { previous };
     },
+    onError: (_error, _id, context) => {
+      if (context?.previous) queryClient.setQueryData(queryKey, context.previous);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 
   const markAllAsRead = useMutation({
@@ -118,11 +123,27 @@ export function useNotifications() {
       if (error) throw error;
     },
     onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<Notification[]>(queryKey);
       queryClient.setQueryData(queryKey, (mevcud: Notification[] = []) =>
         mevcud.map((n) => ({ ...n, oxunub_mu: true })),
       );
+      return { previous };
     },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) queryClient.setQueryData(queryKey, context.previous);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 
-  return { notifications, isLoading, unreadCount, markAsRead, markAllAsRead, userId };
+  return {
+    notifications,
+    isLoading,
+    isError,
+    refetch,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    userId,
+  };
 }
