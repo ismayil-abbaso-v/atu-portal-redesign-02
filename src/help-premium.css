@@ -469,9 +469,9 @@
 }
 
 @media (max-width: 430px) {
-  .help-hero__eyebrow { font-size: 9px; letter-spacing: .11em; }
+  .help-hero__eyebrow { font-size: 11px; letter-spacing: .11em; }
   .help-hero__title { font-size: 1.5rem; }
-  .help-search-panel__badge { font-size: 9px; }
+  .help-search-panel__badge { font-size: 11px; }
   .help-section-title { font-size: 14px; }
   .help-section-meta { font-size: 10px; }
   .help-section-count { min-width: 31px; height: 26px; }

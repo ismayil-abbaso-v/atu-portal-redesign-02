@@ -37,7 +37,7 @@ export function BookCard({
         )}
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/22 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         {yeni ? (
-          <span className="absolute left-2.5 top-2.5 rounded-full border border-white/20 bg-primary px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.08em] text-primary-foreground shadow-sm">
+          <span className="absolute left-2.5 top-2.5 rounded-full border border-white/20 bg-primary px-2 py-1 text-[11px] font-extrabold uppercase tracking-[0.08em] text-primary-foreground shadow-sm">
             Yeni
           </span>
         ) : null}

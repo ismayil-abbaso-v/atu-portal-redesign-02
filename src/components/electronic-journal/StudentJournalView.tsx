@@ -248,7 +248,7 @@ function ScoreMetric({
         <span className="hidden size-8 shrink-0 items-center justify-center rounded-xl bg-current/10 sm:flex">
           {icon}
         </span>
-        <span className="min-w-0 truncate text-[9px] font-extrabold uppercase tracking-[0.035em] text-foreground/65 min-[380px]:text-[10px] sm:text-xs sm:normal-case sm:tracking-normal">
+        <span className="min-w-0 truncate text-[11px] font-extrabold uppercase tracking-[0.035em] text-foreground/65 min-[380px]:text-[10px] sm:text-xs sm:normal-case sm:tracking-normal">
           {label}
         </span>
       </div>
@@ -1292,7 +1292,7 @@ function ColloquiumPanel({ rows }: { rows: ColloquiumRow[] }) {
             <p className="font-data mt-2 text-2xl font-extrabold text-foreground">
               {row?.grade ?? "—"}
             </p>
-            <p className="mt-1 truncate text-[9px] font-medium text-muted-foreground">
+            <p className="mt-1 truncate text-[11px] font-medium text-muted-foreground">
               {formatDate(row?.tarix)}
             </p>
           </div>
@@ -1354,12 +1354,12 @@ function AssessmentMobileCard({
           </h4>
         </div>
         <div className="shrink-0 text-right">
-          <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
             {jt("common.score")}
           </p>
           <p className="font-data text-lg font-extrabold">
             {grade ?? "—"}
-            <span className="text-[9px] text-muted-foreground">/{max}</span>
+            <span className="text-[11px] text-muted-foreground">/{max}</span>
           </p>
         </div>
       </div>

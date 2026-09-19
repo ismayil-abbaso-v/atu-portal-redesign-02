@@ -123,7 +123,7 @@ export function SyllabusUploadDialog({ açıq, onOpenChange, courseId }: { açı
           {selectedFile ? (
             <div className="flex max-w-full items-center gap-2 rounded-xl bg-card px-3 py-1.5 text-sm font-bold shadow-sm">
               <span className="max-w-[230px] truncate sm:max-w-[300px]">{selectedFile.name}</span>
-              {!busy ? <button type="button" aria-label={t("syllabus.clearAria")} onClick={(event) => { event.stopPropagation(); reset(); }} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive"><X className="size-3.5" /></button> : null}
+              {!busy ? <button type="button" aria-label={t("syllabus.clearAria")} onClick={(event) => { event.stopPropagation(); reset(); }} className="flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive"><X className="size-3.5" /></button> : null}
             </div>
           ) : <><p className="max-w-sm text-sm font-bold">{currentSyllabus ? t("syllabus.selectReplace") : t("syllabus.select")}</p><p className="text-xs text-muted-foreground">{t("syllabus.max")}</p></>}
           <input ref={fileInputRef} type="file" className="hidden" disabled={busy} onChange={(event) => acceptFiles(event.target.files)} />

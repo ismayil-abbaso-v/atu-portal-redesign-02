@@ -207,7 +207,7 @@ export function AppHeader({
             >
               <Bell className={open ? "size-5 text-primary" : "size-5"} />
               {unreadCount > 0 ? (
-                <span className="absolute right-1.5 top-1.5 min-w-4 rounded-full bg-primary px-1 text-center text-[9px] font-bold leading-4 text-primary-foreground shadow-sm">
+                <span className="absolute right-1.5 top-1.5 min-w-4 rounded-full bg-primary px-1 text-center text-[11px] font-bold leading-4 text-primary-foreground shadow-sm">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               ) : null}

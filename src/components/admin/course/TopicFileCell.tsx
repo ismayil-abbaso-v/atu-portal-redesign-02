@@ -27,7 +27,7 @@ export function TopicFileCell({ topic }: { topic: CourseTopic }) {
     <>
       <button type="button" aria-label={t("files.showAria", { count: count || 1 })} className="relative inline-flex size-11 items-center justify-center rounded-xl text-primary transition-colors hover:bg-primary/10" onClick={() => setOpen(true)}>
         <Download className="size-4" />
-        {(count || 1) > 1 ? <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold leading-none text-primary-foreground">{count}</span> : null}
+        {(count || 1) > 1 ? <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold leading-none text-primary-foreground">{count}</span> : null}
       </button>
       <TopicFilesDialog açıq={open} onOpenChange={setOpen} topic={topic} />
     </>

@@ -417,7 +417,7 @@ function LogSetriView({ setri }: { setri: LogSetri }) {
         ) : (
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8 rounded-full">
+              <Button variant="ghost" size="icon" className="size-11 rounded-full">
                 <Info className="size-4" />
               </Button>
             </PopoverTrigger>

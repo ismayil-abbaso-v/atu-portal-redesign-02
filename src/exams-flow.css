@@ -167,12 +167,12 @@
 }
 
 .exam-paper-sheet__label {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .exam-paper-sheet__code {
-  font-size: 8px;
+  font-size: 10px;
   opacity: .48;
 }
 
@@ -199,7 +199,7 @@
 
 .exam-paper-sheet__number {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
   opacity: .45;
 }
@@ -219,7 +219,7 @@
   border: 1px solid color-mix(in oklch, var(--primary) 18%, transparent);
   background: color-mix(in oklch, var(--primary) 3%, white);
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 7px;
+  font-size: 10px;
   font-weight: 700;
   color: color-mix(in oklch, var(--primary) 64%, black 36%);
 }
@@ -237,7 +237,7 @@
   margin-top: 9px;
   padding-top: 8px;
   border-top: 1px solid color-mix(in oklch, var(--primary) 12%, transparent);
-  font-size: 7px;
+  font-size: 10px;
   text-transform: uppercase;
   opacity: .46;
 }
@@ -297,7 +297,7 @@
   right: 11px;
   top: 9px;
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .08em;
   color: color-mix(in oklch, var(--primary) 34%, var(--muted-foreground));

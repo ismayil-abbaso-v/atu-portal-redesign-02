@@ -67,7 +67,7 @@ function BildirisIkonu({ item, unreadCount }: { item: NavItem; unreadCount: numb
   return (
     <span className="relative inline-flex shrink-0">
       <item.icon className="size-[var(--sb-icon-svg)]" />
-      <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold leading-none text-destructive-foreground animate-badge-in">
+      <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[11px] font-bold leading-none text-destructive-foreground animate-badge-in">
         {unreadCount > 9 ? "9+" : unreadCount}
       </span>
     </span>
@@ -295,7 +295,7 @@ export function Sidebar({
             <span className="block truncate font-display text-[15px] font-bold text-primary">
               {t("app.name")}
             </span>
-            <span className="mt-1 block text-[9px] font-semibold leading-3 text-muted-foreground">
+            <span className="mt-1 block text-[11px] font-semibold leading-3 text-muted-foreground">
               Azərbaycan Texnologiya Universiteti
             </span>
           </span>
@@ -373,7 +373,7 @@ export function Sidebar({
                 <span className="block truncate font-display text-[15px] font-bold tracking-[-0.02em] text-primary">
                   {t("app.name")}
                 </span>
-                <span className="block truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                <span className="block truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   {cabinetLabel}
                 </span>
               </span>

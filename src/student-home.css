@@ -249,7 +249,7 @@
   color: var(--text-muted);
 }
 .student-home-week__days b {
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
 }
 .student-home-week__days small {
@@ -316,7 +316,7 @@
 .student-home-schedule__row span {
   margin-top: 2px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .student-home-side {
   display: grid;
@@ -355,7 +355,7 @@
 }
 .student-home-summary__row small {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .student-home-summary__row strong {
   margin-top: 2px;
@@ -412,12 +412,12 @@
 .student-home-chat__list small {
   margin-top: 2px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .student-home-chat__list time {
   color: var(--text-muted);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 10px;
 }
 .student-home-services {
   padding-bottom: 18px;
@@ -674,10 +674,10 @@
     grid-auto-flow: column;
     gap: 8px;
     text-align: left;
-    font-size: 8px;
+    font-size: 10px;
   }
   .student-home-hero__words span:nth-child(2) {
-    font-size: 8px;
+    font-size: 10px;
   }
   .student-home-grid {
     grid-template-columns: 1fr;

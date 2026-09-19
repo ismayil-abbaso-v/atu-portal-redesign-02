@@ -205,7 +205,7 @@ export function CourseStudentStatusSection({
                     type="button"
                     aria-label={`${ad} tələbəsini siyahıdan çıxar`}
                     disabled={çıxar.isPending}
-                    className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    className="flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     onClick={() => çıxar.mutate(s.id)}
                   >
                     <X className="size-3.5" />

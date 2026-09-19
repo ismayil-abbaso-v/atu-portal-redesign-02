@@ -94,7 +94,7 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
                   return (
                     <div
                       key={event.id}
-                      className={`calendar-redesign-grid__event min-w-0 truncate rounded-r-md border-l-[3px] px-1.5 py-0.5 text-[9px] font-semibold leading-4 sm:text-[10px] ${chipClass}`}
+                      className={`calendar-redesign-grid__event min-w-0 truncate rounded-r-md border-l-[3px] px-1.5 py-0.5 text-[11px] font-semibold leading-4 sm:text-[10px] ${chipClass}`}
                       title={`${event.baslangic_saat.slice(0, 5)} · ${label}`}
                     >
                       <span className="hidden text-muted-foreground lg:inline">{event.baslangic_saat.slice(0, 5)} </span>
@@ -103,7 +103,7 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
                   );
                 })}
                 {extraCount > 0 ? (
-                  <span className="pl-1 text-[9px] font-bold text-muted-foreground">+{extraCount} {t("calendar.more")}</span>
+                  <span className="pl-1 text-[11px] font-bold text-muted-foreground">+{extraCount} {t("calendar.more")}</span>
                 ) : null}
               </div>
             </button>

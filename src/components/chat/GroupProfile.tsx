@@ -218,7 +218,7 @@ export function GroupProfile({ group, members, messages, onClose }: GroupProfile
                     </span>
                   </div>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${
+                    className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
                       userRole === "muellim"
                         ? "bg-primary/10 text-primary"
                         : userRole === "tyutor"

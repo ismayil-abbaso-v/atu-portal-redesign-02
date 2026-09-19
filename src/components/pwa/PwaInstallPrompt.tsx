@@ -120,7 +120,7 @@ export function PwaInstallPrompt() {
           <button
             type="button"
             onClick={dismiss}
-            className="absolute right-3 top-3 flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 sm:right-4 sm:top-4"
+            className="absolute right-3 top-3 flex size-11 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 sm:right-4 sm:top-4"
             aria-label="Bağla"
           >
             <X className="size-4" />

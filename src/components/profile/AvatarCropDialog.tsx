@@ -105,7 +105,7 @@ export function AvatarCropDialog({ file, open, loading = false, onCancel, onConf
             <h3 id="avatar-crop-title" className="font-bold text-foreground">Profil şəklini yerləşdir</h3>
             <p className="mt-0.5 text-xs text-muted-foreground">Instagram kimi sürüşdür, böyüt və uyğun hissəni seç.</p>
           </div>
-          <button type="button" onClick={onCancel} disabled={loading} className="inline-flex size-9 shrink-0 items-center justify-center rounded-full hover:bg-muted disabled:opacity-50" aria-label="Bağla"><X className="size-4" /></button>
+          <button type="button" onClick={onCancel} disabled={loading} className="inline-flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-muted disabled:opacity-50" aria-label="Bağla"><X className="size-4" /></button>
         </div>
 
         <div className="min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5">

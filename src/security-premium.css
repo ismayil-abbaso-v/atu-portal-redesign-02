@@ -78,7 +78,7 @@
   gap: 7px;
   margin-bottom: 5px;
   color: color-mix(in oklch, var(--primary) 72%, var(--foreground));
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -387,7 +387,7 @@
   .security-page-header__core svg { width: 22px; height: 22px; }
   .security-page-header__orbit--one { width: 100px; height: 54px; }
   .security-page-header__orbit--two { width: 132px; height: 70px; }
-  .security-page-header__eyebrow { font-size: 8px; max-width: 110px; }
+  .security-page-header__eyebrow { font-size: 10px; max-width: 110px; }
 
   .security-page-header + .grid { gap: 14px; }
   .security-page-header + .grid > section { border-radius: 24px !important; box-shadow: none !important; }

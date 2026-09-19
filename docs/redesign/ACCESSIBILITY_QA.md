@@ -16,6 +16,10 @@ Target: WCAG 2.2 AA where applicable to the portal UI.
 - Reduced-motion CSS contract exists.
 - Prompt 11 scoped semantic ESLint passes.
 - TypeScript typecheck passes.
+- Prompt 16 removed all explicit 7–9px production text declarations.
+- Native icon controls explicitly sized below 40px were enlarged to 44×44px.
+- Root-level horizontal clipping was removed instead of masking component overflow.
+- `npm run qa:responsive-a11y` guards these contracts.
 
 ## Keyboard behavior
 
@@ -43,3 +47,6 @@ A browser + screen-reader session is still recommended for:
 - VoiceOver/NVDA naming on third-party Radix controls
 
 These items require an interactive authenticated browser session and are not replaced by static source checks.
+
+The complete Prompt 16 change log and acceptance boundary are documented in
+[`TYPOGRAPHY_RESPONSIVE_A11Y_AUDIT.md`](./TYPOGRAPHY_RESPONSIVE_A11Y_AUDIT.md).

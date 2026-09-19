@@ -390,7 +390,7 @@ function SchedulerHeader() {
 }
 
 function Metric({ label, value, icon: Icon }: { label: string; value: number; icon: typeof CalendarClock }) {
-  return <div className="min-w-0 rounded-2xl border border-border/70 bg-background px-2 py-2.5 text-center sm:px-3"><Icon className="mx-auto size-4 text-primary" /><p className="mt-1 font-data text-lg font-black tabular-nums text-foreground sm:text-xl">{value}</p><p className="mt-0.5 truncate text-[9px] font-bold uppercase tracking-[0.05em] text-muted-foreground sm:text-[10px]">{label}</p></div>;
+  return <div className="min-w-0 rounded-2xl border border-border/70 bg-background px-2 py-2.5 text-center sm:px-3"><Icon className="mx-auto size-4 text-primary" /><p className="mt-1 font-data text-lg font-black tabular-nums text-foreground sm:text-xl">{value}</p><p className="mt-0.5 truncate text-[11px] font-bold uppercase tracking-[0.05em] text-muted-foreground sm:text-[10px]">{label}</p></div>;
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {

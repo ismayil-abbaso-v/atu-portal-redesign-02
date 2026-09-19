@@ -322,7 +322,7 @@
 .appearance-palette-option:hover .appearance-palette-swatch:nth-child(odd) { transform: translateY(-2px); }
 .appearance-palette-copy { min-width: 0; flex: 1 1 auto; }
 .appearance-palette-name { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; color: var(--foreground); font-size: 14px; font-weight: 770; }
-.appearance-active-badge { border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); padding: 3px 7px; color: var(--primary); font-size: 9px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+.appearance-active-badge { border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); padding: 3px 7px; color: var(--primary); font-size: 11px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
 .appearance-palette-desc { margin-top: 3px; color: var(--muted-foreground); font-size: 11px; line-height: 1.45; }
 .appearance-palette-action { display: grid; width: 35px; height: 35px; flex: 0 0 auto; place-items: center; border: 1px solid var(--border); border-radius: 11px; background: var(--card); transition: transform .2s ease, border-color .2s ease; }
 .appearance-palette-option:hover .appearance-palette-action { transform: translateX(2px); border-color: color-mix(in oklch, var(--primary) 22%, var(--border)); }
@@ -356,13 +356,13 @@
 .appearance-preview__copy { min-width: 0; flex: 1 1 auto; }
 .appearance-preview__title { margin: 0; color: var(--foreground); font-size: 16px; font-weight: 780; }
 .appearance-preview__desc { margin: 3px 0 0; color: var(--muted-foreground); font-size: 11px; }
-.appearance-preview__status { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; border: 1px solid color-mix(in oklch, var(--primary) 11%, var(--border)); border-radius: 999px; background: color-mix(in oklch, var(--primary) 5%, var(--background)); padding: 5px 8px; color: var(--primary); font-size: 9px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+.appearance-preview__status { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; border: 1px solid color-mix(in oklch, var(--primary) 11%, var(--border)); border-radius: 999px; background: color-mix(in oklch, var(--primary) 5%, var(--background)); padding: 5px 8px; color: var(--primary); font-size: 11px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
 .appearance-preview__status-dot { width: 6px; height: 6px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 9%, transparent); animation: appearancePulse 2.2s ease-in-out infinite; }
 
 .appearance-preview__chrome { overflow: hidden; border: 1px solid color-mix(in oklch, var(--primary) 10%, var(--border)); border-radius: 19px; background: var(--background); box-shadow: inset 0 1px 0 rgb(255 255 255 / .045), 0 10px 24px color-mix(in oklch, var(--primary) 4%, transparent); }
 .appearance-preview__toolbar { display: flex; align-items: center; gap: 5px; height: 31px; border-bottom: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border)); background: color-mix(in oklch, var(--muted) 45%, var(--card)); padding: 0 11px; }
 .appearance-preview__toolbar-dot { width: 7px; height: 7px; border-radius: 999px; background: color-mix(in oklch, var(--muted-foreground) 35%, var(--border)); }
-.appearance-preview__toolbar-label { margin-left: 6px; color: var(--muted-foreground); font-size: 9px; font-weight: 700; }
+.appearance-preview__toolbar-label { margin-left: 6px; color: var(--muted-foreground); font-size: 11px; font-weight: 700; }
 .appearance-preview__viewport { position: relative; height: 440px; overflow: hidden; background: var(--background); }
 
 @keyframes appearanceAccentIn { to { transform: scaleY(1); } }
@@ -409,7 +409,7 @@
 }
 
 @media (max-width: 430px) {
-  .appearance-hero__eyebrow { font-size: 9px; letter-spacing: .11em; }
+  .appearance-hero__eyebrow { font-size: 11px; letter-spacing: .11em; }
   .appearance-hero__title { font-size: 1.52rem; }
   .appearance-section-head { gap: 10px; }
   .appearance-section-icon { width: 40px; height: 40px; border-radius: 13px; }

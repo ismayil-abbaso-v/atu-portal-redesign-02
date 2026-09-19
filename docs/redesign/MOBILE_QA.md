@@ -24,6 +24,13 @@ Static QA verifies:
 - content bottom clearance for the fixed bottom navigation;
 - contextual hero assets for all covered routes.
 
+Prompt 16 additionally verifies:
+
+- zero explicit 7–9px production font declarations;
+- no `html`/`body`/`#root` horizontal clipping;
+- no explicitly undersized native icon buttons below the guard threshold;
+- 44×44px remediation for the identified 32–36px controls.
+
 ## Required rendered checks
 
 Every capture must inspect:

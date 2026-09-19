@@ -78,7 +78,12 @@ requireIncludes(
 requireIncludes("src/mobile-native.css", "env(safe-area-inset-top)", "Mobile safe-area QA");
 requireIncludes("src/mobile-native.css", "env(safe-area-inset-bottom)", "Mobile safe-area QA");
 requireIncludes("src/mobile-native.css", "100dvh", "Mobile viewport QA");
-requireIncludes("src/mobile-native.css", "overflow-x: hidden", "Horizontal-overflow QA");
+const mobileCss = text("src/mobile-native.css");
+if (
+  /html\s*,\s*\n?\s*body\s*,\s*\n?\s*#root\s*\{[^}]*overflow-x:\s*(?:hidden|clip)/s.test(mobileCss)
+) {
+  failures.push("Horizontal-overflow QA: root-level clipping must not hide component overflow");
+}
 requireIncludes("src/styles.css", "@media (prefers-reduced-motion:reduce)", "Reduced-motion QA");
 requireIncludes(
   "src/components/layout/MobileBottomNav.tsx",
@@ -116,7 +121,6 @@ requireIncludes(
   "Unread state non-color label",
 );
 
-const mobileCss = text("src/mobile-native.css");
 for (const route of [
   "/ev",
   "/elektron-jurnal",
