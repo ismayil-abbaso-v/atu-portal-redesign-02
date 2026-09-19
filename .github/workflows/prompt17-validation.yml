@@ -63,7 +63,22 @@ jobs:
           if [ "$lint_status" -eq 0 ]; then
             exit 0
           fi
-          grep -q "6532 problems (6520 errors, 12 warnings)" /tmp/prompt17-lint.log
+
+          summary="$(grep -Eo '[0-9]+ problems \([0-9]+ errors, [0-9]+ warnings\)' /tmp/prompt17-lint.log | tail -1)"
+          if [ -z "$summary" ]; then
+            echo "Could not parse repository lint summary."
+            exit 1
+          fi
+
+          errors="$(printf '%s' "$summary" | sed -E 's/.*\(([0-9]+) errors, ([0-9]+) warnings\).*/\1/')"
+          warnings="$(printf '%s' "$summary" | sed -E 's/.*\(([0-9]+) errors, ([0-9]+) warnings\).*/\2/')"
+
+          if [ "$errors" -gt 6520 ] || [ "$warnings" -gt 12 ]; then
+            echo "Inherited lint debt increased: $summary"
+            exit 1
+          fi
+
+          echo "Inherited lint debt did not increase: $summary"
 
       - name: Regression tests
         run: npm test
