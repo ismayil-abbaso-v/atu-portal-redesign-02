@@ -64,14 +64,8 @@ export function MobileBottomNav() {
   const panelRef = useRef<HTMLElement>(null);
   const firstSecondaryRef = useRef<HTMLAnchorElement>(null);
 
-  const model = useMemo(
-    () => getMobileNavModel(primaryRole, roles),
-    [primaryRole, roles],
-  );
-  const routeContext = useMemo(
-    () => getMobileRouteContext(pathname, model),
-    [model, pathname],
-  );
+  const model = useMemo(() => getMobileNavModel(primaryRole, roles), [primaryRole, roles]);
+  const routeContext = useMemo(() => getMobileRouteContext(pathname, model), [model, pathname]);
 
   const closeAndRestoreFocus = useCallback(() => {
     setMenuOpen(false);
@@ -99,7 +93,8 @@ export function MobileBottomNav() {
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (panelRef.current?.contains(target) || triggerRef.current?.contains(target)) return;
-      if (target instanceof Element && target.closest(".portal-mobile-bottom-nav__backdrop")) return;
+      if (target instanceof Element && target.closest(".portal-mobile-bottom-nav__backdrop"))
+        return;
       setMenuOpen(false);
     };
 
@@ -161,10 +156,7 @@ export function MobileBottomNav() {
     >
       <button
         type="button"
-        className={cn(
-          "portal-mobile-bottom-nav__backdrop",
-          menuOpen && "is-open",
-        )}
+        className={cn("portal-mobile-bottom-nav__backdrop", menuOpen && "is-open")}
         aria-hidden
         tabIndex={-1}
         onClick={closeAndRestoreFocus}
@@ -178,10 +170,7 @@ export function MobileBottomNav() {
         aria-labelledby={MENU_TITLE_ID}
         aria-hidden={!menuOpen}
         inert={!menuOpen}
-        className={cn(
-          "portal-mobile-secondary-menu",
-          menuOpen && "is-open",
-        )}
+        className={cn("portal-mobile-secondary-menu", menuOpen && "is-open")}
       >
         <div className="portal-mobile-secondary-menu__header">
           <div className="min-w-0">
@@ -210,10 +199,7 @@ export function MobileBottomNav() {
                 to={item.to}
                 aria-current={active ? "page" : undefined}
                 onClick={() => setMenuOpen(false)}
-                className={cn(
-                  "portal-mobile-secondary-menu__item",
-                  active && "is-active",
-                )}
+                className={cn("portal-mobile-secondary-menu__item", active && "is-active")}
               >
                 <span className="portal-mobile-secondary-menu__icon" aria-hidden>
                   <Icon />
