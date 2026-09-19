@@ -1,7 +1,9 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, BookOpen, CreditCard, KeyRound, LifeBuoy, Search, Sparkles, Wrench } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { BookOpen, CreditCard, KeyRound, LifeBuoy, Search, Sparkles, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import helpHero from "@/assets/help-settings-hero.svg";
+import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import {
   Accordion,
   AccordionContent,
@@ -12,6 +14,7 @@ import { helpMessages } from "@/lib/help-i18n";
 import { faqBolmeleri } from "@/lib/help-data";
 import { useI18n } from "@/lib/i18n";
 import "@/help-premium.css";
+import "@/settings-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/yardim")({
   head: () => ({
@@ -23,6 +26,13 @@ export const Route = createFileRoute("/_authenticated/menyu/yardim")({
   component: YardimSehifesi,
 });
 
+const HELP_HERO = {
+  az: { eyebrow: "YARDIM VƏ DƏSTƏK", quote: "Doğru cavaba daha qısa yoldan çatın." },
+  tr: { eyebrow: "YARDIM VE DESTEK", quote: "Doğru yanıta daha kısa yoldan ulaşın." },
+  en: { eyebrow: "HELP & SUPPORT", quote: "Reach the right answer with fewer steps." },
+  ru: { eyebrow: "ПОМОЩЬ И ПОДДЕРЖКА", quote: "Находите нужный ответ быстрее." },
+} as const;
+
 const sectionIcons = {
   account: KeyRound,
   library: BookOpen,
@@ -31,7 +41,6 @@ const sectionIcons = {
 } as const;
 
 function YardimSehifesi() {
-  const router = useRouter();
   const [axtarıs, setAxtarıs] = useState("");
   const { locale } = useI18n();
   const messages = helpMessages[locale];
@@ -79,39 +88,16 @@ function YardimSehifesi() {
   );
 
   return (
-    <div className="help-page">
-      <header className="help-hero">
-        <span aria-hidden className="help-hero__accent" />
-        <span aria-hidden className="help-hero__grid" />
-        <span aria-hidden className="help-hero__glow" />
-        <span aria-hidden className="help-hero__sweep" />
-
-        <div className="help-hero__content">
-          <button
-            type="button"
-            className="help-hero__back"
-            aria-label="Geri"
-            onClick={() => router.history.back()}
-          >
-            <ArrowLeft className="size-5" />
-          </button>
-
-          <div className="help-hero__copy">
-            <div className="help-hero__eyebrow">
-              <span className="help-hero__eyebrow-dot" />
-              ATU · SUPPORT
-            </div>
-            <h1 className="help-hero__title">{tx("page.title")}</h1>
-            <p className="help-hero__subtitle">{tx("page.description")}</p>
-          </div>
-
-          <div className="help-hero__visual" aria-hidden>
-            <span className="help-hero__orbit help-hero__orbit--one" />
-            <span className="help-hero__orbit help-hero__orbit--two" />
-            <span className="help-hero__core"><LifeBuoy className="size-6" /></span>
-          </div>
-        </div>
-      </header>
+    <div className="help-page prompt8-help settings-page-stack">
+      <SettingsPageHero
+        image={helpHero}
+        eyebrow={HELP_HERO[locale].eyebrow}
+        title={tx("page.title")}
+        subtitle={tx("page.description")}
+        quote={HELP_HERO[locale].quote}
+        icon={<LifeBuoy />}
+        backLabel={tx("page.title")}
+      />
 
       <section className="help-search-panel">
         <div className="help-search-panel__badge">

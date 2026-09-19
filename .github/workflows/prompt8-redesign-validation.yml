@@ -1,0 +1,40 @@
+name: Prompt 8 redesign validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint Prompt 8 TypeScript
+        run: >
+          npx eslint
+          --rule 'prettier/prettier: off'
+          --rule '@typescript-eslint/no-explicit-any: off'
+          src/components/menu/SettingsPageHero.tsx
+          src/routes/_authenticated/menyu/index.tsx
+          src/routes/_authenticated/menyu/profil.tsx
+          src/routes/_authenticated/menyu/tehlukesizlik.tsx
+          src/routes/_authenticated/menyu/bildiris.tsx
+          src/routes/_authenticated/menyu/gorunus.tsx
+          src/routes/_authenticated/menyu/yardim.tsx
+          src/lib/menu-hub-i18n.ts
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build

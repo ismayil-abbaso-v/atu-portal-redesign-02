@@ -4,17 +4,19 @@ import {
   ChevronRight,
   CircleHelp,
   FileText,
+  LifeBuoy,
   Palette,
   Settings2,
   Shield,
-  Sparkles,
   UserRound,
 } from "lucide-react";
 import { useEffect } from "react";
 
+import menuHero from "@/assets/menu-settings-hero.svg";
+import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { usePrimaryRole } from "@/hooks/use-user-role";
 import { type MenuHubKey, useMenuHubI18n } from "@/lib/menu-hub-i18n";
-import "@/menu-premium.css";
+import "@/settings-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/")({
   head: () => ({
@@ -36,50 +38,20 @@ type MenuCard = {
 };
 
 const kartlar: readonly MenuCard[] = [
-  {
-    to: "/menyu/profil",
-    titleKey: "profileTitle",
-    descriptionKey: "profileDescription",
-    tagKey: "profileTag",
-    icon: UserRound,
-  },
-  {
-    to: "/menyu/tehlukesizlik",
-    titleKey: "securityTitle",
-    descriptionKey: "securityDescription",
-    tagKey: "securityTag",
-    icon: Shield,
-  },
-  {
-    to: "/menyu/bildiris",
-    titleKey: "notificationsTitle",
-    descriptionKey: "notificationsDescription",
-    tagKey: "notificationsTag",
-    icon: Bell,
-  },
-  {
-    to: "/menyu/gorunus",
-    titleKey: "appearanceTitle",
-    descriptionKey: "appearanceDescription",
-    tagKey: "appearanceTag",
-    icon: Palette,
-  },
-  {
-    to: "/menyu/transkript",
-    titleKey: "transcriptTitle",
-    descriptionKey: "transcriptDescription",
-    tagKey: "transcriptTag",
-    icon: FileText,
-    studentOnly: true,
-  },
-  {
-    to: "/menyu/yardim",
-    titleKey: "helpTitle",
-    descriptionKey: "helpDescription",
-    tagKey: "helpTag",
-    icon: CircleHelp,
-  },
+  { to: "/menyu/profil", titleKey: "profileTitle", descriptionKey: "profileDescription", tagKey: "profileTag", icon: UserRound },
+  { to: "/menyu/tehlukesizlik", titleKey: "securityTitle", descriptionKey: "securityDescription", tagKey: "securityTag", icon: Shield },
+  { to: "/menyu/bildiris", titleKey: "notificationsTitle", descriptionKey: "notificationsDescription", tagKey: "notificationsTag", icon: Bell },
+  { to: "/menyu/gorunus", titleKey: "appearanceTitle", descriptionKey: "appearanceDescription", tagKey: "appearanceTag", icon: Palette },
+  { to: "/menyu/transkript", titleKey: "transcriptTitle", descriptionKey: "transcriptDescription", tagKey: "transcriptTag", icon: FileText, studentOnly: true },
+  { to: "/menyu/yardim", titleKey: "helpTitle", descriptionKey: "helpDescription", tagKey: "helpTag", icon: CircleHelp },
 ];
+
+const QUOTES = {
+  az: "Texnologiya daha yaxşı bir gələcək yaradır.",
+  tr: "Teknoloji daha iyi bir gelecek yaratır.",
+  en: "Technology creates a better future.",
+  ru: "Технологии создают лучшее будущее.",
+} as const;
 
 function setMetaContent(selector: string, content: string) {
   const meta = document.head.querySelector<HTMLMetaElement>(selector);
@@ -87,14 +59,13 @@ function setMetaContent(selector: string, content: string) {
 }
 
 function MenyuSehifesi() {
-  const { t } = useMenuHubI18n();
+  const { locale, t } = useMenuHubI18n();
   const { primaryRole } = usePrimaryRole();
   const visibleCards = kartlar.filter((card) => !card.studentOnly || primaryRole === "telebe");
 
   useEffect(() => {
     const title = t("seoTitle");
     const description = t("seoDescription");
-
     document.title = title;
     setMetaContent('meta[name="description"]', description);
     setMetaContent('meta[property="og:title"]', title);
@@ -102,74 +73,57 @@ function MenyuSehifesi() {
   }, [t]);
 
   return (
-    <div className="menu-premium-page">
-      <section className="menu-premium-hero" aria-labelledby="menu-hub-title">
-        <span aria-hidden className="menu-premium-hero__pattern" />
-        <span aria-hidden className="menu-premium-hero__glow menu-premium-hero__glow--one" />
-        <span aria-hidden className="menu-premium-hero__glow menu-premium-hero__glow--two" />
-        <span aria-hidden className="menu-premium-hero__accent" />
-        <span aria-hidden className="menu-premium-hero__sweep" />
+    <div className="menu-reference-page">
+      <SettingsPageHero
+        image={menuHero}
+        eyebrow={t("heroEyebrow")}
+        title={t("heroTitle")}
+        subtitle={t("heroSubtitle")}
+        quote={QUOTES[locale]}
+        icon={<Settings2 />}
+        showBack={false}
+      />
 
-        <div className="menu-premium-hero__content">
-          <div className="menu-premium-hero__copy">
-            <div className="menu-premium-hero__eyebrow">
-              <Sparkles className="size-3.5" aria-hidden />
-              {t("heroEyebrow")}
-            </div>
-            <h1 id="menu-hub-title" className="menu-premium-hero__title">{t("heroTitle")}</h1>
-            <p className="menu-premium-hero__subtitle">{t("heroSubtitle")}</p>
-          </div>
-
-          <div className="menu-premium-hero__visual" aria-hidden>
-            <span className="menu-premium-orbit menu-premium-orbit--one" />
-            <span className="menu-premium-orbit menu-premium-orbit--two" />
-            <span className="menu-premium-orbit__dot menu-premium-orbit__dot--one" />
-            <span className="menu-premium-orbit__dot menu-premium-orbit__dot--two" />
-            <span className="menu-premium-hero__core">
-              <Settings2 className="size-8" />
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <section className="menu-premium-section" aria-labelledby="menu-settings-title">
-        <div className="menu-premium-section__header">
+      <section className="menu-reference-section" aria-labelledby="menu-settings-title">
+        <div className="menu-reference-heading">
           <div>
-            <p className="menu-premium-section__eyebrow">{t("sectionEyebrow")}</p>
-            <h2 id="menu-settings-title" className="menu-premium-section__title">{t("sectionTitle")}</h2>
+            <p className="menu-reference-heading__eyebrow">{t("sectionEyebrow")}</p>
+            <h2 id="menu-settings-title">{t("sectionTitle")}</h2>
+            <p>{t("seoDescription")}</p>
           </div>
-          <span className="menu-premium-section__count">{t("sectionCount", { count: visibleCards.length })}</span>
+          <span className="menu-reference-heading__count">{visibleCards.length}</span>
         </div>
 
-        <div className="menu-premium-grid">
-          {visibleCards.map((kart, index) => {
-            const sectionTitle = t(kart.titleKey);
+        <div className="menu-reference-grid">
+          {visibleCards.map((card, index) => {
+            const title = t(card.titleKey);
             return (
               <Link
-                key={kart.to}
-                to={kart.to}
-                aria-label={t("openSectionAria", { section: sectionTitle })}
-                className="menu-premium-card group"
-                style={{ animationDelay: `${90 + index * 65}ms` }}
+                key={card.to}
+                to={card.to}
+                aria-label={t("openSectionAria", { section: title })}
+                className="menu-reference-card"
+                style={{ animationDelay: `${index * 35}ms` }}
               >
-                <span aria-hidden className="menu-premium-card__shine" />
-                <span className="menu-premium-card__icon" aria-hidden>
-                  <kart.icon className="size-5" />
+                <span className="menu-reference-card__icon" aria-hidden><card.icon /></span>
+                <span className="menu-reference-card__copy">
+                  <strong>{title}</strong>
+                  <span>{t(card.descriptionKey)}</span>
                 </span>
-
-                <span className="menu-premium-card__content">
-                  <span className="menu-premium-card__tag">{t(kart.tagKey)}</span>
-                  <span className="menu-premium-card__title">{sectionTitle}</span>
-                  <span className="menu-premium-card__text">{t(kart.descriptionKey)}</span>
-                </span>
-
-                <span className="menu-premium-card__arrow" aria-hidden>
-                  <ChevronRight className="size-5" />
-                </span>
+                <span className="menu-reference-card__arrow" aria-hidden><ChevronRight /></span>
+                <span className="menu-reference-card__detail">{t(card.tagKey)}</span>
               </Link>
             );
           })}
         </div>
+      </section>
+
+      <section className="menu-reference-support-banner">
+        <div>
+          <h3>{t("helpTitle")}</h3>
+          <p>{t("helpDescription")}</p>
+        </div>
+        <Link to="/menyu/yardim">{t("helpTitle")}<LifeBuoy aria-hidden /></Link>
       </section>
     </div>
   );

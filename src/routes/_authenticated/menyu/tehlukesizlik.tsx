@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Copy, Eye, EyeOff, KeyRound, Laptop, Loader2, LogOut, MapPin, MonitorSmartphone, QrCode, RefreshCw, ShieldCheck, Smartphone, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { toast } from "sonner";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
+import securityHero from "@/assets/security-settings-hero.svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
+import "@/settings-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/tehlukesizlik")({
   head: () => ({ meta: [{ title: "Təhlükəsizlik — ATU Şəxsi Kabinet" }, { name: "description", content: "Şifrə, iki faktorlu identifikasiya və aktiv sessiyaların idarəsi." }] }),
@@ -15,6 +17,13 @@ type Locale = "az" | "tr" | "en" | "ru";
 type Sessiya = { id: string; session_id: string; cihaz: string; brauzer: string | null; ip: string | null; seher: string | null; olke: string | null; son_aktivlik: string };
 type Presentation = { device: string; browser: string; mobile: boolean };
 type ClientInfo = { presentation: Presentation; ip: string | null; city: string | null; country: string | null };
+
+const SECURITY_HERO: Record<Locale, { eyebrow: string; subtitle: string; quote: string }> = {
+  az: { eyebrow: "HESAB TƏHLÜKƏSİZLİYİ", subtitle: "Şifrənizi, iki faktorlu doğrulamanı və aktiv sessiyalarınızı bir məkandan idarə edin.", quote: "Təhlükəsiz hesab, etibarlı rəqəmsal təcrübə." },
+  tr: { eyebrow: "HESAP GÜVENLİĞİ", subtitle: "Şifrenizi, iki faktörlü doğrulamayı ve aktif oturumlarınızı tek yerden yönetin.", quote: "Güvenli hesap, güvenilir dijital deneyim." },
+  en: { eyebrow: "ACCOUNT SECURITY", subtitle: "Manage your password, two-factor authentication and active sessions from one place.", quote: "A secure account enables a trusted digital experience." },
+  ru: { eyebrow: "БЕЗОПАСНОСТЬ АККАУНТА", subtitle: "Управляйте паролем, двухфакторной аутентификацией и активными сеансами в одном месте.", quote: "Защищённый аккаунт — основа надёжного цифрового опыта." },
+};
 
 const text: Record<Locale, Record<string, string>> = {
   az: {
@@ -201,9 +210,10 @@ function TehlukesizlikSehifesi() {
 
   const qr = mfaRegistration ? qrMarkup(mfaRegistration.qr) : null;
   const passwordDate = lastPasswordChange ? new Date(lastPasswordChange).toLocaleDateString(activeLocale === "az" ? "az-AZ" : activeLocale === "tr" ? "tr-TR" : activeLocale === "ru" ? "ru-RU" : "en-US") : t("never");
+  const hero = SECURITY_HERO[locale];
 
-  return <>
-    <PageHeader baslıq={t("title")} geri />
+  return <div className="settings-page-stack security-settings-redesign">
+    <SettingsPageHero image={securityHero} eyebrow={hero.eyebrow} title={t("title")} subtitle={hero.subtitle} quote={hero.quote} icon={<ShieldCheck />} backLabel={t("cancel")} />
     <div className="grid gap-4 xl:grid-cols-[38%_62%]">
       <section className="min-w-0 rounded-[24px] border border-border/50 bg-card p-5 shadow-sm">
         <h2 className="mb-6 text-[20px] font-bold tracking-tight text-foreground">{t("loginSecurity")}</h2>
@@ -229,7 +239,7 @@ function TehlukesizlikSehifesi() {
 
     {confirmSession ? <ConfirmModal title={t("confirmLogout")} description={t("confirmLogoutDescription")} onClose={() => setConfirmSession(null)} onConfirm={() => void revokeSession(confirmSession)} loading={sessionLoading} t={t} /> : null}
     {confirmAll ? <ConfirmModal title={t("confirmAll")} description={t("confirmAllDescription")} onClose={() => setConfirmAll(false)} onConfirm={() => void revokeAll()} loading={sessionLoading} t={t} /> : null}
-  </>;
+  </div>;;
 }
 
 function PasswordField({ id, label, value, onChange, show, setShow, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; show: boolean; setShow: (value: boolean) => void; placeholder?: string }) { return <div className="space-y-2"><label htmlFor={id} className="text-sm font-bold text-foreground">{label}</label><div className="relative"><input id={id} value={value} onChange={(e) => onChange(e.target.value)} type={show ? "text" : "password"} placeholder={placeholder} autoComplete="new-password" className="h-12 w-full rounded-xl border border-border bg-background px-4 pr-12 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" /><button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">{show ? <EyeOff className="size-5" /> : <Eye className="size-5" />}</button></div></div>; }

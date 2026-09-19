@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/layout/PageHeader";
+import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
+import profileHero from "@/assets/profile-settings-hero.svg";
 import { AvatarCropDialog } from "@/components/profile/AvatarCropDialog";
 import { SignedAvatarImg } from "@/components/common/SignedAvatar";
 import { useUserRoles } from "@/hooks/use-user-role";
@@ -11,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useI18n } from "@/lib/i18n";
 import "@/profile-premium.css";
+import "@/settings-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/profil")({
   head: () => ({ meta: [{ title: "Profil parametrləri — ATU Şəxsi Kabinet" }, { name: "description", content: "Şəxsi, əlaqə və akademik məlumatlarınız." }] }),
@@ -34,6 +37,13 @@ const FIELDS = [
   ["e_poct", "E-POÇT"], ["telefon", "TELEFON"], ["sheher", "ŞƏHƏR"], ["bolme", "BÖLMƏ"], ["fakulte", "FAKÜLTƏ"], ["qrup", "QRUP"],
   ["sinif", "SİNİF"], ["tedris_ili", "TƏDRİS İLİ"], ["tehsil_novu", "TƏHSİL NÖVÜ"], ["dim_bali", "DİM BALI"],
 ] as const;
+const PROFILE_HERO: Record<Locale, { eyebrow: string; subtitle: string; quote: string }> = {
+  az: { eyebrow: "MƏNİM PROFİLİM", subtitle: "Şəxsi, əlaqə və akademik məlumatlarınızı təhlükəsiz şəkildə nəzərdən keçirin və icazəniz daxilində yeniləyin.", quote: "Dəqiq məlumat, daha rahat tələbə təcrübəsi." },
+  tr: { eyebrow: "PROFİLİM", subtitle: "Kişisel, iletişim ve akademik bilgilerinizi güvenli biçimde görüntüleyin ve yetkiniz dahilinde güncelleyin.", quote: "Doğru bilgi, daha rahat bir öğrenci deneyimi." },
+  en: { eyebrow: "MY PROFILE", subtitle: "Review your personal, contact and academic information securely and update fields where your role permits.", quote: "Accurate information supports a smoother student experience." },
+  ru: { eyebrow: "МОЙ ПРОФИЛЬ", subtitle: "Безопасно просматривайте личные, контактные и академические данные и обновляйте доступные поля.", quote: "Точные данные делают студенческий опыт удобнее." },
+};
+
 const FIELD_LABELS: Record<Locale, Record<string, string>> = {
   az: { ad:"AD", soyad:"SOYAD", ata_adi:"ATA ADI", dogum_tarixi:"DOĞUM TARİXİ", cins:"CİNS", fin_kodu:"FİN KODU", e_poct:"E-POÇT", telefon:"TELEFON", sheher:"ŞƏHƏR", bolme:"BÖLMƏ", fakulte:"FAKÜLTƏ", qrup:"QRUP", sinif:"SİNİF", tedris_ili:"TƏDRİS İLİ", tehsil_novu:"TƏHSİL NÖVÜ", dim_bali:"DİM BALI" },
   tr: { ad:"AD", soyad:"SOYAD", ata_adi:"BABA ADI", dogum_tarixi:"DOĞUM TARİHİ", cins:"CİNSİYET", fin_kodu:"FİN KODU", e_poct:"E-POSTA", telefon:"TELEFON", sheher:"ŞEHİR", bolme:"BÖLÜM", fakulte:"FAKÜLTE", qrup:"GRUP", sinif:"SINIF", tedris_ili:"ÖĞRETİM YILI", tehsil_novu:"EĞİTİM TÜRÜ", dim_bali:"DİM PUANI" },
@@ -122,8 +132,18 @@ function ProfilSehifesi() {
   if (yuklenir) return <><PageHeader baslıq={t("title")} geri /><div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">{t("loading")}</div></>;
   if (!profil || !forma) return <><PageHeader baslıq={t("title")} geri /><div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">{t("notFound")}</div></>;
 
-  return <>
-    <PageHeader baslıq={t("title")} geri />
+  const hero = PROFILE_HERO[lang];
+
+  return <div className="settings-page-stack profile-settings-redesign">
+    <SettingsPageHero
+      image={profileHero}
+      eyebrow={hero.eyebrow}
+      title={t("title")}
+      subtitle={hero.subtitle}
+      quote={hero.quote}
+      icon={<UserRound />}
+      backLabel={t("cancel")}
+    />
     <div className="profile-premium-grid">
       <aside className="profile-premium-card">
         <div className="profile-premium-avatar-wrap">
@@ -151,7 +171,7 @@ function ProfilSehifesi() {
     <AvatarCropDialog file={avatarCropFile} open={Boolean(avatarCropFile)} loading={yuklenirAvatar} onCancel={() => setAvatarCropFile(null)} onConfirm={(file) => void avatarYukle(file)} />
     {avatarGoster && profil.avatar_url && <div className="fixed inset-0 z-[110] flex h-[100dvh] items-center justify-center overflow-auto overscroll-contain bg-black/70 p-4" role="dialog" aria-modal="true" onMouseDown={(e) => { if (e.target === e.currentTarget) setAvatarGoster(false); }}><div className="relative my-auto max-w-lg"><SignedAvatarImg src={profil.avatar_url} alt={t("photo")} className="max-h-[calc(100dvh-2rem)] max-w-full rounded-3xl object-contain shadow-2xl" /><button type="button" onClick={() => setAvatarGoster(false)} className="absolute -right-2 -top-2 inline-flex size-9 items-center justify-center rounded-full bg-card text-foreground shadow-lg" aria-label={t("close")}><X className="size-4" /></button></div></div>}
     {silTesdiqi && <div className="fixed inset-0 z-[120] flex h-[100dvh] items-center justify-center overflow-auto overscroll-contain bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="sil-title"><div className="my-auto w-full max-w-sm rounded-3xl bg-card p-6 shadow-2xl"><h3 id="sil-title" className="text-lg font-bold text-foreground">{t("deleteTitle")}</h3><p className="mt-2 text-sm text-muted-foreground">{t("deleteText")}</p><div className="mt-6 flex justify-end gap-2"><button type="button" onClick={() => setSilTesdiqi(false)} className="rounded-xl border border-border px-4 py-2 text-sm font-semibold">{t("cancel")}</button><button type="button" disabled={yuklenirAvatar} onClick={() => void avatarSil()} className="rounded-xl bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground disabled:opacity-50">{t("deletePhoto")}</button></div></div></div>}
-  </>;
+  </div>;;
 }
 
 type Icon = typeof UserRound;

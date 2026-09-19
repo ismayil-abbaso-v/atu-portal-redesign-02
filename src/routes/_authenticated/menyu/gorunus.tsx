@@ -1,6 +1,5 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
-  ArrowLeft,
   Check,
   ChevronDown,
   Globe2,
@@ -8,13 +7,14 @@ import {
   Laptop,
   Moon,
   Palette as PaletteIcon,
-  SlidersHorizontal,
   Sparkles,
   Sun,
   Type,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import appearanceHero from "@/assets/appearance-settings-hero.svg";
 import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
+import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import { DeanDashboard } from "@/components/dashboard/DeanDashboard";
 import { RoleDashboardLocaleBridge } from "@/components/dashboard/RoleDashboardLocaleBridge";
 import { StudentDashboard } from "@/components/dashboard/StudentDashboard";
@@ -27,6 +27,7 @@ import { usePrimaryRole } from "@/hooks/use-user-role";
 import { LOCALE_LABELS, type Locale, useI18n } from "@/lib/i18n";
 import { useTheme, type Palette, type ThemeMode } from "@/lib/theme";
 import "@/appearance-premium.css";
+import "@/settings-redesign.css";
 
 export const Route = createFileRoute("/_authenticated/menyu/gorunus")({
   head: () => ({
@@ -80,6 +81,13 @@ const palitralar: {
     accent: "#9a542f",
   },
 ];
+
+const APPEARANCE_HERO: Record<Locale, { eyebrow: string; quote: string }> = {
+  az: { eyebrow: "PORTAL GÖRÜNÜŞÜ", quote: "Rahat interfeys diqqəti vacib olana yönəldir." },
+  tr: { eyebrow: "PORTAL GÖRÜNÜMÜ", quote: "Rahat bir arayüz dikkati önemli olana yönlendirir." },
+  en: { eyebrow: "PORTAL APPEARANCE", quote: "A comfortable interface keeps attention on what matters." },
+  ru: { eyebrow: "ОФОРМЛЕНИЕ ПОРТАЛА", quote: "Удобный интерфейс помогает сосредоточиться на главном." },
+};
 
 const akademikMaviAdlari: Record<Locale, string> = {
   az: "Akademik Mavi",
@@ -224,7 +232,6 @@ function RealAnaSehifeOnizleme() {
 }
 
 function GorunusSehifesi() {
-  const router = useRouter();
   const { t, locale, setLocale, locales } = useI18n();
   const { mode, palette, fontScale, setMode, setPalette, setFontScale } = useTheme();
 
@@ -233,36 +240,16 @@ function GorunusSehifesi() {
   }, [t, locale]);
 
   return (
-    <div className="appearance-page">
-      <header className="appearance-hero">
-        <span aria-hidden className="appearance-hero__accent" />
-        <span aria-hidden className="appearance-hero__grid" />
-        <span aria-hidden className="appearance-hero__glow" />
-        <span aria-hidden className="appearance-hero__sweep" />
-
-        <div className="appearance-hero__content">
-          <button type="button" className="appearance-hero__back" aria-label="Geri" onClick={() => router.history.back()}>
-            <ArrowLeft className="size-5" />
-          </button>
-
-          <div className="appearance-hero__copy">
-            <div className="appearance-hero__eyebrow">
-              <span className="appearance-hero__eyebrow-dot" />
-              Portal görünüşü
-            </div>
-            <h1 className="appearance-hero__title">{t("settings.appearance")}</h1>
-            <p className="appearance-hero__subtitle">
-              {t("settings.themeDescription")} {t("settings.paletteDescription")}
-            </p>
-          </div>
-
-          <div className="appearance-hero__visual" aria-hidden>
-            <span className="appearance-hero__orbit appearance-hero__orbit--one" />
-            <span className="appearance-hero__orbit appearance-hero__orbit--two" />
-            <span className="appearance-hero__core"><SlidersHorizontal className="size-6" /></span>
-          </div>
-        </div>
-      </header>
+    <div className="appearance-page prompt8-appearance">
+      <SettingsPageHero
+        image={appearanceHero}
+        eyebrow={APPEARANCE_HERO[locale].eyebrow}
+        title={t("settings.appearance")}
+        subtitle={`${t("settings.themeDescription")} ${t("settings.paletteDescription")}`}
+        quote={APPEARANCE_HERO[locale].quote}
+        icon={<PaletteIcon />}
+        backLabel={t("common.back")}
+      />
 
       <div className="appearance-layout">
         <div className="appearance-column">
