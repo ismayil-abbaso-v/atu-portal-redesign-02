@@ -1,23 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { az } from "date-fns/locale";
+import { Link } from "@tanstack/react-router";
+import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
+import { az, enUS, ru, tr } from "date-fns/locale";
 import {
-  BookOpen,
-  CalendarClock,
+  ArrowRight,
   BellRing,
-  Users,
-  MessageCircle,
-  FolderOpen,
-  Megaphone,
-  ChevronRight,
+  BookOpen,
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  FileText,
+  GraduationCap,
+  Library,
   Loader2,
+  MessageCircle,
+  RefreshCw,
+  Sparkles,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
-import { supabase } from "@/integrations/supabase/client";
+import studentHero from "@/assets/student-home-hero.webp";
+import innovationLab from "@/assets/student-innovation-lab.webp";
 import { useNotifications } from "@/hooks/use-notifications";
+import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { StudentGroupAvatarGroup } from "@/components/dashboard/StudentGroupAvatarGroup";
+import { useI18n } from "@/lib/i18n";
+import "@/student-home.css";
 
 type Course = Database["public"]["Tables"]["courses"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -25,73 +34,193 @@ type CalendarEvent = Database["public"]["Tables"]["calendar_events"]["Row"] & {
   courses: Pick<Course, "ad" | "otaq"> | null;
 };
 
-/**
- * İstifadəçinin "prefers-reduced-motion" seçimini yoxlayır — animasiyaları
- * (say-up, ring dolması) ehtiyac olduqda söndürmək üçün.
- */
-function reducedMotionIstenir(): boolean {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+type Locale = "az" | "tr" | "en" | "ru";
+
+const copy = {
+  az: {
+    welcome: "Xoş gəlmisən,",
+    future: "Azərbaycan Texnologiya Universitetində hər gün daha parlaq bir gələcəyə!",
+    quote: "Texnologiya daha yaxşı bir gələcək yaradır.",
+    words: ["TƏHSİL", "TEXNOLOGİYA", "İNKİŞAF", "SƏN"],
+    progress: "Akademik irəliləyiş",
+    semester: "Cari semestr",
+    completed: "Tamamlandı",
+    ongoing: "Davam edir",
+    remaining: "Qalıb",
+    subjects: "Fənn",
+    smallSteps: "Kiçik addımlar böyük nəticələr yaradır.",
+    week: "Bu həftə",
+    noWeek: "Bu həftə üçün dərs planı yoxdur.",
+    lesson: "Dərs",
+    room: "Otaq",
+    summary: "Akademik xülasə",
+    group: "Tədris qrupu",
+    average: "Orta bal",
+    notices: "Yeni bildiriş",
+    chat: "Söhbət aktivliyi",
+    noChat: "Hələ yeni mesaj yoxdur.",
+    openChat: "Söhbətə keç",
+    you: "Siz",
+    services: "Sürətli xidmətlər",
+    journal: "Elektron jurnal",
+    exams: "İmtahanlar",
+    office: "Sənədlər və ofis",
+    library: "Kitabxana",
+    studentOffice: "Tələbə ofisi",
+    innovation: "Texnologiya ilə daha güclü sabah!",
+    innovationText: "İnnovativ düşüncə, bilikli gənclik, inkişaf edən cəmiyyət.",
+    innovationCta: "ATU-da innovasiya",
+    loadError: "Məlumatlar yüklənmədi",
+    retry: "Yenidən cəhd et",
+  },
+  tr: {
+    welcome: "Hoş geldin,",
+    future: "Azerbaycan Teknoloji Üniversitesinde her gün daha parlak bir geleceğe!",
+    quote: "Teknoloji daha iyi bir gelecek yaratır.",
+    words: ["EĞİTİM", "TEKNOLOJİ", "GELİŞİM", "SEN"],
+    progress: "Akademik ilerleme",
+    semester: "Güncel dönem",
+    completed: "Tamamlandı",
+    ongoing: "Devam ediyor",
+    remaining: "Kaldı",
+    subjects: "Ders",
+    smallSteps: "Küçük adımlar büyük sonuçlar yaratır.",
+    week: "Bu hafta",
+    noWeek: "Bu hafta için ders planı yok.",
+    lesson: "Ders",
+    room: "Oda",
+    summary: "Akademik özet",
+    group: "Eğitim grubu",
+    average: "Ortalama",
+    notices: "Yeni bildirim",
+    chat: "Sohbet etkinliği",
+    noChat: "Henüz yeni mesaj yok.",
+    openChat: "Sohbete git",
+    you: "Siz",
+    services: "Hızlı hizmetler",
+    journal: "Elektronik jurnal",
+    exams: "Sınavlar",
+    office: "Belgeler ve ofis",
+    library: "Kütüphane",
+    studentOffice: "Öğrenci ofisi",
+    innovation: "Teknolojiyle daha güçlü yarın!",
+    innovationText: "Yenilikçi düşünce, bilgili gençlik, gelişen toplum.",
+    innovationCta: "ATU'da inovasyon",
+    loadError: "Bilgiler yüklenemedi",
+    retry: "Tekrar dene",
+  },
+  en: {
+    welcome: "Welcome,",
+    future: "A brighter future every day at Azerbaijan Technological University!",
+    quote: "Technology creates a better future.",
+    words: ["EDUCATION", "TECHNOLOGY", "GROWTH", "YOU"],
+    progress: "Academic progress",
+    semester: "Current semester",
+    completed: "Completed",
+    ongoing: "In progress",
+    remaining: "Remaining",
+    subjects: "Courses",
+    smallSteps: "Small steps create great results.",
+    week: "This week",
+    noWeek: "There are no classes planned for this week.",
+    lesson: "Class",
+    room: "Room",
+    summary: "Academic summary",
+    group: "Study group",
+    average: "Average score",
+    notices: "New notifications",
+    chat: "Chat activity",
+    noChat: "There are no recent messages yet.",
+    openChat: "Open chat",
+    you: "You",
+    services: "Quick services",
+    journal: "Electronic journal",
+    exams: "Exams",
+    office: "Documents and office",
+    library: "Library",
+    studentOffice: "Student office",
+    innovation: "A stronger tomorrow through technology!",
+    innovationText: "Innovative thinking, knowledgeable youth, a developing society.",
+    innovationCta: "Innovation at ATU",
+    loadError: "Data could not be loaded",
+    retry: "Try again",
+  },
+  ru: {
+    welcome: "Добро пожаловать,",
+    future: "Каждый день к более светлому будущему в Азербайджанском технологическом университете!",
+    quote: "Технологии создают лучшее будущее.",
+    words: ["ОБРАЗОВАНИЕ", "ТЕХНОЛОГИИ", "РАЗВИТИЕ", "ТЫ"],
+    progress: "Академический прогресс",
+    semester: "Текущий семестр",
+    completed: "Завершено",
+    ongoing: "Продолжается",
+    remaining: "Осталось",
+    subjects: "Предметы",
+    smallSteps: "Маленькие шаги приводят к большим результатам.",
+    week: "Эта неделя",
+    noWeek: "На эту неделю занятий не запланировано.",
+    lesson: "Занятие",
+    room: "Аудитория",
+    summary: "Академическая сводка",
+    group: "Учебная группа",
+    average: "Средний балл",
+    notices: "Новые уведомления",
+    chat: "Активность чата",
+    noChat: "Новых сообщений пока нет.",
+    openChat: "Открыть чат",
+    you: "Вы",
+    services: "Быстрые сервисы",
+    journal: "Электронный журнал",
+    exams: "Экзамены",
+    office: "Документы и офис",
+    library: "Библиотека",
+    studentOffice: "Студенческий офис",
+    innovation: "Более сильное завтра с технологиями!",
+    innovationText: "Инновационное мышление, образованная молодежь, развивающееся общество.",
+    innovationCta: "Инновации в ATU",
+    loadError: "Не удалось загрузить данные",
+    retry: "Повторить",
+  },
+} satisfies Record<Locale, Record<string, string | string[]>>;
+
+const dateLocales = { az, tr, en: enUS, ru } as const;
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
-/** Rəqəmi 0-dan hədəf qiymətə doğru sayaraq artıran hook (count-up). */
-function useCountUp(target: number | null, aktiv: boolean): number | null {
-  const [deyer, setDeyer] = useState<number | null>(target === null ? null : 0);
-  const animeEdildi = useRef(false);
-
+function useCountUp(target: number, ready: boolean) {
+  const [value, setValue] = useState(ready ? 0 : target);
+  const ran = useRef(false);
   useEffect(() => {
-    if (target === null || !aktiv) {
-      setDeyer(target);
+    if (!ready || prefersReducedMotion() || ran.current) {
+      setValue(target);
       return;
     }
-    if (reducedMotionIstenir()) {
-      setDeyer(target);
-      return;
-    }
-    if (animeEdildi.current) {
-      setDeyer(target);
-      return;
-    }
-    animeEdildi.current = true;
-    let cur = 0;
-    const addım = Math.max(1, target / 24);
-    let frame: number;
-    const tick = () => {
-      cur += addım;
-      if (cur >= target) {
-        setDeyer(target);
-        return;
-      }
-      setDeyer(Math.round(cur));
-      frame = requestAnimationFrame(tick);
+    ran.current = true;
+    const start = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / 700);
+      setValue(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+      if (progress < 1) frame = requestAnimationFrame(tick);
     };
-    const timeout = setTimeout(() => {
-      frame = requestAnimationFrame(tick);
-    }, 500);
-    return () => {
-      clearTimeout(timeout);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, [target, aktiv]);
-
-  return deyer;
-}
-
-/** İki "HH:mm:ss" saatı arasındakı fərqi dəqiqə olaraq hesablayır. */
-function deqiqeFerqi(baslangic: string, bitme: string): number | null {
-  const bHissə = baslangic.split(":").map(Number);
-  const eHissə = bitme.split(":").map(Number);
-  const bh = bHissə[0] ?? NaN;
-  const bm = bHissə[1] ?? NaN;
-  const eh = eHissə[0] ?? NaN;
-  const em = eHissə[1] ?? NaN;
-  if ([bh, bm, eh, em].some((v) => Number.isNaN(v))) return null;
-  return eh * 60 + em - (bh * 60 + bm);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [ready, target]);
+  return value;
 }
 
 export function StudentDashboard({ userId }: { userId: string }) {
-  // ---- Profil (ad, soyad, qrup kodu, avatar) ----
-  const { data: profile } = useQuery({
+  const { locale } = useI18n();
+  const lang = locale as Locale;
+  const c = copy[lang];
+  const dateLocale = dateLocales[lang];
+  const { unreadCount } = useNotifications();
+
+  const profileQuery = useQuery({
     queryKey: ["student-profile", userId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -102,11 +231,9 @@ export function StudentDashboard({ userId }: { userId: string }) {
       if (error) throw error;
       return data as Profile | null;
     },
-    enabled: !!userId,
   });
 
-  // ---- Tələbənin daxil olduğu qruplar ----
-  const { data: groupMembers = [], isLoading: isLoadingGroups } = useQuery({
+  const groupsQuery = useQuery({
     queryKey: ["student-groups", userId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -114,482 +241,436 @@ export function StudentDashboard({ userId }: { userId: string }) {
         .select("group_id")
         .eq("user_id", userId);
       if (error) throw error;
-      return data;
+      return data ?? [];
     },
-    enabled: !!userId,
   });
+  const groupIds = groupsQuery.data?.map((item) => item.group_id) ?? [];
 
-  const groupIds = groupMembers.map((gm) => gm.group_id);
-  const primaryGroupId = groupIds[0];
-
-  // ---- Tələbənin fənləri (aktiv fənlər sayı üçün də istifadə olunur) ----
-  const { data: courses = [], isLoading: isLoadingCourses } = useQuery({
+  const coursesQuery = useQuery({
     queryKey: ["student-courses", groupIds, userId],
+    enabled: !groupsQuery.isLoading,
     queryFn: async () => {
-      let groupCourses: Course[] = [];
-      if (groupIds.length > 0) {
-        const { data, error } = await supabase.from("courses").select("*").in("group_id", groupIds);
-        if (!error && data) {
-          groupCourses = data;
-        }
-      }
-
-      const { data: scoreData } = await supabase
+      const groupCourses = groupIds.length
+        ? await supabase.from("courses").select("*").in("group_id", groupIds)
+        : { data: [] as Course[], error: null };
+      if (groupCourses.error) throw groupCourses.error;
+      const { data: scoreRows, error } = await supabase
         .from("exam_scores")
         .select("course_id, courses(*)")
         .eq("user_id", userId);
-
-      const scoreCourses = (scoreData?.map((sd) => sd.courses).filter(Boolean) || []) as Course[];
-
-      const allCourses = [...groupCourses];
-      for (const sc of scoreCourses) {
-        if (!allCourses.some((c) => c.id === sc.id)) {
-          allCourses.push(sc);
-        }
+      if (error) throw error;
+      const all = [...((groupCourses.data ?? []) as Course[])];
+      for (const item of scoreRows ?? []) {
+        const course = item.courses as Course | null;
+        if (course && !all.some((entry) => entry.id === course.id)) all.push(course);
       }
-      return allCourses;
+      return all;
     },
-    enabled: !!userId,
   });
+  const courses = coursesQuery.data ?? [];
+  const courseIds = courses.map((course) => course.id);
 
-  const courseIds = courses.map((c) => c.id);
-
-  // ---- Ümumi orta bal: tələbənin bütün fənlər üzrə yekun qiymətlərinin ortası ----
-  const { data: allScores = [] } = useQuery({
+  const scoresQuery = useQuery({
     queryKey: ["student-all-exam-scores", userId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("exam_scores")
-        .select("yekun_qiymet")
+        .select("course_id, yekun_qiymet")
         .eq("user_id", userId);
       if (error) throw error;
-      return data;
+      return data ?? [];
     },
-    enabled: !!userId,
   });
 
-  const qiymetlendirilmisBallar = allScores
-    .map((s) => s.yekun_qiymet)
-    .filter((v): v is number => v !== null && v !== undefined);
-  const ortaBal =
-    qiymetlendirilmisBallar.length > 0
-      ? qiymetlendirilmisBallar.reduce((cəm, b) => cəm + b, 0) / qiymetlendirilmisBallar.length
-      : null;
-
-  // ---- Bugünkü dərs cədvəli ----
-  const bugununTarixi = format(new Date(), "yyyy-MM-dd");
-  const { data: bugunkuDersler = [], isLoading: isLoadingBugun } = useQuery({
-    queryKey: ["student-today-events", groupIds, courseIds, bugununTarixi],
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekQuery = useQuery({
+    queryKey: ["student-week-events", groupIds, courseIds, format(weekStart, "yyyy-MM-dd")],
+    enabled: !groupsQuery.isLoading && !coursesQuery.isLoading,
     queryFn: async () => {
-      const şərtlər: string[] = [];
-      if (groupIds.length > 0) şərtlər.push(`group_id.in.(${groupIds.join(",")})`);
-      if (courseIds.length > 0) şərtlər.push(`course_id.in.(${courseIds.join(",")})`);
-      if (şərtlər.length === 0) return [];
-
+      const filters: string[] = [];
+      if (groupIds.length) filters.push(`group_id.in.(${groupIds.join(",")})`);
+      if (courseIds.length) filters.push(`course_id.in.(${courseIds.join(",")})`);
+      if (!filters.length) return [];
       const { data, error } = await supabase
         .from("calendar_events")
         .select("*, courses(ad, otaq)")
-        .eq("tarix", bugununTarixi)
-        .or(şərtlər.join(","))
-        .order("baslangic_saat", { ascending: true });
+        .gte("tarix", format(weekStart, "yyyy-MM-dd"))
+        .lte("tarix", format(weekEnd, "yyyy-MM-dd"))
+        .or(filters.join(","))
+        .order("tarix")
+        .order("baslangic_saat");
       if (error) throw error;
       return (data ?? []) as CalendarEvent[];
     },
-    enabled: !isLoadingGroups && !isLoadingCourses,
   });
 
-  // ---- Qrup məlumatı (ad) ----
-  const { data: groupInfo } = useQuery({
-    queryKey: ["student-primary-group-info", primaryGroupId],
+  const chatsQuery = useQuery({
+    queryKey: ["student-home-chat", userId, locale],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("groups")
-        .select("*")
-        .eq("id", primaryGroupId!)
-        .maybeSingle();
+      const { data: memberships, error: membershipError } = await supabase
+        .from("chat_group_members")
+        .select("chat_group_id")
+        .eq("user_id", userId);
+      if (membershipError) throw membershipError;
+      const chatIds = (memberships ?? [])
+        .map((item) => item.chat_group_id)
+        .filter((id): id is string => Boolean(id));
+      if (!chatIds.length) return [];
+      const { data: messages, error } = await supabase
+        .from("chat_messages")
+        .select("id, metin, created_at, gonderen_id, chat_group_id")
+        .in("chat_group_id", chatIds)
+        .order("created_at", { ascending: false })
+        .limit(4);
       if (error) throw error;
-      return data;
-    },
-    enabled: !!primaryGroupId,
-  });
-
-  // ---- Qrup üzvləri (avatarlar üçün) ----
-  // Qeyd: group_members.user_id -> profiles arasında birbaşa FK əlaqəsi
-  // Supabase-in generated tiplərində tanınmadığı üçün (PostgREST embed işləmir),
-  // əvvəlcə user_id-ləri çəkib, sonra profilləri ayrıca sorğu ilə alırıq.
-  const { data: groupUzvleri = [] } = useQuery({
-    queryKey: ["student-primary-group-members", primaryGroupId],
-    queryFn: async (): Promise<
-      { user_id: string; profile: Pick<Profile, "ad" | "soyad" | "avatar_url"> | null }[]
-    > => {
-      const { data: uzvler, error } = await supabase
-        .from("group_members")
-        .select("user_id")
-        .eq("group_id", primaryGroupId!);
-      if (error) throw error;
-      if (!uzvler || uzvler.length === 0) return [];
-
-      const uzvIdler = uzvler.map((u) => u.user_id);
-      const { data: profiller, error: profilXetasi } = await supabase
-        .from("profiles")
-        .select("user_id, ad, soyad, avatar_url")
-        .in("user_id", uzvIdler);
-      if (profilXetasi) throw profilXetasi;
-
-      const profilXeritesi = new Map(
-        (profiller ?? []).map((p) => [
-          p.user_id,
-          { ad: p.ad, soyad: p.soyad, avatar_url: p.avatar_url },
+      const senderIds = [
+        ...new Set(
+          (messages ?? [])
+            .map((message) => message.gonderen_id)
+            .filter((id): id is string => Boolean(id)),
+        ),
+      ];
+      const profiles = senderIds.length
+        ? await supabase.from("profiles").select("user_id, ad, soyad").in("user_id", senderIds)
+        : { data: [], error: null };
+      if (profiles.error) throw profiles.error;
+      const names = new Map(
+        (profiles.data ?? []).map((profile) => [
+          profile.user_id,
+          [profile.ad, profile.soyad].filter(Boolean).join(" "),
         ]),
       );
-      return uzvler.map((u) => ({
-        user_id: u.user_id,
-        profile: profilXeritesi.get(u.user_id) ?? null,
+      return (messages ?? []).map((message) => ({
+        ...message,
+        senderName:
+          message.gonderen_id === userId ? c.you : names.get(message.gonderen_id ?? "") || c.chat,
       }));
     },
-    enabled: !!primaryGroupId,
   });
 
-  // ---- Bildirişlər ----
-  const { notifications, unreadCount } = useNotifications();
-  const sonBildirisler = notifications.slice(0, 3);
-
-  const yuklenirIlkin = isLoadingGroups && courses.length === 0;
-
-  const adIlk = profile?.ad || "İstifadəçi";
-
-  const bugunkuTarixMetni = format(new Date(), "d MMMM · EEEE", { locale: az });
-
-  // ---- Animasiyalar üçün hədəflər ----
-  const fenSayiAnim = useCountUp(courses.length, !isLoadingCourses);
-  const bildirisSayiAnim = useCountUp(unreadCount, true);
-
-  const ringCemferi = 283;
-  const ringOffsetHedef =
-    ortaBal !== null
-      ? Math.max(0, ringCemferi - (ringCemferi * Math.min(100, ortaBal)) / 100)
-      : ringCemferi;
-  const [ringOffset, setRingOffset] = useState(ringCemferi);
-  useEffect(() => {
-    if (ortaBal === null) {
-      setRingOffset(ringCemferi);
-      return;
-    }
-    if (reducedMotionIstenir()) {
-      setRingOffset(ringOffsetHedef);
-      return;
-    }
-    const t = setTimeout(() => setRingOffset(ringOffsetHedef), 300);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ortaBal]);
-
-  if (yuklenirIlkin) {
+  const scores = scoresQuery.data ?? [];
+  const completedIds = new Set(
+    scores.filter((score) => score.yekun_qiymet != null).map((score) => score.course_id),
+  );
+  const completed = courses.filter((course) => completedIds.has(course.id)).length;
+  const ongoing = Math.max(0, courses.length - completed);
+  const remaining = Math.max(0, courses.length - completed - ongoing);
+  const progress = courses.length ? Math.round((completed / courses.length) * 100) : 0;
+  const graded = scores
+    .map((score) => score.yekun_qiymet)
+    .filter((value): value is number => value != null);
+  const average = graded.length
+    ? graded.reduce((sum, value) => sum + value, 0) / graded.length
+    : null;
+  const isLoading =
+    profileQuery.isLoading ||
+    groupsQuery.isLoading ||
+    coursesQuery.isLoading ||
+    scoresQuery.isLoading;
+  const hasError =
+    profileQuery.isError ||
+    groupsQuery.isError ||
+    coursesQuery.isError ||
+    scoresQuery.isError ||
+    weekQuery.isError ||
+    chatsQuery.isError;
+  const animatedProgress = useCountUp(progress, !isLoading);
+  const animatedCompleted = useCountUp(completed, !isLoading);
+  const animatedOngoing = useCountUp(ongoing, !isLoading);
+  if (isLoading) return <StudentHomeSkeleton />;
+  if (hasError)
     return (
-      <div className="flex h-[400px] items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-primary" />
-      </div>
+      <StudentHomeError
+        label={c.loadError as string}
+        retry={c.retry as string}
+        onRetry={() =>
+          void Promise.all([
+            profileQuery.refetch(),
+            groupsQuery.refetch(),
+            coursesQuery.refetch(),
+            scoresQuery.refetch(),
+            weekQuery.refetch(),
+            chatsQuery.refetch(),
+          ])
+        }
+      />
     );
-  }
+
+  const profile = profileQuery.data;
+  const studentName =
+    [profile?.ad, profile?.soyad].filter(Boolean).join(" ") || profile?.ad || "ATU";
+  const weekEvents = weekQuery.data ?? [];
+  const messages = chatsQuery.data ?? [];
 
   return (
-    <div className="space-y-4 pb-6">
-      <div className="animate-stagger space-y-4">
-        {/* ============ HERO ============ */}
-        <div className="relative overflow-hidden rounded-[28px] border border-border bg-card p-6 shadow-sm sm:p-8">
-          {/* incə fon naxışı (dairələr + xətlər), aşağı opasitə */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.18]"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%236E1A2C' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E\")",
-              backgroundSize: "280px 280px",
-            }}
-          />
-          {/* sol kənar gradient zolaq */}
-          <div
-            aria-hidden
-            className="absolute inset-y-0 left-0 w-[5px] bg-gradient-to-b from-primary to-[var(--portal-gold)]"
-          />
+    <div className="student-home">
+      <section className="student-home-hero" style={{ backgroundImage: `url(${studentHero})` }}>
+        <div className="student-home-hero__shade" />
+        <div className="student-home-hero__copy">
+          <p>{c.welcome as string}</p>
+          <h1>{studentName}!</h1>
+          <span>{c.future as string}</span>
+        </div>
+        <blockquote className="student-home-hero__quote">“{c.quote as string}”</blockquote>
+        <div className="student-home-hero__words" aria-hidden>
+          {(c.words as string[]).map((word) => (
+            <span key={word}>{word}</span>
+          ))}
+        </div>
+      </section>
 
-          <div className="relative z-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-            <div>
-              <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.13em] text-[var(--portal-gold)]">
-                {bugunkuTarixMetni}
-              </span>
-              <h1 className="font-display text-2xl font-semibold tracking-[-0.01em] text-primary sm:text-3xl">
-                Salam, {adIlk} <span className="animate-wave">👋</span>
-              </h1>
-              <p className="mt-2 max-w-[36ch] text-sm text-muted-foreground">
-                {isLoadingBugun
-                  ? "Bugünkü cədvəliniz yüklənir…"
-                  : bugunkuDersler.length > 0
-                    ? `Bu gün cədvəlinizdə ${bugunkuDersler.length} dərs var. Uğurlu bir gün keçirin.`
-                    : "Bu gün cədvəlinizdə planlaşdırılmış dərs yoxdur."}
-              </p>
+      <div className="student-home-grid">
+        <section className="student-home-card student-home-progress">
+          <CardHeading
+            title={c.progress as string}
+            action={<span className="student-home-pill">{c.semester as string}</span>}
+          />
+          <div className="student-home-progress__body">
+            <div
+              className="student-home-ring"
+              style={{ "--progress": `${progress * 3.6}deg` } as CSSProperties}
+            >
+              <div>
+                <strong>{animatedProgress}%</strong>
+                <span>{c.completed as string}</span>
+              </div>
             </div>
-
-            <div className="flex flex-none items-center gap-4">
-              <div className="relative size-[104px]">
-                <svg width="104" height="104" viewBox="0 0 104 104" className="-rotate-90">
-                  <circle
-                    cx="52"
-                    cy="52"
-                    r="45"
-                    strokeWidth="8"
-                    fill="none"
-                    className="stroke-[var(--color-accent)]"
-                  />
-                  <circle
-                    cx="52"
-                    cy="52"
-                    r="45"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeDasharray={ringCemferi}
-                    strokeDashoffset={ringOffset}
-                    className="ring-fg stroke-primary"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <b className="font-data text-xl font-semibold text-primary">
-                    {ortaBal !== null ? ortaBal.toFixed(1) : "—"}
-                  </b>
-                  <span className="text-[9.5px] font-bold uppercase tracking-wide text-muted-foreground">
-                    Orta bal
-                  </span>
-                </div>
-              </div>
-              <div className="max-w-[15ch] text-xs leading-relaxed text-muted-foreground">
-                <b className="mb-0.5 block text-[13px] text-foreground">Ümumi ortalama</b>
-                {qiymetlendirilmisBallar.length > 0
-                  ? "Bütün fənlər üzrə yekun qiymətlərin ortasıdır."
-                  : "Hələ heç bir yekun qiymətiniz yoxdur."}
-              </div>
+            <div className="student-home-progress__metrics">
+              <Metric value={courses.length} label={c.subjects as string} />
+              <Metric value={animatedCompleted} label={c.completed as string} tone="positive" />
+              <Metric value={animatedOngoing} label={c.ongoing as string} tone="warning" />
+              <Metric value={remaining} label={c.remaining as string} />
             </div>
           </div>
-        </div>
+          <blockquote className="student-home-progress__quote">
+            “{c.smallSteps as string}”
+          </blockquote>
+        </section>
 
-        {/* ============ STAT-STRIP ============ */}
-        <div className="grid animate-stagger grid-cols-1 gap-3.5 sm:grid-cols-3">
-          <StatChip icon={BookOpen} renk="maroon" value={fenSayiAnim} label="Aktiv fənlər" />
-          <StatChip icon={CalendarClock} renk="gold" value={null} label="Yaxın imtahan" />
-          <StatChip icon={BellRing} renk="green" value={bildirisSayiAnim} label="Yeni bildiriş" />
-        </div>
-
-        {/* ============ CONTENT GRID ============ */}
-        <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[1.55fr_1fr]">
-          {/* Bugünkü dərslər */}
-          <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
-            <div className="mb-4 flex items-baseline justify-between">
-              <h2 className="text-base font-bold text-foreground">Bugünkü dərslər</h2>
+        <section className="student-home-card student-home-week">
+          <CardHeading
+            title={c.week as string}
+            subtitle={`${format(weekStart, "d MMM", { locale: dateLocale })} — ${format(weekEnd, "d MMM", { locale: dateLocale })}`}
+          />
+          <div className="student-home-week__days" aria-label={c.week as string}>
+            {Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)).map((day) => (
+              <span
+                key={day.toISOString()}
+                className={
+                  format(day, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? "is-today" : ""
+                }
+              >
+                <b>{format(day, "EEE", { locale: dateLocale })}</b>
+                <small>{format(day, "d")}</small>
+              </span>
+            ))}
+          </div>
+          {weekQuery.isLoading ? (
+            <div className="student-home-inline-state">
+              <Loader2 className="animate-spin" />
             </div>
+          ) : weekEvents.length ? (
+            <div className="student-home-schedule">
+              {weekEvents.slice(0, 5).map((event) => (
+                <div key={event.id} className="student-home-schedule__row">
+                  <time>{event.baslangic_saat.slice(0, 5)}</time>
+                  <span className="student-home-schedule__line" />
+                  <div>
+                    <strong>{event.courses?.ad ?? event.baslıq}</strong>
+                    <span>
+                      {[c.lesson, event.courses?.otaq ? `${c.room} ${event.courses.otaq}` : null]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Empty icon={<CalendarDays />} label={c.noWeek as string} />
+          )}
+        </section>
 
-            {isLoadingBugun ? (
-              <div className="flex items-center justify-center py-10">
-                <Loader2 className="size-6 animate-spin text-primary" />
+        <div className="student-home-side">
+          <section className="student-home-card student-home-summary">
+            <CardHeading title={c.summary as string} />
+            <SummaryRow
+              icon={<GraduationCap />}
+              label={c.group as string}
+              value={profile?.qrup || "—"}
+            />
+            <SummaryRow
+              icon={<CheckCircle2 />}
+              label={c.average as string}
+              value={average == null ? "—" : average.toFixed(1)}
+            />
+            <SummaryRow
+              icon={<BellRing />}
+              label={c.notices as string}
+              value={String(unreadCount)}
+            />
+          </section>
+          <section className="student-home-card student-home-chat">
+            <CardHeading
+              title={c.chat as string}
+              action={
+                <Link to="/sohbet">
+                  {c.openChat as string}
+                  <ArrowRight />
+                </Link>
+              }
+            />
+            {chatsQuery.isLoading ? (
+              <div className="student-home-inline-state">
+                <Loader2 className="animate-spin" />
               </div>
-            ) : bugunkuDersler.length === 0 ? (
-              <div className="flex flex-col items-center gap-2 py-10 text-center">
-                <CalendarClock className="size-10 stroke-[1.25] text-muted-foreground/50" />
-                <p className="text-sm text-muted-foreground">Bu gün dərs yoxdur.</p>
+            ) : messages.length ? (
+              <div className="student-home-chat__list">
+                {messages.map((message) => (
+                  <div key={message.id}>
+                    <span>{message.senderName.slice(0, 1).toUpperCase()}</span>
+                    <p>
+                      <strong>{message.senderName}</strong>
+                      <small>{message.metin || "…"}</small>
+                    </p>
+                    <time>{format(new Date(message.created_at), "HH:mm")}</time>
+                  </div>
+                ))}
               </div>
             ) : (
-              <div className="relative pl-1.5">
-                {bugunkuDersler.map((ders, idx) => {
-                  const muddet = deqiqeFerqi(ders.baslangic_saat, ders.bitme_saat);
-                  const otaq = ders.courses?.otaq;
-                  const adOrTesvir = ders.courses?.ad ?? ders.baslıq;
-                  return (
-                    <div key={ders.id} className="relative flex gap-4 pb-5 last:pb-0">
-                      {idx !== bugunkuDersler.length - 1 && (
-                        <div className="absolute bottom-[-6px] left-[44px] top-[26px] w-[1.5px] bg-border" />
-                      )}
-                      <div className="w-11 flex-none pt-0.5 font-data text-[12.5px] font-semibold text-muted-foreground">
-                        {ders.baslangic_saat.slice(0, 5)}
-                      </div>
-                      <div className="absolute left-[39px] top-[5px] size-[11px] rounded-full border-[2.5px] border-primary bg-card" />
-                      <div className="ml-3.5 flex flex-1 items-center justify-between gap-2.5 rounded-2xl border border-border/70 bg-muted/60 px-3.5 py-3 transition-colors hover:border-primary/40 hover:bg-accent/60">
-                        <div className="min-w-0">
-                          <b className="block truncate text-[13.5px] font-bold text-foreground">
-                            {adOrTesvir}
-                          </b>
-                          <span className="text-[11.5px] text-muted-foreground">
-                            {[otaq ? `Otaq ${otaq}` : null, muddet ? `${muddet} dəq` : null]
-                              .filter(Boolean)
-                              .join(" · ") || ders.baslıq}
-                          </span>
-                        </div>
-                        <span className="flex-none rounded-full bg-accent px-2.5 py-1 text-[10px] font-bold tracking-[0.02em] text-primary">
-                          Dərs
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <Empty icon={<MessageCircle />} label={c.noChat as string} />
             )}
-          </div>
-
-          <div className="flex flex-col gap-4">
-            {/* Qrupunuz */}
-            <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
-              <div className="mb-4 flex items-baseline justify-between">
-                <h2 className="text-base font-bold text-foreground">Qrupunuz</h2>
-              </div>
-
-              {!primaryGroupId ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">
-                  Hələ heç bir qrupa təyin edilməmisiniz.
-                </p>
-              ) : (
-                <>
-                  {profile?.qrup && (
-                    <span className="mb-2 inline-block rounded-lg bg-accent px-2.5 py-1 font-data text-xs font-bold text-primary">
-                      {profile.qrup}
-                    </span>
-                  )}
-                  <div className="mb-3.5 text-[14.5px] font-bold text-foreground">
-                    {groupInfo?.ad ?? "Qrup"}
-                  </div>
-
-                  <div className="mb-4 flex items-center">
-                    {groupUzvleri.length > 0 ? (
-                      <StudentGroupAvatarGroup members={groupUzvleri} max={5} />
-                    ) : (
-                      <span className="text-xs text-muted-foreground">Üzv məlumatı yoxdur</span>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2.5 rounded-xl px-1 py-2.5 text-[13px] font-semibold text-foreground">
-                      <Users className="size-[15px] flex-none text-primary" />
-                      Qrup yoldaşları
-                      <span className="ml-auto rounded-full bg-primary px-1.5 py-px font-data text-[10.5px] text-primary-foreground">
-                        {groupUzvleri.length}
-                      </span>
-                    </div>
-                    <a
-                      href="/sohbet"
-                      className="flex items-center gap-2.5 rounded-xl px-1 py-2.5 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
-                    >
-                      <MessageCircle className="size-[15px] flex-none text-primary" />
-                      Qrup söhbəti
-                      <ChevronRight className="ml-auto size-3 text-muted-foreground" />
-                    </a>
-                    <div className="flex items-center gap-2.5 rounded-xl px-1 py-2.5 text-[13px] font-semibold text-muted-foreground/70">
-                      <FolderOpen className="size-[15px] flex-none" />
-                      Fayllar
-                      <span className="ml-auto text-[10.5px] font-bold uppercase tracking-wide">
-                        Tezliklə
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5 rounded-xl px-1 py-2.5 text-[13px] font-semibold text-muted-foreground/70">
-                      <Megaphone className="size-[15px] flex-none" />
-                      Qrup elanları
-                      <span className="ml-auto text-[10.5px] font-bold uppercase tracking-wide">
-                        Tezliklə
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Son bildirişlər */}
-            <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
-              <div className="mb-4 flex items-baseline justify-between">
-                <h2 className="text-base font-bold text-foreground">Son bildirişlər</h2>
-                <a
-                  href="/bildirisler?tab=notifications"
-                  className="flex items-center gap-0.5 text-xs font-bold text-primary"
-                >
-                  Hamısını gör <ChevronRight className="size-3" />
-                </a>
-              </div>
-
-              {sonBildirisler.length === 0 ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">Bildiriş yoxdur.</p>
-              ) : (
-                sonBildirisler.map((b, idx) => (
-                  <div
-                    key={b.id}
-                    className={`flex gap-2.5 py-2.5 ${idx !== sonBildirisler.length - 1 ? "border-b border-border/60" : ""}`}
-                  >
-                    <div className="mt-1.5 size-[7px] flex-none rounded-full bg-primary" />
-                    <div className="flex-1">
-                      <b className="block text-[12.8px] font-bold leading-snug text-foreground">
-                        {b.baslıq}
-                      </b>
-                      {b.metin && (
-                        <p className="mt-0.5 text-[11.5px] text-muted-foreground">{b.metin}</p>
-                      )}
-                    </div>
-                    <time className="flex-none pt-0.5 text-[10.5px] text-muted-foreground">
-                      <BildirisVaxti tarix={b.tarix} />
-                    </time>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          </section>
         </div>
+      </div>
+
+      <section className="student-home-card student-home-services">
+        <CardHeading title={c.services as string} />
+        <div className="student-home-services__grid">
+          <Service to="/elektron-jurnal" icon={<BookOpen />} label={c.journal as string} />
+          <Service to="/imtahanlar" icon={<CalendarDays />} label={c.exams as string} />
+          <Service to="/ofis" icon={<FileText />} label={c.office as string} />
+          <Service to="/kitabxana" icon={<Library />} label={c.library as string} />
+          <Service to="/ofis" icon={<Building2 />} label={c.studentOffice as string} />
+        </div>
+      </section>
+
+      <section
+        className="student-home-innovation"
+        style={{ backgroundImage: `url(${innovationLab})` }}
+      >
+        <div className="student-home-innovation__copy">
+          <Sparkles />
+          <h2>{c.innovation as string}</h2>
+          <p>{c.innovationText as string}</p>
+          <Link to="/ofis">
+            {c.innovationCta as string}
+            <ArrowRight />
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function CardHeading({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: ReactNode;
+}) {
+  return (
+    <header className="student-home-card__heading">
+      <div>
+        <h2>{title}</h2>
+        {subtitle ? <p>{subtitle}</p> : null}
+      </div>
+      {action}
+    </header>
+  );
+}
+
+function Metric({ value, label, tone }: { value: number; label: string; tone?: string }) {
+  return (
+    <div className={tone ? `is-${tone}` : ""}>
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function SummaryRow({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
+  return (
+    <div className="student-home-summary__row">
+      <span>{icon}</span>
+      <p>
+        <small>{label}</small>
+        <strong>{value}</strong>
+      </p>
+    </div>
+  );
+}
+
+function Service({
+  to,
+  icon,
+  label,
+}: {
+  to: "/elektron-jurnal" | "/imtahanlar" | "/ofis" | "/kitabxana";
+  icon: ReactNode;
+  label: string;
+}) {
+  return (
+    <Link to={to} className="student-home-service">
+      <span>{icon}</span>
+      <strong>{label}</strong>
+      <ArrowRight />
+    </Link>
+  );
+}
+
+function Empty({ icon, label }: { icon: ReactNode; label: string }) {
+  return (
+    <div className="student-home-empty">
+      <span>{icon}</span>
+      <p>{label}</p>
+    </div>
+  );
+}
+
+function StudentHomeSkeleton() {
+  return (
+    <div className="student-home student-home-skeleton" aria-busy="true">
+      <div className="student-home-skeleton__hero" />
+      <div className="student-home-skeleton__grid">
+        <div />
+        <div />
+        <div />
       </div>
     </div>
   );
 }
 
-function BildirisVaxti({ tarix }: { tarix: string }) {
-  const t = new Date(tarix);
-  const bugun = new Date();
-  const eyniGun =
-    t.getFullYear() === bugun.getFullYear() &&
-    t.getMonth() === bugun.getMonth() &&
-    t.getDate() === bugun.getDate();
-  if (eyniGun) return <>{format(t, "HH:mm")}</>;
-  const dünən = new Date(bugun);
-  dünən.setDate(dünən.getDate() - 1);
-  const dünəndir =
-    t.getFullYear() === dünən.getFullYear() &&
-    t.getMonth() === dünən.getMonth() &&
-    t.getDate() === dünən.getDate();
-  if (dünəndir) return <>Dünən</>;
-  return <>{format(t, "d MMM", { locale: az })}</>;
-}
-
-const chipRenkler = {
-  maroon: { bg: "bg-accent", text: "text-primary" },
-  gold: { bg: "bg-[var(--portal-gold-soft)]", text: "text-[var(--portal-gold)]" },
-  green: { bg: "bg-[var(--color-success)]/15", text: "text-[var(--color-success)]" },
-} as const;
-
-function StatChip({
-  icon: Icon,
-  renk,
-  value,
+function StudentHomeError({
   label,
+  retry,
+  onRetry,
 }: {
-  icon: typeof BookOpen;
-  renk: keyof typeof chipRenkler;
-  value: number | null;
   label: string;
+  retry: string;
+  onRetry: () => void;
 }) {
-  const { bg, text } = chipRenkler[renk];
   return (
-    <div className="flex items-center gap-3.5 rounded-3xl border border-border bg-card p-4">
-      <div
-        className={`flex size-[38px] flex-none items-center justify-center rounded-[11px] ${bg} ${text}`}
-      >
-        <Icon className="size-[17px]" />
-      </div>
-      <div>
-        <b className="block font-data text-xl font-semibold leading-none text-foreground">
-          {value === null ? "—" : value}
-        </b>
-        <span className="mt-1 block text-[11.5px] text-muted-foreground">{label}</span>
-      </div>
+    <div className="student-home-error" role="alert">
+      <RefreshCw />
+      <h2>{label}</h2>
+      <button type="button" onClick={onRetry}>
+        {retry}
+      </button>
     </div>
   );
 }
