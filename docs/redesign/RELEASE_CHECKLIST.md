@@ -23,7 +23,7 @@
 - [x] Repository-wide lint is executed.
 - [x] The inherited Prompt 12 baseline is gated at exactly **6548 problems (6536 errors, 12 warnings)** so Prompt 13 cannot silently add lint debt.
 - [x] No debug `console.log`, `console.debug` or `debugger` statements are allowed in runtime source by the release audit.
-- [x] Runtime code is scanned for hardcoded `localhost` / `127.0.0.1` development endpoints.
+- [x] Runtime code is scanned for hardcoded `localhost` / `127.0.0.1` development endpoints; the generated Lovable preview auth broker is the only allowed exception and its localhost origin is reachable only under Lovable dev-preview host guards.
 
 Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 because a repository-wide mechanical rewrite would violate the release-only/minimal-risk scope.
 
@@ -74,7 +74,7 @@ Repository-wide lint debt is inherited and is not bulk-formatted in Prompt 13 be
 
 - [x] `vercel.json` keeps `npm run build`.
 - [x] Vite/Nitro keeps conditional Vercel preset handling.
-- [x] No production runtime source may contain a hardcoded localhost/development endpoint.
+- [x] No production execution path depends on a localhost/development endpoint. The generated Lovable preview broker keeps its isolated dev-editor localhost origin for preview compatibility.
 - [x] Environment-variable names are documented in `.env.example`.
 - [ ] Live Vercel deployment/runtime-log verification requires a connected Vercel project. The currently connected Vercel account exposes no projects, so this checklist does not claim a live deployment smoke test.
 
