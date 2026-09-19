@@ -76,7 +76,7 @@ The completeness audit found one cross-route shell gap rather than a missing pag
 
 - Primary redesigned student pages remain covered by Prompt 11's visual/mobile/accessibility static QA.
 - Role routes are wrapped by `role-workspace-page` plus admin/groups/faculty/course/teacher/tutor/announcements variants.
-- `src/mobile-native.css` retains safe-area top/bottom handling and `100dvh` behavior; the root shell retains horizontal-overflow protection.
+- `src/mobile-native.css` retains safe-area top/bottom handling and `100dvh` behavior; the root shell does not globally clip horizontal overflow, so component-level overflow remains observable and fixable.
 - Legacy route files that exist only as aliases (`/elanlar`, `/tyutor/$groupId`, `/admin/qruplar*`) are treated as redirect behavior, not separate visual pages.
 - No backend file is modified by Prompt 12.
 
@@ -98,6 +98,7 @@ The completeness audit found one cross-route shell gap rather than a missing pag
 - role workspace redesign wrappers disappear;
 - Prompt 12 metadata translations/mappings disappear;
 - root 404/error boundaries disappear;
+- document-level horizontal clipping is reintroduced;
 - mobile safe-area/`100dvh` contracts disappear;
 - critical dynamic-route access/error/empty-state signals disappear;
 - core redesign QA assets/scripts disappear.
