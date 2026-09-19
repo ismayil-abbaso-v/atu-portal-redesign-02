@@ -1,0 +1,38 @@
+/* Admin navigation hover clipping fix.
+ * The old hover translated tabs upward inside an overflow-clipped nav, which hid the top border.
+ */
+.admin-premium-v2 .admin-nav-desktop {
+  position: relative;
+}
+
+.admin-premium-v2 .admin-nav-link {
+  z-index: 1;
+  will-change: auto;
+}
+
+.admin-premium-v2 .admin-nav-link[data-active="true"] {
+  z-index: 3;
+}
+
+@media (hover:hover) {
+  .admin-premium-v2 .admin-nav-link:hover {
+    z-index: 4;
+    transform: none !important;
+    border-color: color-mix(in oklch, var(--primary) 24%, var(--border)) !important;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklch, var(--primary) 10%, transparent),
+      0 5px 14px color-mix(in oklch, var(--primary) 8%, transparent);
+  }
+
+  .admin-premium-v2 .admin-nav-link[data-active="true"]:hover {
+    border-color: color-mix(in oklch, var(--primary) 82%, white 8%) !important;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / .16),
+      inset 0 0 0 1px color-mix(in oklch, white 8%, transparent),
+      0 8px 19px color-mix(in oklch, var(--primary) 18%, transparent);
+  }
+
+  .admin-premium-v2 .admin-nav-link:hover .admin-nav-icon {
+    transform: scale(1.06) !important;
+  }
+}

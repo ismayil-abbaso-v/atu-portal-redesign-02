@@ -1,0 +1,6 @@
+-- Rollback audit fixture-i eyni istifadəçinin telebe+muellim olduğu kənar halı göstərdi:
+-- student field guard müəllimin öz student-row-u üzərində səlahiyyətli qiymətləndirməsini
+-- bloklayırdı. Bu versiyada staff hüququ yalnız course assignment + time gate keçdikdə
+-- student guard-dan üstün edildi.
+-- Yekun SQL 20260829072319_finalize_ejournal_rls_audit.sql faylına squash edilib;
+-- bu marker remote migration tarixçəsi ilə versiya paritetini saxlayır.

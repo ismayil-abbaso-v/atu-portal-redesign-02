@@ -1,0 +1,338 @@
+/* Profile PageHeader — home-inspired visual layer without changing header geometry. */
+.profile-page-header {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 84% 18%, color-mix(in oklch, var(--primary) 12%, transparent), transparent 22rem),
+    radial-gradient(circle at 64% 110%, color-mix(in oklch, var(--portal-gold) 8%, transparent), transparent 19rem),
+    linear-gradient(135deg, color-mix(in oklch, var(--card) 96%, var(--primary) 4%), var(--card));
+}
+
+.profile-page-header__accent,
+.profile-page-header__pattern,
+.profile-page-header__sweep,
+.profile-page-header__halo,
+.profile-page-header__focus,
+.profile-page-header__network {
+  position: absolute;
+  pointer-events: none;
+}
+
+.profile-page-header__accent {
+  inset-block: 0;
+  left: 0;
+  z-index: 3;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--primary), var(--portal-gold));
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: profileHeaderAccentIn .72s cubic-bezier(.22,1,.36,1) .08s forwards;
+}
+
+.profile-page-header__pattern {
+  inset: 0;
+  z-index: 0;
+  opacity: .32;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--primary) 21%, transparent) 1px, transparent 1.6px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--primary) 6%, transparent) 1px, transparent 1px);
+  background-size: 76px 76px, 58px 100%, 100% 58px;
+  -webkit-mask-image: linear-gradient(92deg, transparent 0%, rgb(0 0 0 / .25) 30%, black 67%, transparent 100%);
+  mask-image: linear-gradient(92deg, transparent 0%, rgb(0 0 0 / .25) 30%, black 67%, transparent 100%);
+  animation: profileHeaderPattern 15s linear infinite;
+}
+
+.profile-page-header__halo {
+  z-index: 0;
+  right: 4%;
+  top: 50%;
+  width: 210px;
+  height: 210px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--primary) 15%, transparent), color-mix(in oklch, var(--primary) 4%, transparent) 43%, transparent 70%);
+  transform: translateY(-50%);
+  animation: profileHeaderHalo 5.4s ease-in-out infinite;
+}
+
+.profile-page-header__focus {
+  z-index: 2;
+  right: 8%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--primary) 72%, white 28%);
+  box-shadow:
+    0 0 0 6px color-mix(in oklch, var(--primary) 10%, transparent),
+    0 0 22px color-mix(in oklch, var(--primary) 38%, transparent);
+  opacity: 0;
+  animation: profileHeaderFocus 6.2s cubic-bezier(.45,0,.55,1) 1.15s infinite;
+}
+
+.profile-page-header__sweep {
+  z-index: 1;
+  top: -80%;
+  bottom: -80%;
+  left: -18%;
+  width: 11%;
+  opacity: 0;
+  transform: skewX(-16deg);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, white 12%, transparent), transparent);
+  animation: profileHeaderSweep 6.8s ease-in-out 1.1s infinite;
+}
+
+.profile-page-header__network {
+  z-index: 1;
+  right: 2.2%;
+  top: 50%;
+  width: min(40%, 530px);
+  height: 94%;
+  transform: translateY(-50%);
+  overflow: visible;
+  opacity: .88;
+}
+
+.profile-page-header__network .profile-page-header__line {
+  fill: none;
+  stroke: color-mix(in oklch, var(--primary) 29%, transparent);
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 620;
+  stroke-dashoffset: 620;
+  animation: profileHeaderDraw 1.8s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.profile-page-header__network .profile-page-header__line--soft {
+  opacity: .65;
+  animation-delay: .16s;
+}
+
+.profile-page-header__network .profile-page-header__flow {
+  fill: none;
+  stroke: color-mix(in oklch, var(--primary) 72%, white 28%);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2 30;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--primary) 35%, transparent));
+  animation: profileHeaderFlowIn .35s ease 1.45s forwards, profileHeaderFlow 4.6s linear 1.45s infinite;
+}
+
+.profile-page-header__network .profile-page-header__flow--two {
+  stroke-width: 1.8;
+  opacity: 0;
+  animation-delay: 1.85s, 1.85s;
+  animation-duration: .35s, 5.4s;
+}
+
+.profile-page-header__network circle {
+  fill: color-mix(in oklch, var(--card) 90%, var(--primary) 10%);
+  stroke: color-mix(in oklch, var(--primary) 52%, transparent);
+  stroke-width: 1.7;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  filter: drop-shadow(0 0 0 transparent);
+  animation: profileHeaderNodeIn .45s cubic-bezier(.22,1,.36,1) forwards, profileHeaderNodePulse 3.2s ease-in-out 1.4s infinite;
+}
+
+.profile-page-header__network circle:nth-of-type(1) { animation-delay: .42s, 1.5s; }
+.profile-page-header__network circle:nth-of-type(2) { animation-delay: .54s, 1.8s; }
+.profile-page-header__network circle:nth-of-type(3) { animation-delay: .66s, 2.1s; }
+.profile-page-header__network circle:nth-of-type(4) { animation-delay: .78s, 2.4s; }
+.profile-page-header__network circle:nth-of-type(5) { animation-delay: .90s, 2.7s; }
+
+.profile-page-header__content {
+  position: relative;
+  z-index: 4;
+  opacity: 0;
+  transform: translateX(-8px);
+  animation: profileHeaderContentIn .62s cubic-bezier(.22,1,.36,1) .05s forwards;
+}
+
+.profile-page-header__heading {
+  position: relative;
+}
+
+.profile-page-header__eyebrow {
+  position: absolute;
+  left: 1px;
+  bottom: calc(100% + 1px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  color: color-mix(in oklch, var(--primary) 68%, var(--muted-foreground));
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: profileHeaderEyebrowIn .45s cubic-bezier(.22,1,.36,1) .36s forwards;
+}
+
+.profile-page-header__back {
+  background: color-mix(in oklch, var(--background) 88%, var(--primary) 4%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 6px 18px color-mix(in oklch, var(--primary) 5%, transparent);
+  opacity: 0;
+  transform: translateX(-6px) scale(.96);
+  animation: profileHeaderBackIn .5s cubic-bezier(.22,1,.36,1) .12s forwards;
+}
+
+.profile-page-header__back::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in oklch, var(--primary) 8%, transparent);
+  border-radius: 12px;
+  opacity: 0;
+  transform: scale(.88);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.profile-page-header__back:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.profile-page-header__title {
+  text-shadow: 0 1px 0 color-mix(in oklch, var(--background) 25%, transparent);
+}
+
+@keyframes profileHeaderAccentIn {
+  to { transform: scaleY(1); }
+}
+
+@keyframes profileHeaderPattern {
+  to { background-position: 76px 38px, 58px 0, 0 29px; }
+}
+
+@keyframes profileHeaderHalo {
+  0%, 100% { transform: translateY(-50%) scale(.92); opacity: .5; }
+  50% { transform: translateY(-50%) scale(1.08); opacity: .96; }
+}
+
+@keyframes profileHeaderFocus {
+  0% { transform: translate(-230px, 24px) scale(.65); opacity: 0; }
+  12% { opacity: .95; }
+  42% { transform: translate(-125px, -25px) scale(1); opacity: 1; }
+  76% { transform: translate(-28px, 18px) scale(.82); opacity: .88; }
+  100% { transform: translate(0, -10px) scale(.6); opacity: 0; }
+}
+
+@keyframes profileHeaderSweep {
+  0%, 18% { transform: translateX(0) skewX(-16deg); opacity: 0; }
+  30% { opacity: .09; }
+  58% { transform: translateX(920%) skewX(-16deg); opacity: .14; }
+  72%, 100% { transform: translateX(920%) skewX(-16deg); opacity: 0; }
+}
+
+@keyframes profileHeaderDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes profileHeaderFlowIn {
+  to { opacity: .9; }
+}
+
+@keyframes profileHeaderFlow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -192; }
+}
+
+@keyframes profileHeaderNodeIn {
+  from { opacity: 0; transform: scale(.35); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes profileHeaderNodePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: .7;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    transform: scale(1.28);
+    opacity: 1;
+    filter: drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 48%, transparent));
+  }
+}
+
+@keyframes profileHeaderContentIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes profileHeaderEyebrowIn {
+  to { opacity: .82; transform: translateY(0); }
+}
+
+@keyframes profileHeaderBackIn {
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@media (max-width: 767px) {
+  .profile-page-header__network {
+    right: -50px;
+    width: 220px;
+    height: 96%;
+    opacity: .56;
+  }
+
+  .profile-page-header__halo {
+    right: -58px;
+    width: 155px;
+    height: 155px;
+    opacity: .52;
+  }
+
+  .profile-page-header__focus {
+    right: 5%;
+    animation-duration: 7.2s;
+  }
+
+  .profile-page-header__pattern {
+    opacity: .2;
+    animation-duration: 24s;
+  }
+
+  .profile-page-header__sweep {
+    display: none;
+  }
+
+  .profile-page-header__network .profile-page-header__flow {
+    stroke-width: 1.8;
+    animation-duration: .35s, 6s;
+  }
+
+  .profile-page-header__eyebrow {
+    font-size: 7px;
+    letter-spacing: .1em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-page-header__accent,
+  .profile-page-header__pattern,
+  .profile-page-header__halo,
+  .profile-page-header__focus,
+  .profile-page-header__sweep,
+  .profile-page-header__network path,
+  .profile-page-header__network circle,
+  .profile-page-header__content,
+  .profile-page-header__eyebrow,
+  .profile-page-header__back {
+    animation: none !important;
+  }
+
+  .profile-page-header__accent { transform: scaleY(1); }
+  .profile-page-header__network .profile-page-header__line { stroke-dashoffset: 0; }
+  .profile-page-header__network .profile-page-header__flow { opacity: .55; }
+  .profile-page-header__network circle,
+  .profile-page-header__content,
+  .profile-page-header__eyebrow,
+  .profile-page-header__back { opacity: 1; transform: none; }
+}

@@ -1,0 +1,36 @@
+name: Integrate upcoming exams
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/components/exams/UpcomingExamsList.tsx'
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch StudentView
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('src/routes/_authenticated/imtahanlar.tsx')
+          s = p.read_text()
+
+          # The previous integration accidentally left a second copy of
+          # StudentView's closing JSX/function block. Remove only that duplicate.
+          duplicate = '\n    </div>\n  );\n}\n\nfunction StudentDetailsModal('
+          fixed = '\nfunction StudentDetailsModal('
+          if duplicate in s:
+              s = s.replace(duplicate, fixed, 1)
+
+          p.write_text(s)
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/routes/_authenticated/imtahanlar.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: remove duplicate StudentView closing block'
+          git push

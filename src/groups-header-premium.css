@@ -1,0 +1,186 @@
+/* Groups header refinement — route-scoped, palette-aware and lightweight. */
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) {
+  isolation: isolate;
+  overflow: hidden;
+  border-color: color-mix(in oklch, var(--primary) 14%, var(--border));
+  background:
+    radial-gradient(circle at 86% 20%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 22%),
+    radial-gradient(circle at 66% 110%, color-mix(in oklch, var(--primary) 5%, transparent), transparent 28%),
+    linear-gradient(115deg,
+      color-mix(in oklch, var(--card) 99%, var(--primary) 1%) 0%,
+      color-mix(in oklch, var(--card) 97%, var(--primary) 3%) 48%,
+      color-mix(in oklch, var(--card) 94%, var(--primary) 6%) 100%);
+  box-shadow:
+    0 12px 30px color-mix(in oklch, var(--primary) 6%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / .055);
+  animation: groupsHeroEnter .68s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* Fine academic grid + moving constellation dots. */
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .62;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--primary) 24%, transparent) 1px, transparent 1.5px),
+    linear-gradient(108deg, transparent 0 47%, color-mix(in oklch, var(--primary) 4.5%, transparent) 48% 49%, transparent 50% 100%);
+  background-size: 72px 72px, 150px 100%;
+  background-position: 0 0, 0 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 24%, black 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 24%, black 100%);
+  animation: groupsConstellationDrift 18s linear infinite;
+}
+
+/* Elegant flowing ribbon on the right — no canvas, no JS. */
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: -3%;
+  bottom: -34%;
+  width: min(72%, 980px);
+  height: 150%;
+  pointer-events: none;
+  opacity: .42;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--primary) 28%, transparent) 32%,
+    color-mix(in oklch, var(--primary) 58%, transparent) 72%,
+    color-mix(in oklch, var(--primary) 22%, transparent) 100%);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 260'%3E%3Cpath d='M-25 180 C130 90 260 235 430 160 S720 42 1035 120' fill='none' stroke='black' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M-35 204 C160 126 300 250 485 181 S775 78 1040 143' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' opacity='.55'/%3E%3Cpath d='M-30 154 C120 64 280 204 440 136 S740 12 1030 94' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' opacity='.38'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 260'%3E%3Cpath d='M-25 180 C130 90 260 235 430 160 S720 42 1035 120' fill='none' stroke='black' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M-35 204 C160 126 300 250 485 181 S775 78 1040 143' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' opacity='.55'/%3E%3Cpath d='M-30 154 C120 64 280 204 440 136 S740 12 1030 94' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' opacity='.38'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  transform: translate3d(0,0,0);
+  animation: groupsRibbonFloat 9s ease-in-out infinite;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) > * {
+  position: relative;
+  z-index: 2;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) h1 {
+  position: relative;
+  width: fit-content;
+  overflow: visible;
+  text-shadow: 0 1px 0 color-mix(in oklch, var(--card) 72%, transparent);
+  animation: groupsHeroTitleIn .66s cubic-bezier(.22,1,.36,1) .08s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -11px;
+  width: 92px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    var(--primary),
+    color-mix(in oklch, var(--primary) 32%, transparent),
+    transparent);
+  transform-origin: left center;
+  animation: groupsTitleRuleIn .9s cubic-bezier(.22,1,.36,1) .22s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) h1::before {
+  content: "";
+  position: absolute;
+  left: 98px;
+  bottom: -13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--primary);
+  transform: rotate(45deg) scale(0);
+  box-shadow: 0 0 0 5px color-mix(in oklch, var(--primary) 7%, transparent);
+  animation: groupsTitleDiamondIn .45s cubic-bezier(.22,1,.36,1) .62s forwards,
+             groupsTitleDiamondGlow 4.8s ease-in-out 1.2s infinite;
+}
+
+/* Back/action buttons on detail view remain readable above the animated layer. */
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) button {
+  border-color: color-mix(in oklch, var(--primary) 13%, var(--border));
+  background: color-mix(in oklch, var(--card) 90%, var(--primary) 10%);
+  box-shadow: 0 5px 14px color-mix(in oklch, var(--primary) 5%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+@keyframes groupsHeroEnter {
+  from { opacity:0; transform:translateY(8px) scale(.997); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes groupsHeroTitleIn {
+  from { opacity:0; transform:translateX(-10px); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes groupsTitleRuleIn {
+  from { opacity:0; transform:scaleX(.08); }
+  to { opacity:1; transform:scaleX(1); }
+}
+
+@keyframes groupsTitleDiamondIn {
+  to { transform:rotate(45deg) scale(1); }
+}
+
+@keyframes groupsTitleDiamondGlow {
+  0%,100% { opacity:.72; box-shadow:0 0 0 4px color-mix(in oklch, var(--primary) 5%, transparent); }
+  50% { opacity:1; box-shadow:0 0 0 7px color-mix(in oklch, var(--primary) 9%, transparent); }
+}
+
+@keyframes groupsConstellationDrift {
+  from { background-position:0 0, 0 0; }
+  to { background-position:72px 0, 150px 0; }
+}
+
+@keyframes groupsRibbonFloat {
+  0%,100% { transform:translate3d(0,0,0) scaleY(1); opacity:.34; }
+  50% { transform:translate3d(-1.8%, -3px, 0) scaleY(1.035); opacity:.5; }
+}
+
+@media (max-width: 767px) {
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::after {
+    right: -22%;
+    width: 96%;
+    opacity: .28;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before {
+    opacity: .42;
+    background-size: 62px 62px, 125px 100%;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) h1::after {
+    width: 70px;
+    bottom: -9px;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) h1::before {
+    left: 76px;
+    bottom: -11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header),
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before,
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::after,
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card h1,
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card h1::after,
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card h1::before {
+    animation: none !important;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card h1::before {
+    transform: rotate(45deg) scale(1);
+  }
+}

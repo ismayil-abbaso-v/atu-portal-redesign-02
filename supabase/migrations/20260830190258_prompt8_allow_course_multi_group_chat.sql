@@ -1,0 +1,1 @@
+alter table public.chat_groups drop constraint if exists chat_groups_course_id_key;

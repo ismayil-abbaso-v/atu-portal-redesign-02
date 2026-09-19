@@ -1,0 +1,126 @@
+/* Mobile-only polish for the exams hero. Keeps desktop geometry untouched. */
+@media (max-width: 639px) {
+  .exam-horizon-hero {
+    min-height: 232px;
+    padding: 22px 18px 20px;
+    border-radius: 24px;
+    box-shadow:
+      0 10px 26px color-mix(in oklch, var(--primary) 10%, transparent),
+      inset 0 1px 0 rgb(255 255 255 / .07);
+  }
+
+  .exam-horizon-hero__left-accent {
+    width: 4px;
+  }
+
+  .exam-horizon-hero__mesh {
+    inset: -12px;
+    opacity: .15;
+    background-size: 52px 52px;
+    animation: examHorizonMobileMesh 18s linear infinite;
+  }
+
+  .exam-horizon-hero__glow--one {
+    width: 250px;
+    height: 250px;
+    right: -78px;
+    top: -92px;
+    opacity: .24;
+    animation: examHorizonMobileGlow 7.5s ease-in-out infinite;
+  }
+
+  .exam-horizon-hero__glow--two,
+  .exam-horizon-hero__sweep {
+    display: none;
+  }
+
+  .exam-horizon-hero__art {
+    inset: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    opacity: .72;
+  }
+
+  .exam-horizon-hero__curve {
+    stroke-width: 1.65;
+  }
+
+  .exam-horizon-hero__nodes circle {
+    stroke-width: 1.1;
+  }
+
+  .exam-horizon-hero > .relative.z-10 {
+    min-height: 188px;
+    gap: 18px;
+  }
+
+  .exam-horizon-hero__copy {
+    max-width: none;
+  }
+
+  .exam-horizon-hero__copy > div:first-child {
+    margin-bottom: 10px;
+    font-size: 9px;
+    letter-spacing: .14em;
+  }
+
+  .exam-horizon-hero__copy h1 {
+    font-size: clamp(2rem, 9vw, 2.35rem);
+    line-height: 1;
+    letter-spacing: -.035em;
+  }
+
+  .exam-horizon-hero__copy p {
+    margin-top: 12px;
+    max-width: 31ch;
+    font-size: 13px;
+    line-height: 1.58;
+    text-wrap: pretty;
+  }
+
+  .exam-horizon-hero__labels {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 16px;
+  }
+
+  .exam-horizon-hero__labels span {
+    min-height: 31px;
+    justify-content: center;
+    padding-inline: 6px;
+    font-size: 9px;
+    letter-spacing: .035em;
+  }
+
+  .exam-horizon-hero__status {
+    display: none !important;
+  }
+
+  .exam-horizon-stat:hover {
+    transform: none;
+    box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 5%, transparent);
+  }
+
+  .exam-horizon-stat:hover .exam-horizon-stat__icon {
+    transform: none;
+  }
+}
+
+@keyframes examHorizonMobileMesh {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 52px 26px, 52px 26px, 52px 26px; }
+}
+
+@keyframes examHorizonMobileGlow {
+  0%, 100% { transform: scale(.94); opacity: .20; }
+  50% { transform: scale(1.035); opacity: .30; }
+}
+
+@media (max-width: 639px) and (prefers-reduced-motion: reduce) {
+  .exam-horizon-hero__mesh,
+  .exam-horizon-hero__glow--one {
+    animation: none !important;
+  }
+}

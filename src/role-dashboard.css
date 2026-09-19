@@ -1,0 +1,68 @@
+@keyframes role-panel-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes role-panel-rise{from{opacity:0;transform:translateY(12px) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes role-panel-soft-pulse{0%,100%{opacity:.42;transform:scale(1)}50%{opacity:.72;transform:scale(1.035)}}
+@keyframes role-panel-tab-enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes teacher-status-pulse{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes tutor-home-network-drift{0%{mask-position:0 0;-webkit-mask-position:0 0}100%{mask-position:28px 18px;-webkit-mask-position:28px 18px}}
+@keyframes tutor-home-orb-float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-8px,6px,0) scale(1.035)}}
+
+.role-panel-enter{animation:role-panel-enter .42s cubic-bezier(.22,1,.36,1) both}
+.role-panel-stagger>*{opacity:0;animation:role-panel-rise .48s cubic-bezier(.22,1,.36,1) both}
+.role-panel-stagger>*:nth-child(1){animation-delay:.03s}
+.role-panel-stagger>*:nth-child(2){animation-delay:.07s}
+.role-panel-stagger>*:nth-child(3){animation-delay:.11s}
+.role-panel-stagger>*:nth-child(4){animation-delay:.15s}
+.role-panel-stagger>*:nth-child(5){animation-delay:.19s}
+.role-panel-stagger>*:nth-child(6){animation-delay:.23s}
+.role-panel-stagger>*:nth-child(7){animation-delay:.27s}
+.role-panel-stagger>*:nth-child(8){animation-delay:.31s}
+.role-panel-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background-color .22s ease}
+.role-panel-card:active{transform:scale(.994)}
+.role-panel-orbit{animation:role-panel-soft-pulse 5.8s ease-in-out infinite;transform-origin:center}
+.teacher-status-pulse{animation:teacher-status-pulse 1.5s ease-in-out infinite}
+.teacher-workspace-tabs [role="tabpanel"][data-state="active"]{animation:role-panel-tab-enter .24s cubic-bezier(.22,1,.36,1) both}
+
+.tutor-home-network{
+  color:var(--color-primary,#6e1a2c);
+  background:currentColor;
+  opacity:.14;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cg fill='none' stroke='white' stroke-width='1.15'%3E%3Ccircle cx='30' cy='44' r='3'/%3E%3Ccircle cx='94' cy='22' r='2.2'/%3E%3Ccircle cx='154' cy='68' r='3'/%3E%3Ccircle cx='226' cy='34' r='2.2'/%3E%3Ccircle cx='284' cy='104' r='3'/%3E%3Ccircle cx='66' cy='142' r='2.2'/%3E%3Ccircle cx='188' cy='160' r='3'/%3E%3Ccircle cx='28' cy='246' r='2.2'/%3E%3Ccircle cx='128' cy='270' r='3'/%3E%3Ccircle cx='266' cy='252' r='2.2'/%3E%3Cpath d='M30 44L94 22L154 68L226 34L284 104M66 142L154 68M66 142L28 246M66 142L128 270L266 252L188 160L284 104M188 160L154 68'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cg fill='none' stroke='white' stroke-width='1.15'%3E%3Ccircle cx='30' cy='44' r='3'/%3E%3Ccircle cx='94' cy='22' r='2.2'/%3E%3Ccircle cx='154' cy='68' r='3'/%3E%3Ccircle cx='226' cy='34' r='2.2'/%3E%3Ccircle cx='284' cy='104' r='3'/%3E%3Ccircle cx='66' cy='142' r='2.2'/%3E%3Ccircle cx='188' cy='160' r='3'/%3E%3Ccircle cx='28' cy='246' r='2.2'/%3E%3Ccircle cx='128' cy='270' r='3'/%3E%3Ccircle cx='266' cy='252' r='2.2'/%3E%3Cpath d='M30 44L94 22L154 68L226 34L284 104M66 142L154 68M66 142L28 246M66 142L128 270L266 252L188 160L284 104M188 160L154 68'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size:320px 320px;
+  mask-size:320px 320px;
+  animation:tutor-home-network-drift 18s ease-in-out infinite alternate;
+}
+.tutor-home-orb{color:var(--color-primary,#6e1a2c);border:1px solid currentColor;border-radius:9999px;opacity:.08;animation:tutor-home-orb-float 8s ease-in-out infinite}
+.tutor-home-orb-a{right:-72px;top:-92px;width:260px;height:260px}
+.tutor-home-orb-b{right:18%;bottom:-110px;width:210px;height:210px;animation-delay:-3.4s}
+.tutor-home-card,.tutor-home-list-row{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.tutor-home-card:active,.tutor-home-list-row:active{transform:scale(.992)}
+
+@media (hover:hover) and (pointer:fine){
+  .role-panel-card:hover{transform:translateY(-2px)}
+  .tutor-home-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--color-primary,#6e1a2c) 30%,transparent);box-shadow:0 12px 30px rgba(15,23,42,.07)}
+  .tutor-home-list-row:hover{border-color:color-mix(in srgb,var(--color-primary,#6e1a2c) 25%,transparent);background:color-mix(in srgb,var(--color-primary,#6e1a2c) 2.5%,transparent)}
+}
+
+@media (max-width:767px){
+  .teacher-workspace-tabs input,.teacher-workspace-tabs textarea,.teacher-workspace-tabs select,.teacher-workspace-tabs button{scroll-margin-block-end:9rem}
+  .teacher-workspace-tabs [role="tabpanel"]>section>.sticky.bottom-0{padding-bottom:max(.625rem,env(safe-area-inset-bottom))}
+}
+
+@media (max-width:639px){
+  .tutor-home-network{-webkit-mask-size:260px 260px;mask-size:260px 260px;opacity:.11}
+  .tutor-home-orb-a{right:-118px;top:-90px}
+  .tutor-home-orb-b{display:none}
+  .role-panel-card{touch-action:manipulation}
+}
+
+@media (max-width:359px){
+  .teacher-workspace-tabs [role="tab"]{padding-inline:.35rem;font-size:.69rem;letter-spacing:-.01em}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .role-panel-enter,.role-panel-stagger>*,.role-panel-orbit,.teacher-status-pulse,.teacher-workspace-tabs [role="tabpanel"][data-state="active"],.tutor-home-network,.tutor-home-orb{animation:none!important;opacity:1!important;transform:none!important}
+  .tutor-home-network{opacity:.1!important}
+  .tutor-home-orb{opacity:.06!important}
+  .role-panel-card,.tutor-home-card,.tutor-home-list-row{transition:none!important}
+}

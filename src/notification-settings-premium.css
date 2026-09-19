@@ -1,0 +1,515 @@
+/* Premium notification settings — responsive, palette-aware, mobile-safe. */
+.notification-settings-page {
+  position: relative;
+}
+
+.notification-settings-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  min-height: 150px;
+  border: 1px solid color-mix(in oklch, var(--primary) 14%, var(--border));
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 83% 22%, color-mix(in oklch, var(--primary) 13%, transparent), transparent 22rem),
+    radial-gradient(circle at 55% 120%, color-mix(in oklch, var(--portal-gold) 7%, transparent), transparent 18rem),
+    linear-gradient(135deg, color-mix(in oklch, var(--card) 97%, var(--primary) 3%), var(--card));
+  box-shadow:
+    0 12px 32px color-mix(in oklch, var(--primary) 5%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / .05);
+}
+
+.notification-settings-hero__accent,
+.notification-settings-hero__grid,
+.notification-settings-hero__sweep,
+.notification-settings-hero__glow {
+  position: absolute;
+  pointer-events: none;
+}
+
+.notification-settings-hero__accent {
+  inset-block: 0;
+  left: 0;
+  z-index: 3;
+  width: 5px;
+  background: linear-gradient(to bottom, var(--primary), color-mix(in oklch, var(--portal-gold) 72%, var(--primary)));
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: notificationSettingsAccent .7s cubic-bezier(.22,1,.36,1) .05s forwards;
+}
+
+.notification-settings-hero__grid {
+  inset: 0;
+  z-index: 0;
+  opacity: .22;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--primary) 18%, transparent) 1px, transparent 1.6px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--primary) 5%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px, 58px 100%, 100% 58px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 38%, black 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 38%, black 100%);
+  animation: notificationSettingsGrid 20s linear infinite;
+}
+
+.notification-settings-hero__glow {
+  right: 4%;
+  top: 50%;
+  z-index: 0;
+  width: 230px;
+  height: 230px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--primary) 12%, transparent), transparent 68%);
+  transform: translateY(-50%);
+  animation: notificationSettingsGlow 6.8s ease-in-out infinite;
+}
+
+.notification-settings-hero__sweep {
+  z-index: 1;
+  top: -80%;
+  bottom: -80%;
+  left: -18%;
+  width: 11%;
+  opacity: 0;
+  transform: skewX(-17deg);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .10), transparent);
+  animation: notificationSettingsSweep 7.6s ease-in-out 1s infinite;
+}
+
+.notification-settings-hero__content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 28px;
+}
+
+.notification-settings-hero__back {
+  position: relative;
+  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in oklch, var(--primary) 10%, var(--border));
+  border-radius: 15px;
+  background: color-mix(in oklch, var(--background) 90%, var(--primary) 4%);
+  color: var(--foreground);
+  box-shadow: 0 7px 18px color-mix(in oklch, var(--primary) 5%, transparent);
+  transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+  animation: notificationSettingsContentIn .55s cubic-bezier(.22,1,.36,1) .05s both;
+}
+
+.notification-settings-hero__back:hover {
+  transform: translateX(-2px);
+  border-color: color-mix(in oklch, var(--primary) 24%, var(--border));
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 10px 24px color-mix(in oklch, var(--primary) 12%, transparent);
+}
+
+.notification-settings-hero__copy {
+  min-width: 0;
+  flex: 1 1 auto;
+  animation: notificationSettingsContentIn .62s cubic-bezier(.22,1,.36,1) .1s both;
+}
+
+.notification-settings-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.notification-settings-hero__eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 0 5px color-mix(in oklch, var(--primary) 10%, transparent);
+  animation: notificationSettingsDot 2.6s ease-in-out infinite;
+}
+
+.notification-settings-hero__title {
+  margin: 0;
+  color: var(--foreground);
+  font-family: var(--font-display, inherit);
+  font-size: clamp(1.7rem, 2.3vw, 2.45rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+
+.notification-settings-hero__subtitle {
+  max-width: 680px;
+  margin: 8px 0 0;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.notification-settings-hero__summary {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  animation: notificationSettingsContentIn .7s cubic-bezier(.22,1,.36,1) .18s both;
+}
+
+.notification-settings-hero__stat {
+  min-width: 92px;
+  border: 1px solid color-mix(in oklch, var(--primary) 14%, var(--border));
+  border-radius: 17px;
+  background: color-mix(in oklch, var(--card) 80%, transparent);
+  padding: 11px 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .05);
+}
+
+.notification-settings-hero__stat strong {
+  display: block;
+  color: var(--foreground);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.notification-settings-hero__stat span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.notification-settings-hero__signal {
+  position: relative;
+  display: grid;
+  width: 88px;
+  height: 88px;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.notification-settings-hero__signal-ring {
+  position: absolute;
+  border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent);
+  border-radius: 999px;
+  animation: notificationSettingsRing 3.7s ease-in-out infinite;
+}
+
+.notification-settings-hero__signal-ring:nth-child(1) { inset: 7px; }
+.notification-settings-hero__signal-ring:nth-child(2) { inset: 17px; animation-delay: -.9s; }
+.notification-settings-hero__signal-ring:nth-child(3) { inset: 27px; animation-delay: -1.8s; }
+
+.notification-settings-hero__signal-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+  border-radius: 15px;
+  background: color-mix(in oklch, var(--primary) 12%, var(--card));
+  color: var(--primary);
+  box-shadow: 0 10px 24px color-mix(in oklch, var(--primary) 10%, transparent);
+}
+
+.notification-settings-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.18fr) minmax(320px, .82fr);
+}
+
+.notification-settings-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--primary) 9%, var(--border));
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--card) 98%, var(--primary) 2%), var(--card));
+  padding: 22px;
+  box-shadow:
+    0 10px 28px color-mix(in oklch, var(--primary) 4%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / .04);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: notificationSettingsPanelIn .6s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.notification-settings-panel:nth-child(2) { animation-delay: .08s; }
+
+.notification-settings-panel::before {
+  content: "";
+  position: absolute;
+  inset-inline: 18px;
+  top: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 58%, white 18%), transparent);
+  transform: scaleX(.25);
+  opacity: .55;
+  animation: notificationSettingsTopline .8s cubic-bezier(.22,1,.36,1) .25s forwards;
+}
+
+.notification-settings-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.notification-settings-panel__icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 14px;
+  background: color-mix(in oklch, var(--primary) 11%, var(--card));
+  color: var(--primary);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .05);
+  animation: notificationSettingsIconIn .5s cubic-bezier(.22,1,.36,1) .18s both;
+}
+
+.notification-settings-panel__title-wrap { min-width: 0; }
+.notification-settings-panel__title { margin: 0; color: var(--foreground); font-size: 18px; font-weight: 750; }
+.notification-settings-panel__desc { margin: 3px 0 0; color: var(--muted-foreground); font-size: 12px; line-height: 1.45; }
+.notification-settings-panel__count {
+  margin-left: auto;
+  border: 1px solid color-mix(in oklch, var(--primary) 12%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--primary) 6%, var(--background));
+  padding: 6px 9px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.notification-settings-list { display: grid; gap: 10px; }
+
+.notification-settings-row {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border));
+  border-radius: 18px;
+  background: color-mix(in oklch, var(--background) 96%, var(--primary) 4%);
+  padding: 13px 14px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .035);
+  opacity: 0;
+  transform: translateY(8px) scale(.99);
+  animation: notificationSettingsRowIn .5s cubic-bezier(.22,1,.36,1) forwards;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.notification-settings-row:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--primary) 18%, var(--border));
+  background: color-mix(in oklch, var(--background) 92%, var(--primary) 8%);
+  box-shadow: 0 8px 18px color-mix(in oklch, var(--primary) 5%, transparent);
+}
+
+.notification-settings-row.is-active::after {
+  content: "";
+  position: absolute;
+  inset-block: 11px;
+  left: 0;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 14px color-mix(in oklch, var(--primary) 36%, transparent);
+  animation: notificationSettingsActiveBar .42s cubic-bezier(.22,1,.36,1) both;
+}
+
+.notification-settings-row__icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px;
+  background: color-mix(in oklch, var(--primary) 8%, var(--card));
+  color: color-mix(in oklch, var(--primary) 82%, var(--foreground));
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+
+.notification-settings-row:hover .notification-settings-row__icon {
+  transform: scale(1.045);
+  background: color-mix(in oklch, var(--primary) 13%, var(--card));
+  box-shadow: 0 7px 16px color-mix(in oklch, var(--primary) 7%, transparent);
+}
+
+.notification-settings-row__copy { min-width: 0; flex: 1 1 auto; }
+.notification-settings-row__title { color: var(--foreground); font-size: 14px; font-weight: 720; line-height: 1.3; }
+.notification-settings-row__description { margin-top: 3px; color: var(--muted-foreground); font-size: 11px; line-height: 1.45; }
+.notification-settings-row__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 700;
+}
+.notification-settings-row.is-active .notification-settings-row__state { color: var(--primary); }
+.notification-settings-row__state-dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+
+.notification-settings-row__control {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-settings-row__pending {
+  width: 8px;
+  height: 8px;
+  border: 2px solid color-mix(in oklch, var(--primary) 25%, transparent);
+  border-top-color: var(--primary);
+  border-radius: 999px;
+  animation: notificationSettingsSpinner .7s linear infinite;
+}
+
+.notification-settings__switch {
+  position: relative;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 24px !important;
+  box-sizing: border-box !important;
+  overflow: hidden;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  border: 0 !important;
+  padding: 2px !important;
+  transition: background-color .22s ease, box-shadow .22s ease, transform .18s ease !important;
+}
+.notification-settings__switch:hover { transform: scale(1.03); }
+.notification-settings__switch[data-state="checked"] { box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 8%, transparent); }
+.notification-settings__switch > span {
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 20px !important;
+  margin: 0 !important;
+  transform: translateX(0) !important;
+}
+.notification-settings__switch[data-state="checked"] > span { transform: translateX(20px) !important; }
+.notification-settings__switch[data-state="unchecked"] > span { transform: translateX(0) !important; }
+
+.notification-settings-channel {
+  min-height: 112px;
+  padding: 15px;
+}
+.notification-settings-channel .notification-settings-row__icon { width: 46px; height: 46px; border-radius: 15px; }
+
+.notification-settings-panel__note {
+  margin-top: 14px;
+  border: 1px dashed color-mix(in oklch, var(--primary) 13%, var(--border));
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--primary) 4%, var(--background));
+  padding: 12px 13px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 1.5;
+  animation: notificationSettingsContentIn .55s cubic-bezier(.22,1,.36,1) .35s both;
+}
+
+.notification-settings-skeleton {
+  height: 70px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: color-mix(in oklch, var(--muted) 76%, var(--card));
+  position: relative;
+}
+.notification-settings-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-110%);
+  background: linear-gradient(105deg, transparent 20%, rgb(255 255 255 / .12) 47%, transparent 75%);
+  animation: notificationSettingsShimmer 1.25s ease-in-out infinite;
+}
+
+@keyframes notificationSettingsAccent { to { transform: scaleY(1); } }
+@keyframes notificationSettingsGrid { to { background-position: 72px 35px, 58px 0, 0 29px; } }
+@keyframes notificationSettingsGlow { 0%,100% { transform: translateY(-50%) scale(.94); opacity: .6; } 50% { transform: translateY(-50%) scale(1.05); opacity: 1; } }
+@keyframes notificationSettingsSweep { 0%,20% { transform: translateX(0) skewX(-17deg); opacity: 0; } 36% { opacity: .1; } 62% { transform: translateX(1050%) skewX(-17deg); opacity: .08; } 75%,100% { transform: translateX(1050%) skewX(-17deg); opacity: 0; } }
+@keyframes notificationSettingsContentIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes notificationSettingsDot { 0%,100% { transform: scale(1); opacity: .72; } 50% { transform: scale(1.22); opacity: 1; } }
+@keyframes notificationSettingsRing { 0%,100% { transform: scale(.94); opacity: .28; } 50% { transform: scale(1.04); opacity: .72; } }
+@keyframes notificationSettingsPanelIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes notificationSettingsTopline { to { transform: scaleX(1); opacity: .9; } }
+@keyframes notificationSettingsIconIn { from { opacity: 0; transform: scale(.75) rotate(-5deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+@keyframes notificationSettingsRowIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes notificationSettingsActiveBar { from { transform: scaleY(.35); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+@keyframes notificationSettingsSpinner { to { transform: rotate(360deg); } }
+@keyframes notificationSettingsShimmer { to { transform: translateX(110%); } }
+
+@media (max-width: 1023px) {
+  .notification-settings-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .notification-settings-hero { min-height: 142px; border-radius: 24px; }
+  .notification-settings-hero__content { min-height: 142px; padding: 20px 17px; gap: 13px; }
+  .notification-settings-hero__subtitle { max-width: 32ch; font-size: 12px; }
+  .notification-settings-hero__summary { display: none; }
+  .notification-settings-hero__signal { position: absolute; right: 9px; top: 50%; z-index: -1; width: 92px; height: 92px; transform: translateY(-50%); opacity: .32; }
+  .notification-settings-hero__grid { opacity: .14; animation-duration: 28s; }
+  .notification-settings-hero__sweep { display: none; }
+  .notification-settings-hero__glow { right: -70px; width: 180px; height: 180px; }
+  .notification-settings-panel { border-radius: 22px; padding: 16px; }
+  .notification-settings-panel__head { align-items: flex-start; }
+  .notification-settings-panel__count { padding: 5px 8px; }
+  .notification-settings-row { padding: 12px; }
+  .notification-settings-row:hover { transform: none; box-shadow: none; }
+  .notification-settings-row:hover .notification-settings-row__icon { transform: none; }
+  .notification-settings__switch:hover { transform: none; }
+}
+
+@media (max-width: 420px) {
+  .notification-settings-hero__back { width: 42px; height: 42px; border-radius: 14px; }
+  .notification-settings-hero__title { font-size: 1.55rem; }
+  .notification-settings-panel__desc { max-width: 24ch; }
+  .notification-settings-row__description { max-width: 28ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-settings-hero__accent,
+  .notification-settings-hero__grid,
+  .notification-settings-hero__sweep,
+  .notification-settings-hero__glow,
+  .notification-settings-hero__back,
+  .notification-settings-hero__copy,
+  .notification-settings-hero__summary,
+  .notification-settings-hero__eyebrow-dot,
+  .notification-settings-hero__signal-ring,
+  .notification-settings-panel,
+  .notification-settings-panel::before,
+  .notification-settings-panel__icon,
+  .notification-settings-row,
+  .notification-settings-row.is-active::after,
+  .notification-settings-panel__note,
+  .notification-settings-skeleton::after {
+    animation: none !important;
+  }
+  .notification-settings-hero__accent { transform: none; }
+  .notification-settings-panel,
+  .notification-settings-row { opacity: 1; transform: none; }
+}

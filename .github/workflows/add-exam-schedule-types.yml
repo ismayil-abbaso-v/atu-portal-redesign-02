@@ -1,0 +1,39 @@
+name: Add exam schedule Supabase types
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-exam-schedule-types.yml'
+      - 'src/integrations/supabase/types.ts'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add exam_schedule types
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('src/integrations/supabase/types.ts')
+          s = p.read_text()
+          if 'exam_schedule: {' in s:
+              raise SystemExit(0)
+          marker = '      exam_scores: {'
+          block = '''      exam_schedule: {\n        Row: {\n          id: string\n          group_id: string\n          course_id: string\n          imtahan_tarixi: string\n          baslangic_saat: string\n          otaq: string\n          yaradan_id: string\n          created_at: string\n          updated_at: string\n        }\n        Insert: {\n          id?: string\n          group_id: string\n          course_id: string\n          imtahan_tarixi: string\n          baslangic_saat: string\n          otaq: string\n          yaradan_id?: string\n          created_at?: string\n          updated_at?: string\n        }\n        Update: {\n          id?: string\n          group_id?: string\n          course_id?: string\n          imtahan_tarixi?: string\n          baslangic_saat?: string\n          otaq?: string\n          yaradan_id?: string\n          created_at?: string\n          updated_at?: string\n        }\n        Relationships: []\n      }\n'''
+          if marker not in s:
+              raise SystemExit('exam_scores marker not found')
+          p.write_text(s.replace(marker, block + marker, 1))
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/integrations/supabase/types.ts
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: add exam schedule database types"
+          git push

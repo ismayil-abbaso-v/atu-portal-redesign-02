@@ -1,0 +1,5 @@
+-- Canlı mühitdə private helper-lərin RLS policy-dən birbaşa çağırılmasının
+-- `permission denied for function` verməsi bu versiyada public auth.uid()-scoped
+-- wrapper-lərlə düzəldildi.
+-- Yekun, təkrarlana bilən SQL 20260829072319_finalize_ejournal_rls_audit.sql
+-- faylına squash edilib. Bu marker remote migration tarixçəsi ilə versiya paritetini saxlayır.

@@ -1,0 +1,46 @@
+/* Profile data visibility fix — keep values readable on desktop and mobile. */
+
+.profile-premium-meta-row {
+  grid-template-columns: 24px minmax(0, 1fr) minmax(72px, 45%);
+}
+
+.profile-premium-meta-row dt {
+  min-width: 0;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+.profile-premium-meta-row dd {
+  min-width: 0;
+  max-width: none !important;
+  justify-self: end;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.profile-premium-meta-row dd.rounded-full {
+  white-space: nowrap !important;
+  overflow-wrap: normal;
+}
+
+/* Detail cards should show the whole database value instead of ellipsis. */
+.profile-premium-field > .truncate {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 420px) {
+  .profile-premium-meta-row {
+    grid-template-columns: 22px minmax(0, 1fr) minmax(68px, 43%);
+    gap: 8px;
+    padding-inline: 6px;
+  }
+}

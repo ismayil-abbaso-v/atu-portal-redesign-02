@@ -1,0 +1,167 @@
+/* Compact sizing layer for every shared admin PageHeader.
+ * Keeps the premium animation language, but guarantees foreground content
+ * remains visible inside the fixed-height hero.
+ */
+.admin-premium-v2 .admin-page-header {
+  height: 96px !important;
+  min-height: 96px !important;
+  max-height: 96px !important;
+  padding-top: .6rem !important;
+  padding-bottom: .6rem !important;
+}
+
+/* Old admin-premium-v2 has a generic `header.surface-card > *` rule that
+ * forces every direct child to `position: relative`. The shared header's
+ * decorative layers must stay out of normal flow, otherwise they push the
+ * actual title below the fixed-height hero and overflow clips it. */
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__accent,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__grid,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__glow,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__sweep,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__network {
+  position: absolute !important;
+  pointer-events: none !important;
+}
+
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__accent {
+  z-index: 5 !important;
+}
+
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__grid,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__glow {
+  z-index: 0 !important;
+}
+
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__sweep,
+.admin-premium-v2 .admin-content header.admin-page-header > .admin-page-header__network {
+  z-index: 1 !important;
+}
+
+.admin-premium-v2 .admin-page-header__content {
+  position: relative !important;
+  z-index: 10 !important;
+  display: flex !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  align-items: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.admin-premium-v2 .admin-page-header__copy {
+  position: relative !important;
+  z-index: 11 !important;
+  display: flex !important;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none;
+  animation: adminCompactCopyIn .52s cubic-bezier(.22,1,.36,1) both !important;
+}
+
+.admin-premium-v2 .admin-page-header__eyebrow {
+  display: inline-flex !important;
+  align-self: flex-start;
+  margin-bottom: .22rem !important;
+  padding: .2rem .52rem !important;
+  font-size: .55rem !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.admin-premium-v2 .admin-content .admin-page-header h1.admin-page-header__title {
+  display: block !important;
+  margin: 0 !important;
+  color: var(--primary-foreground) !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.admin-premium-v2 .admin-page-header__visual {
+  position: relative !important;
+  z-index: 11 !important;
+  width: 50px !important;
+  height: 50px !important;
+  margin-left: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.admin-premium-v2 .admin-page-header__orbit {
+  inset: 2px !important;
+}
+
+.admin-premium-v2 .admin-page-header__orbit--two {
+  inset: 8px !important;
+}
+
+.admin-premium-v2 .admin-page-header__core {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.admin-premium-v2 .admin-page-header__core svg {
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+}
+
+.admin-premium-v2 .admin-page-header__actions,
+.admin-premium-v2 .admin-page-header__back {
+  position: relative !important;
+  z-index: 12 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.admin-premium-v2 .admin-page-header__network {
+  opacity: .34 !important;
+}
+
+@keyframes adminCompactCopyIn {
+  from { opacity: 0; transform: translateX(-7px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 767px) {
+  .admin-premium-v2 .admin-page-header {
+    height: 84px !important;
+    min-height: 84px !important;
+    max-height: 84px !important;
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
+  }
+
+  .admin-premium-v2 .admin-page-header__content {
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+
+  .admin-premium-v2 .admin-page-header__eyebrow {
+    margin-bottom: .2rem !important;
+    padding: .18rem .46rem !important;
+    font-size: .5rem !important;
+    letter-spacing: .08em !important;
+  }
+
+  .admin-premium-v2 .admin-page-header__network {
+    left: 36% !important;
+    width: 64% !important;
+    opacity: .2 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-premium-v2 .admin-page-header__copy {
+    animation: none !important;
+  }
+}

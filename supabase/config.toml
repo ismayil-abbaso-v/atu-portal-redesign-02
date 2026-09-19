@@ -1,0 +1,12 @@
+project_id = "tdxrpbrcgricqqfdytyg"
+
+[functions.receive-exam-result]
+verify_jwt = false
+
+# Custom JWT + uploader/assigned-teacher authorization is enforced in-function.
+[functions.sync-exam-material-to-official]
+verify_jwt = false
+
+# Internal Vault-backed x-atu-worker-token authentication is enforced in-function.
+[functions.process-official-exam-outbox]
+verify_jwt = false

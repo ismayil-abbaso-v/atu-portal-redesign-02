@@ -1,0 +1,3 @@
+ATU Excel import schema build: 2026-08-26
+The users Excel importer must treat Təhsil haqqı values "ödənişli" and "dövlət sifarişi" as status text, not numeric amounts. Numeric tuition remains numeric.
+Source component: src/components/admin/AdminUsersExcelTools.tsx

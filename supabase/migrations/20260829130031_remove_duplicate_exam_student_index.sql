@@ -1,0 +1,1 @@
+drop index if exists public.idx_exam_detailed_results_student_id;

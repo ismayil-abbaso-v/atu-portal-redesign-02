@@ -1,0 +1,476 @@
+/* Groups admin — premium, palette-aware, responsive and GPU-light.
+ * Scoped to the active /qruplar navigation state so other pages stay untouched.
+ */
+
+body:has(a[href="/qruplar"].bg-primary) {
+  --groups-accent-soft: color-mix(in oklch, var(--primary) 9%, transparent);
+  --groups-accent-faint: color-mix(in oklch, var(--primary) 4%, transparent);
+  --groups-border: color-mix(in oklch, var(--primary) 10%, var(--border));
+  --groups-shadow: color-mix(in oklch, var(--primary) 7%, transparent);
+}
+
+/* =========================
+   Shared groups page header
+   ========================= */
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) {
+  isolation: isolate;
+  border-color: var(--groups-border);
+  background:
+    radial-gradient(circle at 88% -20%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 30%),
+    linear-gradient(135deg, color-mix(in oklch, var(--card) 97%, var(--primary) 3%), var(--card) 58%, color-mix(in oklch, var(--card) 98%, var(--primary) 2%));
+  box-shadow:
+    0 12px 34px var(--groups-shadow),
+    inset 0 1px 0 rgb(255 255 255 / .04);
+  animation: groupsHeaderIn .62s cubic-bezier(.22,1,.36,1) both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .54;
+  background-image:
+    radial-gradient(circle at 9% 30%, color-mix(in oklch, var(--primary) 18%, transparent) 1px, transparent 1.5px),
+    linear-gradient(115deg, transparent 0 48%, color-mix(in oklch, var(--primary) 4%, transparent) 49% 50%, transparent 51% 100%);
+  background-size: 58px 58px, 94px 94px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 25%, black 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 25%, black 88%, transparent);
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .34;
+  background: linear-gradient(102deg, transparent 30%, color-mix(in oklch, var(--primary) 12%, transparent) 48%, transparent 66%);
+  background-size: 230% 100%;
+  animation: groupsHeaderSweep 11s ease-in-out infinite;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) > * {
+  position: relative;
+  z-index: 1;
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card h1 {
+  text-shadow: 0 1px 0 color-mix(in oklch, var(--card) 60%, transparent);
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card button {
+  border-color: color-mix(in oklch, var(--primary) 12%, var(--border));
+  background: color-mix(in oklch, var(--background) 91%, var(--primary) 9%);
+  box-shadow: 0 5px 14px color-mix(in oklch, var(--primary) 5%, transparent);
+}
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card button:hover {
+  border-color: color-mix(in oklch, var(--primary) 24%, var(--border));
+}
+
+/* =========================
+   Groups list shell / toolbar
+   ========================= */
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--groups-border);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--card) 98%, var(--primary) 2%), var(--card));
+  box-shadow:
+    0 14px 34px var(--groups-shadow),
+    inset 0 1px 0 rgb(255 255 255 / .035);
+  animation: groupsShellIn .64s cubic-bezier(.22,1,.36,1) .05s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm::before {
+  content: "";
+  position: absolute;
+  inset: 0 7% auto;
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 62%, transparent), transparent);
+  transform-origin: center;
+  animation: groupsTopline 1s cubic-bezier(.22,1,.36,1) .2s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child {
+  position: relative;
+  z-index: 2;
+  padding: 10px;
+  border: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border));
+  border-radius: 18px;
+  background: color-mix(in oklch, var(--background) 76%, var(--primary) 2%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .035);
+  animation: groupsToolbarIn .55s cubic-bezier(.22,1,.36,1) .12s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child input {
+  min-height: 44px;
+  border-color: color-mix(in oklch, var(--primary) 7%, var(--border));
+  background: var(--card);
+  box-shadow: 0 3px 12px color-mix(in oklch, var(--primary) 3%, transparent);
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child input:focus {
+  border-color: color-mix(in oklch, var(--primary) 35%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 8%, transparent), 0 5px 16px var(--groups-shadow);
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child button {
+  min-height: 42px;
+  border-color: color-mix(in oklch, var(--primary) 9%, var(--border));
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 5%, transparent);
+  transition: transform .2s cubic-bezier(.22,1,.36,1), border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+@media (hover:hover) {
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 17px color-mix(in oklch, var(--primary) 8%, transparent);
+  }
+}
+
+/* =========================
+   Group cards
+   ========================= */
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 112px;
+  border: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--primary) 8%, transparent), transparent 42%),
+    linear-gradient(145deg, color-mix(in oklch, var(--background) 88%, var(--primary) 2%), color-mix(in oklch, var(--card) 98%, var(--primary) 2%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .035);
+  opacity: 0;
+  transform: translateY(9px) scale(.988);
+  animation: groupsCardIn .48s cubic-bezier(.22,1,.36,1) forwards;
+  transition: transform .22s cubic-bezier(.22,1,.36,1), border-color .22s ease, box-shadow .22s ease, background-color .22s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(1){animation-delay:.14s}
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(2){animation-delay:.19s}
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(3){animation-delay:.24s}
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(4){animation-delay:.29s}
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(5){animation-delay:.34s}
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:nth-child(6){animation-delay:.39s}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative::before {
+  content: "";
+  position: absolute;
+  inset: auto 14px 0;
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: .42;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 52%, transparent), transparent);
+  transform: scaleX(.3);
+  transition: transform .26s ease, opacity .26s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative::after {
+  content: "";
+  position: absolute;
+  inset: -30% auto -30% -55%;
+  width: 44%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(105deg, transparent, rgb(255 255 255 / .09), transparent);
+  transform: skewX(-14deg);
+  transition: left .55s cubic-bezier(.22,1,.36,1), opacity .2s ease;
+}
+
+@media (hover:hover) {
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklch, var(--primary) 23%, var(--border));
+    box-shadow: 0 11px 24px color-mix(in oklch, var(--primary) 8%, transparent), inset 0 1px 0 rgb(255 255 255 / .05);
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:hover::before {
+    transform: scaleX(1);
+    opacity: .75;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative:hover::after {
+    left: 120%;
+    opacity: .7;
+  }
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative > div.absolute.right-3.top-3 {
+  border: 1px solid color-mix(in oklch, var(--primary-foreground) 12%, transparent);
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 16%, transparent);
+  animation: groupsIconFloat 5.8s ease-in-out infinite;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative.ring-2 {
+  border-color: color-mix(in oklch, var(--primary) 60%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 9%, transparent), 0 9px 22px var(--groups-shadow);
+}
+
+/* Pagination footer */
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.justify-between.gap-3.pt-2 {
+  margin-top: 2px;
+  padding: 12px 10px 2px;
+  border-top: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border));
+  animation: groupsFooterIn .45s ease .28s both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.justify-between.gap-3.pt-2 button {
+  border: 1px solid transparent;
+  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.justify-between.gap-3.pt-2 button:not(:disabled):hover {
+  border-color: color-mix(in oklch, var(--primary) 10%, var(--border));
+  background: var(--groups-accent-soft);
+}
+
+/* =========================
+   Group detail layout
+   ========================= */
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section,
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--groups-border);
+  background:
+    radial-gradient(circle at 95% -10%, color-mix(in oklch, var(--primary) 6%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in oklch, var(--card) 98%, var(--primary) 2%), var(--card));
+  box-shadow: 0 12px 30px var(--groups-shadow), inset 0 1px 0 rgb(255 255 255 / .035);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: groupsDetailCardIn .58s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section { animation-delay:.10s; }
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:nth-child(1) { animation-delay:.17s; }
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:nth-child(2) { animation-delay:.24s; }
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section::before,
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section::before {
+  content: "";
+  position: absolute;
+  inset: 0 12% auto;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 55%, transparent), transparent);
+}
+
+/* Course accordion */
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section [data-state][class*="rounded-2xl"] {
+  border-color: color-mix(in oklch, var(--primary) 8%, var(--border));
+  background: color-mix(in oklch, var(--background) 86%, var(--primary) 2%);
+  transition: border-color .22s ease, background-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section [data-state="open"][class*="rounded-2xl"] {
+  border-color: color-mix(in oklch, var(--primary) 23%, var(--border));
+  background: color-mix(in oklch, var(--background) 82%, var(--primary) 4%);
+  box-shadow: 0 7px 18px color-mix(in oklch, var(--primary) 5%, transparent);
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section button.group.flex.min-h-12 {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in oklch, var(--primary) 7%, var(--border));
+  background: color-mix(in oklch, var(--card) 98%, var(--primary) 2%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .035);
+}
+
+@media (hover:hover) {
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section button.group.flex.min-h-12:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--primary) 23%, var(--border));
+    box-shadow: 0 7px 16px color-mix(in oklch, var(--primary) 6%, transparent);
+  }
+}
+
+/* Leader card + students */
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:first-child .size-12,
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:first-child .size-10 {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 7%, transparent);
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between {
+  border: 1px solid transparent;
+  background: transparent;
+  opacity: 0;
+  transform: translateX(6px);
+  animation: groupsStudentIn .42s cubic-bezier(.22,1,.36,1) forwards;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:nth-child(1){animation-delay:.28s}
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:nth-child(2){animation-delay:.32s}
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:nth-child(3){animation-delay:.36s}
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:nth-child(4){animation-delay:.40s}
+body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:nth-child(n+5){animation-delay:.44s}
+
+@media (hover:hover) {
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between:hover {
+    border-color: color-mix(in oklch, var(--primary) 7%, var(--border));
+    background: var(--groups-accent-faint);
+    transform: translateX(2px);
+  }
+}
+
+/* =========================
+   Dialogs opened from groups
+   ========================= */
+body:has(a[href="/qruplar"].bg-primary) [role="dialog"],
+body:has(a[href="/qruplar"].bg-primary) [role="alertdialog"] {
+  border-color: color-mix(in oklch, var(--primary) 13%, var(--border));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--primary) 7%, transparent), transparent 30%),
+    var(--card);
+  box-shadow: 0 24px 64px color-mix(in oklch, var(--foreground) 18%, transparent), 0 0 0 1px color-mix(in oklch, var(--primary) 4%, transparent);
+  animation: groupsDialogIn .32s cubic-bezier(.22,1,.36,1) both;
+}
+
+body:has(a[href="/qruplar"].bg-primary) [role="dialog"] input,
+body:has(a[href="/qruplar"].bg-primary) [role="dialog"] button[role="combobox"] {
+  border-color: color-mix(in oklch, var(--primary) 9%, var(--border));
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+body:has(a[href="/qruplar"].bg-primary) [role="dialog"] input:focus,
+body:has(a[href="/qruplar"].bg-primary) [role="dialog"] button[role="combobox"]:focus-visible {
+  border-color: color-mix(in oklch, var(--primary) 38%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+/* =========================
+   Mobile / touch
+   ========================= */
+@media (max-width: 767px) {
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header) {
+    margin-bottom: 14px;
+    box-shadow: 0 8px 22px color-mix(in oklch, var(--primary) 5%, transparent);
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm {
+    border-radius: 24px;
+    padding: 12px;
+    box-shadow: none;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child {
+    padding: 8px;
+    border-radius: 16px;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child > div.ml-auto {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child > div.ml-auto > button {
+    flex: 1 1 auto;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section,
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section {
+    border-radius: 24px;
+    box-shadow: none;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative,
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section button.group.flex.min-h-12 {
+    transform: none;
+  }
+}
+
+@media (max-width: 420px) {
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid {
+    grid-template-columns: 1fr;
+  }
+
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative {
+    min-height: 102px;
+  }
+}
+
+/* =========================
+   Dark mode refinements
+   ========================= */
+.dark body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header),
+.dark body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm,
+.dark body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section,
+.dark body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section {
+  box-shadow: 0 14px 34px rgb(0 0 0 / .14), inset 0 1px 0 rgb(255 255 255 / .025);
+}
+
+/* =========================
+   Motion
+   ========================= */
+@keyframes groupsHeaderIn {
+  from { opacity:0; transform:translateY(9px) scale(.995); }
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsHeaderSweep {
+  0%, 34% { background-position: 165% 0; }
+  62% { background-position: -65% 0; }
+  100% { background-position: -65% 0; }
+}
+@keyframes groupsShellIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsToolbarIn {
+  from { opacity:0; transform:translateY(6px); }
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsTopline {
+  from { opacity:0; transform:scaleX(.15); }
+  to { opacity:1; transform:scaleX(1); }
+}
+@keyframes groupsCardIn {
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsIconFloat {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-1.5px); }
+}
+@keyframes groupsFooterIn {
+  from { opacity:0; transform:translateY(5px); }
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsDetailCardIn {
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsStudentIn {
+  to { opacity:1; transform:none; }
+}
+@keyframes groupsDialogIn {
+  from { opacity:0; transform:translateY(8px) scale(.985); }
+  to { opacity:1; transform:none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card,
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card::after,
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm,
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm::before,
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.flex.flex-wrap.items-center.gap-2:first-child,
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative,
+  body:has(a[href="/qruplar"].bg-primary) div.flex.flex-1.flex-col.gap-4.rounded-3xl.bg-card.p-4.shadow-sm > div.grid > button.relative > div.absolute.right-3.top-3,
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > section,
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section,
+  body:has(a[href="/qruplar"].bg-primary) div.grid.min-w-0.flex-1.gap-4 > aside > section:last-child div.group.flex.items-center.justify-between,
+  body:has(a[href="/qruplar"].bg-primary) [role="dialog"],
+  body:has(a[href="/qruplar"].bg-primary) [role="alertdialog"] {
+    animation:none !important;
+    opacity:1 !important;
+    transform:none !important;
+  }
+}

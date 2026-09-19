@@ -1,0 +1,389 @@
+/* Admin Premium V2 — stable hooks, palette-aware, light on GPU. */
+.admin-premium-v2 {
+  --admin-v2-ease: cubic-bezier(.22,1,.36,1);
+  --admin-v2-border: color-mix(in oklch, var(--primary) 12%, var(--border));
+  --admin-v2-soft: color-mix(in oklch, var(--primary) 5%, var(--card));
+  --admin-v2-shadow: 0 10px 28px color-mix(in oklch, var(--primary) 6%, transparent);
+}
+
+/* ---------- Top admin navigation ---------- */
+.admin-premium-v2 .admin-nav {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--admin-v2-border);
+  background:
+    radial-gradient(circle at 9% 30%, color-mix(in oklch, var(--primary) 7%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in oklch, var(--card) 99%, var(--primary) 1%), var(--card));
+  box-shadow: var(--admin-v2-shadow), inset 0 1px 0 rgb(255 255 255 / .42);
+  animation: adminV2NavEnter .56s var(--admin-v2-ease) both;
+}
+
+.admin-premium-v2 .admin-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .28;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--primary) 18%, transparent) 1px, transparent 1.5px),
+    linear-gradient(105deg, transparent 0 36%, color-mix(in oklch, var(--primary) 6%, transparent) 36.4% 36.8%, transparent 37.2% 100%);
+  background-size: 70px 70px, 240px 100%;
+  animation: adminV2NavTexture 24s linear infinite;
+}
+
+.admin-premium-v2 .admin-nav::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -18%;
+  width: 14%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-17deg);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 13%, transparent), transparent);
+  animation: adminV2NavSweep 9.6s ease-in-out 1.4s infinite;
+}
+
+.admin-premium-v2 .admin-nav > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-premium-v2 .admin-nav-link {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  transform: translateZ(0);
+  transition: transform .22s ease, border-color .22s ease, background-color .22s ease, color .22s ease, box-shadow .22s ease;
+}
+
+.admin-premium-v2 .admin-nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 25%, rgb(255 255 255 / .15) 50%, transparent 75%);
+  transform: translateX(-130%);
+}
+
+.admin-premium-v2 .admin-nav-link[data-active="true"] {
+  border-color: color-mix(in oklch, var(--primary) 78%, white 9%);
+  box-shadow: 0 8px 19px color-mix(in oklch, var(--primary) 18%, transparent), inset 0 1px 0 rgb(255 255 255 / .14);
+}
+
+.admin-premium-v2 .admin-nav-link[data-active="true"]::before {
+  opacity: 1;
+  animation: adminV2TabSheen 7.4s ease-in-out 1.8s infinite;
+}
+
+.admin-premium-v2 .admin-nav-icon {
+  transition: transform .24s var(--admin-v2-ease);
+}
+
+@media (hover:hover) {
+  .admin-premium-v2 .admin-nav-link:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklch, var(--primary) 14%, var(--border));
+  }
+  .admin-premium-v2 .admin-nav-link:hover .admin-nav-icon {
+    transform: translateY(-1px) scale(1.07);
+  }
+}
+
+/* ---------- Admin page hero/header ---------- */
+.admin-premium-v2 .admin-content > header.surface-card,
+.admin-premium-v2 .admin-content > .admin-dashboard-page > header.surface-card,
+.admin-premium-v2 .admin-content > div > header.surface-card:first-child {
+  position: relative;
+  isolation: isolate;
+  contain: paint;
+  overflow: hidden;
+  min-height: 122px;
+  border: 1px solid color-mix(in oklch, var(--primary) 44%, var(--border));
+  background:
+    radial-gradient(circle at 86% -25%, color-mix(in oklch, var(--primary-foreground) 16%, transparent), transparent 29%),
+    radial-gradient(circle at 66% 145%, color-mix(in oklch, var(--primary-foreground) 7%, transparent), transparent 35%),
+    linear-gradient(118deg,
+      color-mix(in oklch, var(--primary) 94%, black 6%) 0%,
+      var(--primary) 55%,
+      color-mix(in oklch, var(--primary) 84%, black 16%) 100%);
+  color: var(--primary-foreground);
+  box-shadow:
+    0 14px 34px color-mix(in oklch, var(--primary) 13%, transparent),
+    inset 5px 0 0 color-mix(in oklch, var(--portal-gold) 64%, white 36%),
+    inset 0 1px 0 rgb(255 255 255 / .12);
+  animation: adminV2HeroEnter .66s var(--admin-v2-ease) both;
+}
+
+.admin-premium-v2 .admin-content > header.surface-card::before,
+.admin-premium-v2 .admin-content > .admin-dashboard-page > header.surface-card::before,
+.admin-premium-v2 .admin-content > div > header.surface-card:first-child::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .28;
+  background-image:
+    radial-gradient(circle at 13% 72%, rgb(255 255 255 / .48) 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 34% 28%, rgb(255 255 255 / .34) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 58% 72%, rgb(255 255 255 / .28) 0 1px, transparent 1.5px),
+    linear-gradient(145deg, transparent 0 22%, rgb(255 255 255 / .11) 22.3% 22.7%, transparent 23% 100%),
+    linear-gradient(25deg, transparent 0 46%, rgb(255 255 255 / .075) 46.3% 46.65%, transparent 47% 100%);
+  background-size: 180px 110px, 230px 125px, 270px 140px, 320px 100%, 380px 100%;
+  background-position: 0 0, 80px 10px, 170px -8px, 0 0, 80px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 13%, black 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 13%, black 92%, transparent 100%);
+  animation: adminV2HeroNetwork 18s linear infinite;
+}
+
+.admin-premium-v2 .admin-content > header.surface-card::after,
+.admin-premium-v2 .admin-content > .admin-dashboard-page > header.surface-card::after,
+.admin-premium-v2 .admin-content > div > header.surface-card:first-child::after {
+  content: "";
+  position: absolute;
+  top: -70%;
+  bottom: -70%;
+  left: -22%;
+  z-index: 0;
+  width: 15%;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-17deg);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .16), transparent);
+  animation: adminV2HeroSweep 8.8s ease-in-out 1.25s infinite;
+}
+
+.admin-premium-v2 .admin-content header.surface-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.admin-premium-v2 .admin-content header.surface-card > .absolute.inset-x-0.top-0 {
+  opacity: .5;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .44), transparent) !important;
+}
+
+.admin-premium-v2 .admin-content header.surface-card h1 {
+  color: var(--primary-foreground) !important;
+  text-shadow: 0 1px 0 rgb(0 0 0 / .08);
+  animation: adminV2HeroCopy .72s var(--admin-v2-ease) both;
+}
+
+.admin-premium-v2 .admin-content header.surface-card button {
+  border-color: rgb(255 255 255 / .18) !important;
+  background: rgb(255 255 255 / .09) !important;
+  color: var(--primary-foreground) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .1);
+}
+
+/* ---------- Main content / cards ---------- */
+.admin-premium-v2 .admin-dashboard-body,
+.admin-premium-v2 .admin-content > :not(header):not(.admin-dashboard-page),
+.admin-premium-v2 .admin-dashboard-page > :not(header) {
+  animation: adminV2SectionEnter .62s var(--admin-v2-ease) .08s both;
+}
+
+.admin-premium-v2 .admin-content :is(.surface-card, .rounded-3xl.bg-card):not(header) {
+  border-color: var(--admin-v2-border);
+  box-shadow: var(--admin-v2-shadow), inset 0 1px 0 rgb(255 255 255 / .04);
+  transition: transform .24s var(--admin-v2-ease), border-color .24s ease, box-shadow .24s ease, background-color .24s ease;
+}
+
+@media (hover:hover) {
+  .admin-premium-v2 .admin-content :is(.surface-card, .rounded-3xl.bg-card):not(header):hover {
+    border-color: color-mix(in oklch, var(--primary) 21%, var(--border));
+    box-shadow: 0 14px 32px color-mix(in oklch, var(--primary) 8%, transparent), inset 0 1px 0 rgb(255 255 255 / .05);
+  }
+}
+
+/* statistic cards */
+.admin-premium-v2 .admin-dashboard-body .grid > div,
+.admin-premium-v2 .admin-dashboard-body > div > div {
+  animation: adminV2CardEnter .58s var(--admin-v2-ease) both;
+}
+
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(2) { animation-delay: 55ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(3) { animation-delay: 110ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(4) { animation-delay: 165ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(5) { animation-delay: 220ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(6) { animation-delay: 275ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(7) { animation-delay: 330ms; }
+.admin-premium-v2 .admin-dashboard-body .grid > div:nth-child(8) { animation-delay: 385ms; }
+
+@media (hover:hover) {
+  .admin-premium-v2 .admin-dashboard-body .grid > div:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* controls */
+.admin-premium-v2 :is(input, button, [role="combobox"], [role="tab"], select) {
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.admin-premium-v2 :is(input, [role="combobox"]):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 11%, transparent);
+}
+
+.admin-premium-v2 button:not(:disabled):active {
+  transform: scale(.985);
+}
+
+/* tables / rows */
+.admin-premium-v2 table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-premium-v2 tbody tr {
+  animation: adminV2RowEnter .44s var(--admin-v2-ease) both;
+  transition: background-color .18s ease, transform .18s ease;
+}
+
+.admin-premium-v2 tbody tr:nth-child(2) { animation-delay: 35ms; }
+.admin-premium-v2 tbody tr:nth-child(3) { animation-delay: 70ms; }
+.admin-premium-v2 tbody tr:nth-child(4) { animation-delay: 105ms; }
+.admin-premium-v2 tbody tr:nth-child(5) { animation-delay: 140ms; }
+.admin-premium-v2 tbody tr:nth-child(6) { animation-delay: 175ms; }
+.admin-premium-v2 tbody tr:nth-child(7) { animation-delay: 210ms; }
+.admin-premium-v2 tbody tr:nth-child(8) { animation-delay: 245ms; }
+
+@media (hover:hover) {
+  .admin-premium-v2 tbody tr:hover {
+    background: color-mix(in oklch, var(--primary) 4%, transparent);
+  }
+}
+
+/* dialogs opened while admin is mounted */
+body:has(.admin-premium-v2) [role="dialog"] {
+  animation: adminV2DialogEnter .3s var(--admin-v2-ease) both;
+}
+
+.dark .admin-premium-v2 .admin-nav,
+.dark .admin-premium-v2 .admin-content :is(.surface-card, .rounded-3xl.bg-card):not(header) {
+  box-shadow: 0 15px 36px rgb(0 0 0 / .17), inset 0 1px 0 rgb(255 255 255 / .025);
+}
+
+@keyframes adminV2NavEnter {
+  from { opacity: 0; transform: translateY(-7px) scale(.996); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2NavTexture {
+  to { background-position: 70px 35px, 240px 0; }
+}
+
+@keyframes adminV2NavSweep {
+  0%, 20% { transform: translateX(0) skewX(-17deg); opacity: 0; }
+  32% { opacity: .7; }
+  62% { transform: translateX(900%) skewX(-17deg); opacity: .75; }
+  75%, 100% { transform: translateX(900%) skewX(-17deg); opacity: 0; }
+}
+
+@keyframes adminV2TabSheen {
+  0%, 62% { transform: translateX(-130%); opacity: 0; }
+  72% { opacity: 1; }
+  92%, 100% { transform: translateX(130%); opacity: 0; }
+}
+
+@keyframes adminV2HeroEnter {
+  from { opacity: 0; transform: translateY(8px) scale(.997); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2HeroNetwork {
+  0% { background-position: 0 0, 80px 10px, 170px -8px, 0 0, 80px 0; }
+  50% { background-position: 50px -10px, 125px 20px, 210px 4px, 160px 0, -110px 0; }
+  100% { background-position: 100px 0, 170px 10px, 250px -8px, 320px 0, -300px 0; }
+}
+
+@keyframes adminV2HeroSweep {
+  0%, 18% { transform: translateX(0) skewX(-17deg); opacity: 0; }
+  30% { opacity: .12; }
+  60% { transform: translateX(820%) skewX(-17deg); opacity: .16; }
+  74%, 100% { transform: translateX(820%) skewX(-17deg); opacity: 0; }
+}
+
+@keyframes adminV2HeroCopy {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2SectionEnter {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2CardEnter {
+  from { opacity: 0; transform: translateY(10px) scale(.993); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2RowEnter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes adminV2DialogEnter {
+  from { opacity: 0; transform: translateY(7px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 639px) {
+  .admin-premium-v2 .admin-nav {
+    border-radius: 20px;
+    padding: 7px;
+    box-shadow: 0 7px 18px color-mix(in oklch, var(--primary) 5%, transparent);
+  }
+
+  .admin-premium-v2 .admin-nav::after {
+    display: none;
+  }
+
+  .admin-premium-v2 .admin-nav::before {
+    opacity: .18;
+    animation: none;
+  }
+
+  .admin-premium-v2 .admin-nav-mobile [role="combobox"] {
+    min-height: 46px;
+    border-color: color-mix(in oklch, var(--primary) 13%, var(--border));
+    background: color-mix(in oklch, var(--card) 97%, var(--primary) 3%);
+  }
+
+  .admin-premium-v2 .admin-content > header.surface-card,
+  .admin-premium-v2 .admin-content > .admin-dashboard-page > header.surface-card,
+  .admin-premium-v2 .admin-content > div > header.surface-card:first-child {
+    min-height: 104px;
+    box-shadow: 0 9px 22px color-mix(in oklch, var(--primary) 9%, transparent), inset 4px 0 0 color-mix(in oklch, var(--portal-gold) 62%, white 38%);
+  }
+
+  .admin-premium-v2 .admin-content header.surface-card::after {
+    display: none;
+  }
+
+  .admin-premium-v2 .admin-content header.surface-card::before {
+    opacity: .2;
+    animation-duration: 24s;
+  }
+
+  .admin-premium-v2 .admin-dashboard-body .grid > div:hover,
+  .admin-premium-v2 .admin-content :is(.surface-card, .rounded-3xl.bg-card):not(header):hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-premium-v2 *,
+  .admin-premium-v2 *::before,
+  .admin-premium-v2 *::after,
+  body:has(.admin-premium-v2) [role="dialog"] {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}

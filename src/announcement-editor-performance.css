@@ -1,0 +1,96 @@
+/* Fullscreen announcement editor performance + portal layering fixes.
+ * Loaded globally, but only activates while the editor portal exists.
+ */
+
+/* The original full-viewport backdrop blur forced the browser to continuously
+ * re-rasterize the entire app behind the editor (including animated headers).
+ * A denser translucent scrim preserves the visual hierarchy without GPU blur.
+ */
+.announcement-modal-backdrop--portal {
+  background: rgb(13 9 11 / 0.62) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  animation-duration: 140ms !important;
+}
+
+.announcement-modal--fullscreen {
+  contain: layout paint;
+  box-shadow: 0 18px 64px rgb(0 0 0 / 0.20) !important;
+}
+
+/* Header/footer are already visually separated by borders. Blurring the whole
+ * editor underneath them creates two additional full-width compositing layers.
+ */
+.announcement-modal--fullscreen .announcement-editor-header,
+.announcement-modal--fullscreen .announcement-editor-footer {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: var(--background) !important;
+}
+
+/* Small cover badges do not need their own blur layer either. */
+.announcement-modal--fullscreen .announcement-media-editor-preview span {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Media rows below the current viewport are not painted until needed. This is
+ * especially important when an announcement contains many high-resolution images.
+ */
+.announcement-modal--fullscreen .announcement-media-editor-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 138px;
+  animation: none !important;
+}
+
+.announcement-modal--fullscreen .announcement-media-editor-preview img {
+  backface-visibility: hidden;
+}
+
+/* While the editor is open, the obscured application must not keep spending CPU
+ * on decorative loops. The portal itself is a direct body child, so this pauses
+ * the underlying app while leaving editor interactions/animations untouched.
+ */
+body:has(.announcement-modal-backdrop--portal)
+  > :not(.announcement-modal-backdrop--portal):not([data-radix-popper-content-wrapper]) * {
+  animation-play-state: paused !important;
+}
+
+/* Radix Select renders into a separate body portal. Its stock z-50 layer was
+ * underneath the fullscreen editor (z-index 2147483000), so menus were opening
+ * correctly but were invisible. Raise only poppers while this editor is open.
+ */
+body:has(.announcement-modal-backdrop--portal) [data-radix-popper-content-wrapper] {
+  z-index: 2147483646 !important;
+  pointer-events: auto !important;
+}
+
+body:has(.announcement-modal-backdrop--portal) [role="listbox"] {
+  z-index: 2147483646 !important;
+}
+
+/* Keep option rendering cheap and crisp; the popup itself should never inherit
+ * a full-screen blur from surrounding surfaces.
+ */
+body:has(.announcement-modal-backdrop--portal) [data-radix-popper-content-wrapper] > div {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+@media (max-width: 639px) {
+  .announcement-modal-backdrop--portal {
+    background: rgb(13 9 11 / 0.68) !important;
+  }
+
+  .announcement-modal--fullscreen {
+    contain: layout paint;
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-modal-backdrop--portal,
+  .announcement-modal--fullscreen {
+    animation: none !important;
+  }
+}

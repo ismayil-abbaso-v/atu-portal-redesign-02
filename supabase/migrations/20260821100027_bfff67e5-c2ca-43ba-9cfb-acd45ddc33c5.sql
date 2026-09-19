@@ -1,0 +1,16 @@
+REVOKE ALL ON FUNCTION public.set_profile_status(uuid, text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.set_profile_status(uuid, text) TO authenticated;
+REVOKE ALL ON FUNCTION public.has_role(uuid, app_role) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, app_role) TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_dashboard_stats(timestamptz, timestamptz, text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_dashboard_stats(timestamptz, timestamptz, text) TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_registration_trend(timestamptz, timestamptz, text, text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_registration_trend(timestamptz, timestamptz, text, text) TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_role_distribution(text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_role_distribution(text) TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_distinct_faculties() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_distinct_faculties() TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_list_users(text, app_role[], text, text, text, text, integer, integer) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_list_users(text, app_role[], text, text, text, text, integer, integer) TO authenticated;
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.update_updated_at_column() FROM PUBLIC, anon, authenticated;

@@ -1,0 +1,5 @@
+-- Canlı auditdə public.get_week_parity() private helper-i invoker kimi çağırdığı
+-- üçün authenticated istifadəçidə `permission denied for schema private` verdi.
+-- Bu versiyada funksiya təhlükəsiz SECURITY DEFINER wrapper-ə çevrildi.
+-- Yekun SQL 20260829072319_finalize_ejournal_rls_audit.sql faylına squash edilib;
+-- bu marker remote migration tarixçəsi ilə versiya paritetini saxlayır.

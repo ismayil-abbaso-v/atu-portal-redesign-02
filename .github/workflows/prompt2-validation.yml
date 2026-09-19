@@ -1,0 +1,36 @@
+name: Prompt 2 validation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Run regression tests
+        run: bun test src/lib/electronic-journal.test.ts src/lib/schedule.test.ts src/lib/electronic-journal-i18n.test.ts src/lib/notification-hub-i18n.test.ts src/lib/tutor-prompt78-i18n.test.ts src/lib/official-exam-integration.test.ts
+
+      - name: Typecheck
+        run: npm run typecheck

@@ -1,0 +1,55 @@
+@keyframes teacher-journal-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes teacher-journal-card{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes teacher-journal-live{0%,100%{opacity:.48;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes teacher-journal-skeleton{0%,100%{opacity:.48}50%{opacity:.82}}
+
+.teacher-daily-journal{animation:teacher-journal-enter .36s cubic-bezier(.22,1,.36,1) both;min-width:0;max-width:100%;overflow-x:clip}
+.teacher-journal-day-strip{display:flex;gap:.55rem;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;padding:.15rem .1rem .55rem;scrollbar-width:none}
+.teacher-journal-day-strip::-webkit-scrollbar{display:none}
+.teacher-journal-day{scroll-snap-align:center;min-width:88px;min-height:72px;transition:transform .18s ease,border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
+.teacher-journal-day:hover{transform:translateY(-1px)}
+.teacher-journal-live-dot{animation:teacher-journal-live 1.5s ease-in-out infinite}
+.teacher-journal-student-list>*{opacity:0;animation:teacher-journal-card .34s cubic-bezier(.22,1,.36,1) both}
+.teacher-journal-student-list>*:nth-child(1){animation-delay:.02s}.teacher-journal-student-list>*:nth-child(2){animation-delay:.04s}.teacher-journal-student-list>*:nth-child(3){animation-delay:.06s}.teacher-journal-student-list>*:nth-child(4){animation-delay:.08s}.teacher-journal-student-list>*:nth-child(5){animation-delay:.10s}.teacher-journal-student-list>*:nth-child(6){animation-delay:.12s}.teacher-journal-student-list>*:nth-child(n+7){animation-delay:.14s}
+.teacher-journal-touch{min-height:44px;touch-action:manipulation}
+.teacher-journal-save-dock{position:sticky;bottom:0;z-index:30;margin-inline:-1rem;padding:.8rem 1rem max(.8rem,env(safe-area-inset-bottom));background:linear-gradient(to top,var(--color-card) 74%,color-mix(in oklch,var(--color-card) 95%,transparent) 90%,transparent);backdrop-filter:blur(10px)}
+.teacher-journal-mobile-card{content-visibility:auto;contain-intrinsic-size:250px;min-width:0}
+.teacher-journal-mobile-card input,.teacher-journal-mobile-card textarea,.teacher-journal-mobile-card button{scroll-margin-block-end:10rem}
+.teacher-journal-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.teacher-journal-lab-choice-grid{display:grid;grid-template-columns:1fr;gap:.5rem}
+.teacher-journal-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;width:100%}
+.teacher-journal-skeleton{background:color-mix(in oklch,var(--color-muted) 78%,var(--color-card));animation:teacher-journal-skeleton 1.25s ease-in-out infinite}
+
+@media (hover:hover) and (pointer:fine){
+  .teacher-daily-journal button[aria-label]{position:relative}
+  .teacher-daily-journal button[aria-label]::after{content:attr(aria-label);pointer-events:none;position:absolute;left:50%;top:calc(100% + .45rem);z-index:60;max-width:14rem;transform:translate(-50%,-2px);white-space:nowrap;border-radius:.5rem;background:var(--color-primary);padding:.35rem .55rem;font-size:.7rem;font-weight:700;line-height:1rem;color:var(--color-primary-foreground);opacity:0;visibility:hidden;box-shadow:0 8px 20px rgba(15,23,42,.15);transition:opacity .15s ease,transform .15s ease,visibility .15s ease}
+  .teacher-daily-journal button[aria-label]:hover::after,.teacher-daily-journal button[aria-label]:focus-visible::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
+}
+
+@media (max-width:639px){
+  .teacher-daily-journal{margin-inline:-.15rem}
+  .teacher-journal-day{min-width:84px}
+  .teacher-journal-save-dock{margin-inline:-.75rem;padding-inline:.75rem}
+  .teacher-journal-action-grid{grid-template-columns:1fr 1fr}
+}
+
+@media (max-width:359px){
+  .teacher-journal-action-grid{gap:.4rem}
+  .teacher-journal-action-grid button{padding-inline:.65rem;font-size:.75rem}
+  .teacher-journal-day{min-width:80px}
+}
+
+@media (min-width:540px){
+  .teacher-journal-lab-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media (min-width:768px){
+  .teacher-journal-save-dock{position:static;margin:0;padding:1rem 0 0;background:none;backdrop-filter:none}
+  .teacher-journal-action-grid{width:auto;min-width:320px}
+  .teacher-journal-mobile-card input,.teacher-journal-mobile-card textarea,.teacher-journal-mobile-card button{scroll-margin-block-end:2rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .teacher-daily-journal,.teacher-journal-student-list>*,.teacher-journal-live-dot,.teacher-journal-skeleton{animation:none!important;opacity:1!important;transform:none!important}
+  .teacher-journal-day,.teacher-daily-journal button[aria-label]::after{transition:none!important}
+}

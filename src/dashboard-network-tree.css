@@ -1,0 +1,133 @@
+/* Dashboard greeting network animation. */
+:root{
+  --dashboard-tree-stroke:#6e1a2c;
+  --dashboard-tree-opacity:.18;
+  --dashboard-tree-mask:url('/dashboard-network-tree.svg');
+  --dashboard-atu-mask:url('/dashboard-atu-tree.svg');
+}
+html.dark:not([data-palette]){--dashboard-tree-stroke:#8b2744;--dashboard-tree-opacity:.25}
+html[data-palette="rose"]{--dashboard-tree-stroke:#2e86c1;--dashboard-tree-opacity:.22}
+html.dark[data-palette="rose"]{--dashboard-tree-stroke:#3fa9ea;--dashboard-tree-opacity:.30}
+html[data-palette="forest"]{--dashboard-tree-stroke:#3f9b68;--dashboard-tree-opacity:.21}
+html.dark[data-palette="forest"]{--dashboard-tree-stroke:#58b87a;--dashboard-tree-opacity:.29}
+html[data-palette="sunset"]{--dashboard-tree-stroke:#c96b35;--dashboard-tree-opacity:.21}
+html.dark[data-palette="sunset"]{--dashboard-tree-stroke:#e29357;--dashboard-tree-opacity:.29}
+
+/* Existing network layer. */
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]>div.absolute.inset-0{
+  background-image:none!important;
+  background-color:var(--dashboard-tree-stroke)!important;
+  opacity:var(--dashboard-tree-opacity);
+  filter:none!important;
+  -webkit-mask-image:var(--dashboard-tree-mask);
+  mask-image:var(--dashboard-tree-mask);
+  -webkit-mask-size:280px 280px;
+  mask-size:280px 280px;
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+  -webkit-mask-position:0 0;
+  mask-position:0 0;
+}
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]>div.absolute.inset-0::before,
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]>div.absolute.inset-0::after{
+  content:none!important;
+  display:none!important;
+  animation:none!important;
+}
+
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]{
+  isolation:isolate;
+}
+
+/* During phase two, cover only the middle network area. The left and right
+ * network structures remain visible; there is no additional animation behind ATU. */
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::after{
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:1;
+  width:clamp(430px,52vw,650px);
+  height:94%;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch,var(--color-card) 72%,transparent) 10%,
+    var(--color-card) 22%,
+    var(--color-card) 78%,
+    color-mix(in oklch,var(--color-card) 72%,transparent) 90%,
+    transparent 100%
+  );
+  opacity:0;
+  animation:dashboard-atu-focus 24s linear infinite;
+}
+
+/* ATU uses exactly the same stroke colour and visual strength as the regular
+ * network. No glow, shadow, or brighter special treatment. */
+.animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::before{
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:2;
+  width:clamp(320px,38vw,520px);
+  height:min(82%,224px);
+  transform:translate(-50%,-50%);
+  background-color:var(--dashboard-tree-stroke);
+  opacity:var(--dashboard-tree-opacity);
+  filter:none;
+  -webkit-mask-image:var(--dashboard-atu-mask);
+  mask-image:var(--dashboard-atu-mask);
+  -webkit-mask-size:contain;
+  mask-size:contain;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+}
+
+@keyframes dashboard-atu-focus{
+  0%,31.5%{opacity:0}
+  33.2%,60.5%{opacity:1}
+  64%,100%{opacity:0}
+}
+
+@media (max-width:639px){
+  .animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::before{
+    width:min(88vw,360px);
+    height:60%;
+    top:56%;
+    opacity:var(--dashboard-tree-opacity);
+    filter:none;
+  }
+
+  .animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::after{
+    width:92%;
+    height:72%;
+    top:56%;
+    background:linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklch,var(--color-card) 72%,transparent) 8%,
+      var(--color-card) 18%,
+      var(--color-card) 82%,
+      color-mix(in oklch,var(--color-card) 72%,transparent) 92%,
+      transparent 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::before,
+  .animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]::after{
+    display:none!important;
+    animation:none!important;
+  }
+  .animate-stagger>div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"]>div.absolute.inset-0{
+    animation:none!important;
+    opacity:var(--dashboard-tree-opacity);
+  }
+}

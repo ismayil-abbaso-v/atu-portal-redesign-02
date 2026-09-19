@@ -1,0 +1,48 @@
+name: Prompt 8 Verification
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Spreadsheet dependency source usage
+        run: |
+          echo "DIRECT_XLSX_IMPORTS"
+          grep -RInE "from ['\"]xlsx['\"]|require\(['\"]xlsx['\"]\)|import\(['\"]xlsx['\"]\)" src || true
+          echo "XLSX_JS_STYLE_IMPORTS"
+          grep -RIn "xlsx-js-style" src || true
+
+      - name: Install dependencies
+        # package-lock.json currently predates package.json dependency updates;
+        # install from the declared manifest so verification reaches build/tests.
+        run: npm install --no-audit --no-fund
+
+      - name: Production dependency audit
+        run: npm audit --omit=dev --json || true
+
+      - name: Production build and TypeScript check
+        run: npm run build
+
+      - name: Regression tests
+        run: npm test

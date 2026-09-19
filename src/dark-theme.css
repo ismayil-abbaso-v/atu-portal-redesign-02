@@ -1,0 +1,157 @@
+:root {
+  --atu-maroon-static: #65001d;
+}
+
+/*
+ * Dark mode intentionally keeps ATU's identity deep-burgundy while moving
+ * the surrounding interface toward a neutral charcoal palette. This avoids
+ * the warm/orange cast that made cards, navigation and controls feel muddy.
+ */
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(.145 .010 20);
+  --foreground: oklch(.945 .008 70);
+
+  --card: oklch(.185 .014 20);
+  --card-foreground: oklch(.945 .008 70);
+  --popover: oklch(.175 .013 20);
+  --popover-foreground: oklch(.945 .008 70);
+
+  --primary: oklch(.49 .155 15);
+  --primary-foreground: oklch(.985 .004 70);
+  --secondary: oklch(.225 .015 22);
+  --secondary-foreground: oklch(.93 .008 70);
+
+  --muted: oklch(.22 .013 22);
+  --muted-foreground: oklch(.69 .018 48);
+  --accent: oklch(.255 .035 16);
+  --accent-foreground: oklch(.95 .008 70);
+
+  --destructive: oklch(.61 .20 27);
+  --destructive-foreground: oklch(.985 .004 70);
+  --success: oklch(.66 .13 150);
+  --success-foreground: oklch(.14 .02 150);
+  --warning: oklch(.72 .13 72);
+  --warning-foreground: oklch(.18 .025 72);
+
+  /* Brand stays recognisably ATU burgundy instead of becoming orange. */
+  --brand: oklch(.31 .11 12);
+  --brand-foreground: oklch(.99 .002 80);
+
+  --border: oklch(.31 .018 24 / .78);
+  --input: oklch(.205 .014 22);
+  --ring: oklch(.59 .17 15);
+
+  --sidebar: oklch(.16 .012 20);
+  --sidebar-foreground: oklch(.94 .008 70);
+  --sidebar-primary: oklch(.49 .155 15);
+  --sidebar-primary-foreground: oklch(.985 .004 70);
+  --sidebar-accent: oklch(.235 .026 16);
+  --sidebar-accent-foreground: oklch(.95 .008 70);
+  --sidebar-border: oklch(.30 .018 24 / .82);
+  --sidebar-ring: oklch(.59 .17 15);
+
+  --portal-gold: oklch(.73 .105 74);
+  --portal-gold-soft: oklch(.255 .035 72);
+
+  --chart-1: oklch(.63 .17 20);
+  --chart-2: oklch(.74 .11 75);
+  --chart-3: oklch(.67 .10 220);
+  --chart-4: oklch(.67 .12 150);
+  --chart-5: oklch(.64 .14 300);
+}
+
+.dark body {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 8% -10%, rgb(101 0 29 / .11), transparent 32rem),
+    linear-gradient(180deg, rgb(255 255 255 / .008), transparent 18rem);
+}
+
+/* Keep surfaces crisp and layered without the grey/brown haze. */
+.dark .surface-card,
+.dark .rounded-3xl.bg-card {
+  border-color: color-mix(in oklch, var(--border) 92%, transparent);
+  box-shadow:
+    0 10px 30px rgb(0 0 0 / .20),
+    inset 0 1px 0 rgb(255 255 255 / .018);
+}
+
+.dark .surface-card:hover,
+.dark .rounded-3xl.bg-card:hover {
+  border-color: color-mix(in oklch, var(--primary) 30%, var(--border));
+  box-shadow:
+    0 12px 34px rgb(0 0 0 / .24),
+    inset 0 1px 0 rgb(255 255 255 / .024);
+}
+
+/*
+ * Student dashboard greeting panel intentionally has no dark-mode override.
+ * Its appearance comes directly from StudentDashboard.tsx, matching the
+ * original implementation preserved in the reference project.
+ */
+
+.dark table {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.dark table thead tr {
+  background: color-mix(in oklch, var(--primary) 8%, var(--card));
+}
+
+.dark table tbody tr:hover {
+  background: color-mix(in oklch, var(--primary) 7%, transparent);
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+  background: color-mix(in oklch, var(--input) 94%, black);
+  border-color: var(--border);
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: color-mix(in oklch, var(--primary) 72%, white 4%);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+.dark [role="dialog"],
+.dark [data-radix-dialog-content] {
+  background: var(--popover);
+  border-color: var(--border);
+  box-shadow: 0 24px 70px rgb(0 0 0 / .46);
+}
+
+.dark [data-radix-dialog-overlay] {
+  background: rgb(4 2 3 / .62);
+  backdrop-filter: blur(3px);
+}
+
+/*
+ * The menu logo badge must NEVER follow --primary. Its background is an ATU
+ * brand asset and therefore remains exactly the same in light and dark mode.
+ * The badge stays flat in every theme: no outer shadow or glow.
+ */
+aside span:has(> img[alt="ATU"]) {
+  background: var(--atu-maroon-static) !important;
+  box-shadow: none !important;
+}
+
+.dark aside span:has(> img[alt="ATU"]) {
+  box-shadow: none !important;
+}
+
+/* Sidebar receives a cleaner charcoal separation from the page background. */
+.dark aside[class*="from-sidebar"] {
+  background-image: linear-gradient(to bottom, var(--sidebar), color-mix(in oklch, var(--background) 96%, black));
+  box-shadow: 10px 0 34px rgb(0 0 0 / .18);
+}
+
+.dark ::selection {
+  background: color-mix(in oklch, var(--primary) 55%, transparent);
+  color: var(--foreground);
+}

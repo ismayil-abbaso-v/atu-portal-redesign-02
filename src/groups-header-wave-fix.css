@@ -1,0 +1,25 @@
+/* Final groups hero wave coverage fix.
+ * Keeps the existing Exams-style animation and compact geometry,
+ * but stretches the flowing art across the full hero width.
+ */
+
+body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before {
+  left: -2% !important;
+  right: auto !important;
+  width: 104% !important;
+  max-width: none !important;
+  height: 190% !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-position: center center !important;
+  mask-position: center center !important;
+}
+
+@media (max-width: 639px) {
+  body:has(a[href="/qruplar"].bg-primary) header.surface-card:not(.calendar-page-hero):not(.profile-page-header):not(.security-page-header):not(.transcript-page-header)::before {
+    left: -18% !important;
+    right: auto !important;
+    width: 136% !important;
+    height: 175% !important;
+  }
+}

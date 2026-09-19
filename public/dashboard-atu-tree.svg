@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="210" viewBox="0 0 500 210" fill="none">
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      .atu-animated { display: none; }
+    }
+  </style>
+
+  <!-- The complete ATU mark is gated inside the SVG itself. This keeps its
+       visibility perfectly synchronised with the second phase and prevents
+       dots/segments from leaking into phase one or phase three. -->
+  <g class="atu-animated" stroke="white" stroke-linecap="round" stroke-linejoin="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.315;0.335;0.605;0.635;1" dur="24s" repeatCount="indefinite"/>
+
+    <!-- Kök: ATU işarəsinin bütün budaqlarını daşıyan mərkəzi ağac gövdəsi -->
+    <g stroke-width="2" stroke-dasharray="0 1">
+      <path pathLength="1" d="M250 196L250 164"/>
+      <path pathLength="1" d="M250 186L219 205"/>
+      <path pathLength="1" d="M250 186L281 205"/>
+      <path pathLength="1" d="M250 178L202 178"/>
+      <path pathLength="1" d="M250 178L298 178"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.323;0.365;0.603;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- Gövdədən A, T və U istiqamətinə üç əsas budaq -->
+    <g stroke-width="2.2" stroke-dasharray="0 1">
+      <path pathLength="1" d="M250 165L154 136"/>
+      <path pathLength="1" d="M250 165L250 128"/>
+      <path pathLength="1" d="M250 165L345 136"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.335;0.382;0.598;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- Kənar şaxələr: desktopda sağ və soldakı mövcud şəbəkə animasiyasına vizual keçid verir -->
+    <g stroke-width="1.35" stroke-dasharray="0 1">
+      <path pathLength="1" d="M154 136L108 151L69 127L30 145"/>
+      <path pathLength="1" d="M108 151L82 177"/>
+      <path pathLength="1" d="M69 127L48 98"/>
+      <path pathLength="1" d="M345 136L392 151L430 124L470 143"/>
+      <path pathLength="1" d="M392 151L418 178"/>
+      <path pathLength="1" d="M430 124L454 96"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.347;0.403;0.592;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- A -->
+    <g stroke-width="4.3" stroke-dasharray="0 1">
+      <path pathLength="1" d="M111 125L152 42L193 125"/>
+      <path pathLength="1" d="M129 90H175"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.352;0.421;0.585;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- T -->
+    <g stroke-width="4.3" stroke-dasharray="0 1">
+      <path pathLength="1" d="M210 44H290"/>
+      <path pathLength="1" d="M250 44V125"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.368;0.437;0.585;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- U -->
+    <g stroke-width="4.3" stroke-dasharray="0 1">
+      <path pathLength="1" d="M307 44V87C307 111 321 125 344 125C367 125 381 111 381 87V44"/>
+      <animate attributeName="stroke-dasharray" values="0 1;0 1;1 1;1 1;0 1;0 1" keyTimes="0;0.384;0.454;0.585;0.637;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- Akademik ağacın düyünləri -->
+    <g fill="white" stroke="none" opacity="0">
+      <circle cx="250" cy="165" r="3.6"/>
+      <circle cx="154" cy="136" r="3"/>
+      <circle cx="250" cy="128" r="3"/>
+      <circle cx="345" cy="136" r="3"/>
+      <circle cx="108" cy="151" r="2.5"/>
+      <circle cx="69" cy="127" r="2.5"/>
+      <circle cx="30" cy="145" r="2.2"/>
+      <circle cx="82" cy="177" r="2.2"/>
+      <circle cx="48" cy="98" r="2.2"/>
+      <circle cx="392" cy="151" r="2.5"/>
+      <circle cx="430" cy="124" r="2.5"/>
+      <circle cx="470" cy="143" r="2.2"/>
+      <circle cx="418" cy="178" r="2.2"/>
+      <circle cx="454" cy="96" r="2.2"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.393;0.426;0.592;0.625;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- Hərfin əsas nöqtələrində daha incə, rəsmi düyün aksentləri -->
+    <g fill="white" stroke="none" opacity="0">
+      <circle cx="152" cy="42" r="3.2"/>
+      <circle cx="111" cy="125" r="2.4"/>
+      <circle cx="193" cy="125" r="2.4"/>
+      <circle cx="210" cy="44" r="2.4"/>
+      <circle cx="290" cy="44" r="2.4"/>
+      <circle cx="250" cy="125" r="2.6"/>
+      <circle cx="307" cy="44" r="2.4"/>
+      <circle cx="381" cy="44" r="2.4"/>
+      <circle cx="344" cy="125" r="2.8"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.415;0.458;0.585;0.623;1" dur="24s" repeatCount="indefinite"/>
+    </g>
+  </g>
+</svg>

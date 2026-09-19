@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ATU Portal — Dizayn konsepti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF6F2;
+    --paper:#FFFFFF;
+    --ink:#211417;
+    --ink-soft:#79686A;
+    --ink-faint:#A9999A;
+    --line:#EEE2DD;
+    --line-soft:#F3EAE6;
+    --maroon-900:#420E1B;
+    --maroon-800:#551425;
+    --maroon-700:#6E1A2C;
+    --maroon-600:#84213A;
+    --maroon-500:#9E2C46;
+    --maroon-100:#F6E4E7;
+    --maroon-50:#FBF1F1;
+    --gold:#A97A22;
+    --gold-100:#F6ECD8;
+    --green:#2E7A56;
+    --green-100:#E4F1EA;
+    --amber:#B4791C;
+    --amber-100:#FAEDD9;
+    --red:#AD3A3A;
+    --red-100:#F8E5E2;
+    --shadow-sm:0 1px 2px rgba(33,20,23,.05);
+    --shadow-md:0 1px 1px rgba(33,20,23,.03), 0 10px 30px -14px rgba(33,20,23,.22);
+    --shadow-lg:0 20px 60px -20px rgba(33,20,23,.28);
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:'ss01' 1;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace; font-feature-settings:'tnum' 1;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--maroon-100);color:var(--maroon-900);}
+  :focus-visible{outline:2px solid var(--maroon-500); outline-offset:3px; border-radius:6px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:264px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    position:relative;
+    background:linear-gradient(180deg,#FCF9F7 0%,var(--cream) 100%);
+    border-right:1px solid var(--line);
+    padding:26px 18px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:2px 8px 14px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .brand img{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08));}
+  .brand .word{display:flex;flex-direction:column;line-height:1.05;}
+  .brand .word b{font-family:'Fraunces',serif;font-size:16.5px;font-weight:700;color:var(--maroon-800);}
+  .brand .word span{font-size:10px;letter-spacing:.14em;color:var(--ink-faint);font-weight:600;text-transform:uppercase;}
+
+  nav.nav{position:relative; display:flex; flex-direction:column; gap:2px;}
+  .nav-indicator{
+    position:absolute; left:0; width:100%; height:42px;
+    background:var(--maroon-800);
+    border-radius:12px;
+    transition:transform .38s var(--ease);
+    z-index:0;
+    box-shadow:0 8px 18px -8px rgba(66,14,27,.55);
+  }
+  .nav-item{
+    position:relative; z-index:1;
+    display:flex; align-items:center; gap:11px;
+    height:42px; padding:0 13px;
+    border-radius:12px;
+    font-size:13.6px; font-weight:600;
+    color:var(--ink-soft);
+    background:transparent;
+    border:none;
+    width:100%;
+    text-align:left;
+    transition:color .25s var(--ease);
+  }
+  .nav-item svg{width:17px;height:17px;flex:none;opacity:.75;transition:opacity .25s;}
+  .nav-item .badge{
+    margin-left:auto; font-size:10.5px; font-weight:700;
+    background:var(--maroon-100); color:var(--maroon-800);
+    border-radius:20px; padding:2px 7px; font-family:'IBM Plex Mono',monospace;
+  }
+  .nav-item.active{color:#fff;}
+  .nav-item.active svg{opacity:1;}
+  .nav-item.active .badge{background:rgba(255,255,255,.18); color:#fff;}
+  .nav-item:not(.active):hover{color:var(--maroon-800);}
+  .nav-group-label{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:10px 13px 2px;}
+
+  .sidebar-foot{margin-top:auto; display:flex; flex-direction:column; gap:10px;}
+  .app-cta{
+    border-radius:16px; padding:14px;
+    background:var(--maroon-900);
+    color:#fff;
+    display:flex; align-items:center; gap:11px;
+    position:relative; overflow:hidden;
+  }
+  .app-cta::after{
+    content:"";position:absolute; inset:0;
+    background:radial-gradient(120px 90px at 90% 0%, rgba(255,255,255,.14), transparent 70%);
+  }
+  .app-cta svg{width:20px;height:20px;flex:none;}
+  .app-cta b{display:block;font-size:12.5px;font-weight:700;}
+  .app-cta span{display:block;font-size:10.5px;color:rgba(255,255,255,.65);margin-top:1px;}
+
+  /* ---------- main ---------- */
+  main{padding:24px 34px 60px; min-width:0;}
+  .topbar{display:flex; align-items:center; gap:16px; margin-bottom:26px;}
+  .search{
+    flex:1; max-width:420px;
+    display:flex; align-items:center; gap:9px;
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:13px; padding:10px 14px;
+    color:var(--ink-faint);
+    font-size:13px;
+    box-shadow:var(--shadow-sm);
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .search:focus-within{border-color:var(--maroon-500); box-shadow:0 0 0 3px var(--maroon-100);}
+  .search svg{width:15px;height:15px;flex:none;}
+  .search input{border:none;background:none;outline:none;flex:1;font-family:inherit;font-size:13px;color:var(--ink);}
+  .topbar-right{margin-left:auto; display:flex; align-items:center; gap:16px;}
+  .bell{position:relative; width:38px;height:38px;border-radius:11px;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);}
+  .bell svg{width:16px;height:16px;color:var(--ink-soft);}
+  .bell .dot{position:absolute; top:6px; right:6px; width:8px;height:8px;border-radius:50%;background:var(--maroon-600); border:1.5px solid var(--paper);}
+  .who{display:flex; align-items:center; gap:10px;}
+  .who img{width:38px;height:38px;border-radius:11px;object-fit:cover;}
+  .who .t{line-height:1.15;}
+  .who b{font-size:13px;font-weight:700;}
+  .who span{font-size:11px;color:var(--ink-faint);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* fade-up entrance */
+  .rise{opacity:0; transform:translateY(14px); animation:rise .6s var(--ease) forwards;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    border-radius:28px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:30px 34px;
+    display:flex; align-items:center; justify-content:space-between; gap:30px;
+    box-shadow:var(--shadow-md);
+  }
+  .hero::before{
+    content:"";position:absolute; inset:0;
+    background-image:var(--pattern);
+    background-size:280px 280px;
+    opacity:.55;
+    pointer-events:none;
+  }
+  .hero::after{
+    content:"";position:absolute; left:0; top:0; bottom:0; width:5px;
+    background:linear-gradient(180deg,var(--maroon-700),var(--gold));
+  }
+  .hero-text{position:relative; z-index:1;}
+  .hero-text .eyebrow{font-size:11px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; color:var(--gold); margin-bottom:9px; display:block;}
+  .hero-text h1{font-size:30px; color:var(--maroon-900);}
+  .hero-text h1 .wave{display:inline-block; animation:wave 2.4s ease-in-out .6s 2;}
+  @keyframes wave{0%,100%{transform:rotate(0)}20%{transform:rotate(16deg)}40%{transform:rotate(-8deg)}60%{transform:rotate(12deg)}80%{transform:rotate(0)}}
+  .hero-text p{margin:8px 0 0; font-size:14px; color:var(--ink-soft); max-width:36ch;}
+
+  .ring-card{position:relative; z-index:1; display:flex; align-items:center; gap:16px; flex:none;}
+  .ring{width:104px;height:104px; position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .bg{stroke:var(--maroon-100);}
+  .ring .fg{stroke:var(--maroon-700); stroke-linecap:round; stroke-dasharray:283; stroke-dashoffset:283; animation:ringfill 1.4s .3s var(--ease) forwards;}
+  @keyframes ringfill{to{stroke-dashoffset:var(--offset);}}
+  .ring .num{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .ring .num b{font-size:20px; font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--maroon-900);}
+  .ring .num span{font-size:9.5px; color:var(--ink-faint); font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+  .ring-label{font-size:12px; color:var(--ink-soft); max-width:15ch; line-height:1.4;}
+  .ring-label b{display:block; color:var(--ink); font-size:13px; margin-bottom:2px;}
+
+  /* ---------- stat strip ---------- */
+  .stat-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0;}
+  .chip{
+    background:var(--paper); border:1px solid var(--line); border-radius:18px;
+    padding:16px 18px; display:flex; align-items:center; gap:13px;
+    box-shadow:var(--shadow-sm); transition:transform .28s var(--ease), box-shadow .28s var(--ease);
+  }
+  .chip:hover{transform:translateY(-3px); box-shadow:var(--shadow-md);}
+  .chip .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .chip .ic svg{width:17px;height:17px;}
+  .chip.c1 .ic{background:var(--maroon-100); color:var(--maroon-700);}
+  .chip.c2 .ic{background:var(--gold-100); color:var(--gold);}
+  .chip.c3 .ic{background:var(--green-100); color:var(--green);}
+  .chip b{display:block; font-family:'IBM Plex Mono',monospace; font-size:21px; font-weight:600; line-height:1;}
+  .chip span{display:block; font-size:11.5px; color:var(--ink-faint); margin-top:4px;}
+
+  /* ---------- content grid ---------- */
+  .grid-main{display:grid; grid-template-columns:1.55fr 1fr; gap:16px; align-items:start;}
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:22px; box-shadow:var(--shadow-sm);
+  }
+  .card-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px;}
+  .card-head h2{font-size:16.5px; color:var(--ink);}
+  .card-head a{font-size:12px; font-weight:700; color:var(--maroon-700); display:flex; align-items:center; gap:3px;}
+  .card-head a svg{width:12px;height:12px; transition:transform .2s;}
+  .card-head a:hover svg{transform:translateX(2px);}
+
+  /* timeline */
+  .timeline{position:relative; padding-left:6px;}
+  .t-row{position:relative; display:flex; gap:16px; padding-bottom:20px;}
+  .t-row:last-child{padding-bottom:0;}
+  .t-row::before{content:"";position:absolute; left:44px; top:26px; bottom:-6px; width:1.5px; background:var(--line);}
+  .t-row:last-child::before{display:none;}
+  .t-time{width:44px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; color:var(--ink-soft); padding-top:3px;}
+  .t-dot{position:absolute; left:39px; top:5px; width:11px;height:11px;border-radius:50%; background:var(--paper); border:2.5px solid var(--maroon-700);}
+  .t-card{
+    flex:1; background:var(--cream); border:1px solid var(--line-soft); border-radius:14px;
+    padding:12px 15px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-left:14px; transition:border-color .2s, background .2s;
+  }
+  .t-card:hover{border-color:var(--maroon-500); background:var(--maroon-50);}
+  .t-card .ti b{display:block; font-size:13.5px; font-weight:700;}
+  .t-card .ti span{font-size:11.5px; color:var(--ink-faint);}
+  .tag{font-size:10px; font-weight:700; padding:4px 9px; border-radius:20px; letter-spacing:.02em; flex:none;}
+  .tag.ders{background:var(--maroon-100); color:var(--maroon-800);}
+  .tag.praktiki{background:var(--gold-100); color:var(--gold);}
+  .tag.seminar{background:var(--green-100); color:var(--green);}
+
+  /* group card */
+  .group-code{font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; color:var(--maroon-700); background:var(--maroon-100); display:inline-block; padding:3px 9px; border-radius:8px; margin-bottom:8px;}
+  .group-name{font-size:14.5px; font-weight:700; margin-bottom:14px;}
+  .avatars{display:flex; align-items:center; margin-bottom:16px;}
+  .avatars img{width:32px;height:32px;border-radius:50%; border:2.5px solid var(--paper); margin-left:-9px; object-fit:cover;}
+  .avatars img:first-child{margin-left:0;}
+  .avatars .more{width:32px;height:32px;border-radius:50%;border:2.5px solid var(--paper); margin-left:-9px; background:var(--maroon-800); color:#fff; font-size:10.5px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .link-list{display:flex; flex-direction:column; gap:1px;}
+  .link-row{display:flex; align-items:center; gap:10px; padding:10px 4px; border-radius:10px; font-size:13px; font-weight:600; color:var(--ink); transition:background .2s;}
+  .link-row:hover{background:var(--cream);}
+  .link-row svg{width:15px;height:15px; color:var(--maroon-700); flex:none;}
+  .link-row .n{margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:10.5px; background:var(--maroon-700); color:#fff; border-radius:20px; padding:1px 7px;}
+  .link-row .chev{color:var(--ink-faint); width:12px;height:12px;}
+
+  /* notifications */
+  .notif-row{display:flex; gap:11px; padding:11px 2px; border-bottom:1px solid var(--line-soft);}
+  .notif-row:last-child{border-bottom:none; padding-bottom:0;}
+  .notif-dot{width:7px;height:7px;border-radius:50%;background:var(--maroon-600); margin-top:6px; flex:none;}
+  .notif-row b{display:block; font-size:12.8px; font-weight:700; line-height:1.35;}
+  .notif-row p{margin:2px 0 0; font-size:11.5px; color:var(--ink-faint);}
+  .notif-row time{font-size:10.5px; color:var(--ink-faint); flex:none; padding-top:1px;}
+
+  .stack-gap{display:flex; flex-direction:column; gap:16px;}
+
+  /* ---------- exams view ---------- */
+  .page-head{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:22px;}
+  .page-head h1{font-size:27px; color:var(--maroon-900);}
+  .page-head p{margin:5px 0 0; font-size:13px; color:var(--ink-soft);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; border:none; border-radius:12px;
+    padding:11px 18px; font-size:13px; font-weight:700; transition:transform .2s var(--ease), box-shadow .2s;
+  }
+  .btn svg{width:14px;height:14px;}
+  .btn-primary{background:var(--maroon-800); color:#fff; box-shadow:0 10px 24px -10px rgba(66,14,27,.55);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 28px -10px rgba(66,14,27,.6);}
+  .btn-ghost{background:var(--paper); border:1px solid var(--line); color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--maroon-500); color:var(--maroon-700);}
+
+  .tabs{position:relative; display:inline-flex; gap:4px; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:4px; margin-bottom:20px; box-shadow:var(--shadow-sm);}
+  .tab-indicator{position:absolute; top:4px; bottom:4px; left:4px; border-radius:10px; background:var(--maroon-800); transition:transform .36s var(--ease), width .36s var(--ease); z-index:0;}
+  .tab{position:relative; z-index:1; border:none; background:none; padding:9px 16px; font-size:12.8px; font-weight:700; color:var(--ink-soft); border-radius:10px; white-space:nowrap;}
+  .tab.active{color:#fff;}
+
+  .exam-summary{
+    display:flex; align-items:center; justify-content:space-between;
+    background:linear-gradient(120deg,var(--maroon-900),var(--maroon-700));
+    color:#fff; border-radius:22px; padding:24px 28px; margin-bottom:20px;
+    position:relative; overflow:hidden; box-shadow:var(--shadow-md);
+  }
+  .exam-summary::before{content:"";position:absolute; inset:0; background-image:var(--pattern-light); background-size:260px; opacity:.5;}
+  .exam-summary h3{position:relative; font-size:15px; font-weight:700; opacity:.92;}
+  .exam-summary .big{position:relative; text-align:right;}
+  .exam-summary .big b{font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:600;}
+  .exam-summary .big span{display:block; font-size:11px; color:rgba(255,255,255,.7); margin-top:2px;}
+
+  .exam-list{display:flex; flex-direction:column; gap:12px;}
+  .exam-row{
+    display:flex; align-items:center; gap:16px; background:var(--paper); border:1px solid var(--line);
+    border-radius:16px; padding:16px 18px; position:relative; overflow:hidden;
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .exam-row:hover{transform:translateY(-2px); box-shadow:var(--shadow-md);}
+  .exam-row::before{content:"";position:absolute; left:0; top:0; bottom:0; width:4px;}
+  .exam-row.urgent::before{background:var(--red);}
+  .exam-row.soon::before{background:var(--amber);}
+  .exam-row.later::before{background:var(--green);}
+  .exam-row .ei{flex:1; min-width:0;}
+  .exam-row .ei b{font-size:14.5px; font-weight:700; display:block;}
+  .exam-row .ei .meta{display:flex; gap:14px; margin-top:5px; font-size:12px; color:var(--ink-faint);}
+  .exam-row .ei .meta span{display:flex; align-items:center; gap:5px;}
+  .exam-row .ei .meta svg{width:12.5px;height:12.5px;}
+  .pill{font-size:11px; font-weight:700; padding:6px 12px; border-radius:20px; flex:none;}
+  .pill.urgent{background:var(--red-100); color:var(--red);}
+  .pill.soon{background:var(--amber-100); color:var(--amber);}
+  .pill.later{background:var(--green-100); color:var(--green);}
+
+  .result-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .rcard{background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:18px; transition:transform .25s var(--ease), box-shadow .25s var(--ease);}
+  .rcard:hover{transform:translateY(-3px); box-shadow:var(--shadow-md);}
+  .rcard-top{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px;}
+  .code{font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700; color:var(--maroon-700); background:var(--maroon-100); padding:3px 8px; border-radius:7px;}
+  .score{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:700; padding:4px 10px; border-radius:10px;}
+  .score.good{background:var(--green-100); color:var(--green);}
+  .score.mid{background:var(--amber-100); color:var(--amber);}
+  .score.low{background:var(--red-100); color:var(--red);}
+  .rcard h4{font-size:14px; font-weight:700; margin:2px 0 12px; line-height:1.35; min-height:38px;}
+  .bar{height:6px; border-radius:20px; background:var(--line-soft); overflow:hidden; margin-bottom:6px;}
+  .bar i{display:block; height:100%; border-radius:20px; transform-origin:left; animation:barfill 1s .2s var(--ease) both;}
+  @keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .bar i.good{background:var(--green);}
+  .bar i.mid{background:var(--amber);}
+  .bar i.low{background:var(--red);}
+  .pct{font-size:11px; color:var(--ink-faint); text-align:right; margin-bottom:12px;}
+  .rcard-meta{display:flex; flex-direction:column; gap:5px; font-size:11.5px; color:var(--ink-soft); margin-bottom:14px;}
+  .rcard-meta span{display:flex; align-items:center; gap:6px;}
+  .rcard-meta svg{width:12px;height:12px; color:var(--ink-faint);}
+  .rcard .see{width:100%; justify-content:center; background:var(--cream); border:1px solid var(--line); border-radius:11px; padding:9px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:7px; color:var(--maroon-800); transition:background .2s,border-color .2s;}
+  .rcard .see:hover{background:var(--maroon-50); border-color:var(--maroon-500);}
+  .rcard .see svg{width:13px;height:13px;}
+
+  .foot-note{text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:34px; padding-top:18px; border-top:1px solid var(--line-soft);}
+
+  @media (max-width:1180px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .grid-main{grid-template-columns:1fr;}
+    .stat-strip{grid-template-columns:1fr 1fr;}
+    .result-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="data:image/png;base64,__LOGO_B64__" alt="ATU">
+      <div class="word"><b>ATU Portal</b><span>Tələbə kabineti</span></div>
+    </div>
+
+    <nav class="nav" id="mainNav">
+      <div class="nav-indicator" id="navIndicator"></div>
+      <button class="nav-item active" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        Ana səhifə
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M15.7 13.9c2.9.4 4.8 2.7 4.8 6"/></svg>
+        Qruplar
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5V5.2C4 4 5 3.3 6 3.3h12c1 0 1.7.7 1.7 1.9v14.3"/><path d="M4 19.5c0-1 .9-1.7 2-1.7h13.7"/></svg>
+        Fənlər
+      </button>
+      <button class="nav-item" data-view="exams">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/><path d="M9 14l2 2 4-4"/></svg>
+        İmtahanlar
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3.4v5c0 4.4-2.9 7.7-7 9-4.1-1.3-7-4.6-7-9v-5L12 3z"/></svg>
+        Bildirişlər
+        <span class="badge">5</span>
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4.5h9.5L20 10v9a.5.5 0 01-.5.5H5A.5.5 0 014.5 19V5a.5.5 0 01.5-.5z"/><path d="M14 4.5V10h6"/><path d="M8 13.5h8M8 16.5h5"/></svg>
+        Kitabxana
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4.8h11l5 5V19a.7.7 0 01-.7.7H4A.7.7 0 013.3 19V5.5A.7.7 0 014 4.8z"/><path d="M8 11h8M8 14.5h5"/></svg>
+        Söhbət
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 4.8-3.3 8.3-8 9.5-4.7-1.2-8-4.7-8-9.5V7l8-4z"/><path d="M9.3 12l1.9 2 3.5-4"/></svg>
+        Fakültə icmalı
+      </button>
+
+      <div class="nav-group-label">Sistem</div>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 000-3l1-1.7-1.7-1.7-1.7 1a1.7 1.7 0 00-3 0l-1-1.7-1.7 0-1 1.7a1.7 1.7 0 00-3 0l-1.7-1L3.6 8.8l1 1.7a1.7 1.7 0 000 3l-1 1.7 1.7 1.7 1.7-1a1.7 1.7 0 003 0l1 1.7h1.7l1-1.7a1.7 1.7 0 003 0l1.7 1 1.7-1.7-1-1.7z"/></svg>
+        Parametrlər
+      </button>
+      <button class="nav-item" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5.5A1.5 1.5 0 014 19.5v-15A1.5 1.5 0 015.5 3H9"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Çıxış
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="app-cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>
+        <div><b>ATU Tətbiqi</b><span>Mobil tətbiqi yükləyin</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+    <div class="topbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Axtarış et…">
+      </label>
+      <div class="topbar-right">
+        <div class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3.4v5c0 4.4-2.9 7.7-7 9-4.1-1.3-7-4.6-7-9v-5L12 3z"/></svg><span class="dot"></span></div>
+        <div class="who">
+          <img src="https://i.pravatar.cc/80?img=13" alt="">
+          <div class="t"><b>İsmayıl Abbasov</b><span>Tələbə</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ HOME VIEW ============ -->
+    <section class="view active" id="view-home">
+
+      <div class="hero rise" style="animation-delay:.02s">
+        <div class="hero-text">
+          <span class="eyebrow">21 Avqust · Cümə</span>
+          <h1>Salam, İsmayıl <span class="wave">👋</span></h1>
+          <p>Bu gün cədvəlində 4 dərs var. Uğurlu bir gün keçirməyin üçün hər şey hazırdır.</p>
+        </div>
+        <div class="ring-card">
+          <div class="ring">
+            <svg width="104" height="104" viewBox="0 0 104 104">
+              <circle class="bg" cx="52" cy="52" r="45" stroke-width="8" fill="none"/>
+              <circle class="fg" cx="52" cy="52" r="45" stroke-width="8" fill="none" style="--offset:52"/>
+            </svg>
+            <div class="num"><b>86.4</b><span>GPA</span></div>
+          </div>
+          <div class="ring-label"><b>Ümumi ortalama</b>Son semestrə görə 3.2 bal yüksəlib</div>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="chip c1 rise" style="animation-delay:.08s">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4.8h11l5 5V19a.7.7 0 01-.7.7H4A.7.7 0 013.3 19V5.5A.7.7 0 014 4.8z"/></svg></div>
+          <div><b class="mono" data-count="8">0</b><span>Aktiv fənlər</span></div>
+        </div>
+        <div class="chip c2 rise" style="animation-delay:.14s">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg></div>
+          <div><b class="mono" data-count="2">0</b><span>Yaxın imtahan</span></div>
+        </div>
+        <div class="chip c3 rise" style="animation-delay:.2s">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3.4v5c0 4.4-2.9 7.7-7 9-4.1-1.3-7-4.6-7-9v-5L12 3z"/></svg></div>
+          <div><b class="mono" data-count="4">0</b><span>Yeni bildiriş</span></div>
+        </div>
+      </div>
+
+      <div class="grid-main">
+        <div class="card rise" style="animation-delay:.26s">
+          <div class="card-head">
+            <h2>Bugünkü dərslər</h2>
+            <a href="#">Hamısını gör <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+          </div>
+          <div class="timeline">
+            <div class="t-row">
+              <div class="t-time">10:00</div><div class="t-dot"></div>
+              <div class="t-card"><div class="ti"><b>Verilənlər bazası</b><span>B2, otaq 204 · 90 dəq</span></div><span class="tag ders">Dərs</span></div>
+            </div>
+            <div class="t-row">
+              <div class="t-time">12:00</div><div class="t-dot"></div>
+              <div class="t-card"><div class="ti"><b>Şəbəkə təhlükəsizliyi</b><span>B2, otaq 312 · 90 dəq</span></div><span class="tag ders">Dərs</span></div>
+            </div>
+            <div class="t-row">
+              <div class="t-time">14:00</div><div class="t-dot"></div>
+              <div class="t-card"><div class="ti"><b>İnformasiya təhlükəsizliyinin əsasları</b><span>B2, otaq 105 · 90 dəq</span></div><span class="tag praktiki">Praktiki</span></div>
+            </div>
+            <div class="t-row">
+              <div class="t-time">16:00</div><div class="t-dot"></div>
+              <div class="t-card"><div class="ti"><b>İngilis dili</b><span>B1, otaq 201 · 90 dəq</span></div><span class="tag ders">Dərs</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-gap">
+          <div class="card rise" style="animation-delay:.32s">
+            <div class="card-head"><h2>Qrupunuz</h2><a href="#">Hamısını gör <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a></div>
+            <span class="group-code">İT-2243A2</span>
+            <div class="group-name">İnformasiya Təhlükəsizliyi</div>
+            <div class="avatars">
+              <img src="https://i.pravatar.cc/64?img=1"><img src="https://i.pravatar.cc/64?img=4"><img src="https://i.pravatar.cc/64?img=8"><img src="https://i.pravatar.cc/64?img=11"><img src="https://i.pravatar.cc/64?img=15"><div class="more">+18</div>
+            </div>
+            <div class="link-list">
+              <a class="link-row" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><circle cx="17.5" cy="8.5" r="2.6"/></svg>Qrup yoldaşları<span class="n">22</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+              <a class="link-row" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4.8h11l5 5V19a.7.7 0 01-.7.7H4A.7.7 0 013.3 19V5.5A.7.7 0 014 4.8z"/></svg>Qrup söhbəti<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+              <a class="link-row" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h9l4 4v12.5a.5.5 0 01-.5.5H6a.5.5 0 01-.5-.5V4.5A.5.5 0 016 4z"/></svg>Fayllar<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+              <a class="link-row" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3.4v5c0 4.4-2.9 7.7-7 9-4.1-1.3-7-4.6-7-9v-5L12 3z"/></svg>Qrup elanları<span class="n">3</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+
+          <div class="card rise" style="animation-delay:.38s">
+            <div class="card-head"><h2>Son bildirişlər</h2><a href="#">Hamısını gör <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a></div>
+            <div class="notif-row"><div class="notif-dot"></div><div style="flex:1"><b>İmtahan cədvəli dərc olundu</b><p>Yay semestri imtahan cədvəli portalda</p></div><time>10:30</time></div>
+            <div class="notif-row"><div class="notif-dot"></div><div style="flex:1"><b>Yeni dərs materialı əlavə olundu</b><p>Verilənlər bazası fənni üzrə 5-ci həftə</p></div><time>Dünən</time></div>
+            <div class="notif-row"><div class="notif-dot"></div><div style="flex:1"><b>Kitabxanada yeni kitablar</b><p>İT sahəsi üzrə yeni kitablar əlavə olunub</p></div><time>2 gün</time></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot-note">ATU Portal — dizayn konsepti · yalnız nümayiş məqsədilədir</div>
+    </section>
+
+    <!-- ============ EXAMS VIEW ============ -->
+    <section class="view" id="view-exams">
+      <div class="page-head rise">
+        <div>
+          <h1>İmtahanlar</h1>
+          <p>Yaxın, keçmiş imtahanlarınız və nəticələriniz bir yerdə.</p>
+        </div>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>
+          İmtahan cədvəli
+        </button>
+      </div>
+
+      <div class="tabs" id="examTabs">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <button class="tab active" data-tab="upcoming">Yaxın imtahanlar</button>
+        <button class="tab" data-tab="past">Keçmiş imtahanlar</button>
+        <button class="tab" data-tab="results">Nəticələrim</button>
+      </div>
+
+      <!-- UPCOMING -->
+      <div class="tab-panel" id="panel-upcoming">
+        <div class="exam-list">
+          <div class="exam-row urgent rise" style="animation-delay:.05s">
+            <div class="ei"><b>İnformasiya təhlükəsizliyinin əsasları</b>
+              <div class="meta">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>28 May 2024, 10:00</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Otaq B2-105</span>
+              </div>
+            </div>
+            <span class="pill urgent">5 gün qalıb</span>
+          </div>
+          <div class="exam-row soon rise" style="animation-delay:.1s">
+            <div class="ei"><b>Verilənlər bazası</b>
+              <div class="meta">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>30 May 2024, 14:00</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Otaq B2-204</span>
+              </div>
+            </div>
+            <span class="pill soon">7 gün qalıb</span>
+          </div>
+          <div class="exam-row later rise" style="animation-delay:.15s">
+            <div class="ei"><b>Şəbəkə təhlükəsizliyi</b>
+              <div class="meta">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>3 İyun 2024, 10:00</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Otaq B2-312</span>
+              </div>
+            </div>
+            <span class="pill later">11 gün qalıb</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAST -->
+      <div class="tab-panel" id="panel-past" style="display:none">
+        <div class="exam-list">
+          <div class="exam-row later"><div class="ei"><b>Proqramlaşdırma əsasları</b><div class="meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2 Yanvar 2024, 09:00</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Otaq A1-110</span></div></div><span class="pill later">Tamamlanıb</span></div>
+          <div class="exam-row later"><div class="ei"><b>Veb proqramlaşdırma</b><div class="meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>18 Dekabr 2023, 11:00</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Otaq A2-201</span></div></div><span class="pill later">Tamamlanıb</span></div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="tab-panel" id="panel-results" style="display:none">
+        <div class="exam-summary">
+          <h3>Ümumi nəticə</h3>
+          <div class="big"><b class="mono">22</b><span>İmtahan</span></div>
+        </div>
+        <div class="result-grid">
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">1306y</span><span class="score low">24/50</span></div>
+            <h4>Azərbaycan dilində işgüzar və akademik kommunikasiya</h4>
+            <div class="bar"><i class="low" style="width:48%"></i></div>
+            <div class="pct">48%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-01-16 · 10:20–11:16</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 55 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">2423y</span><span class="score low">24/50</span></div>
+            <h4>Fizikanın əsasları</h4>
+            <div class="bar"><i class="low" style="width:48%"></i></div>
+            <div class="pct">48%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-01-09 · 09:03–11:00</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 1 saat 56 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">3030y</span><span class="score mid">30/50</span></div>
+            <h4>Kimya</h4>
+            <div class="bar"><i class="mid" style="width:60%"></i></div>
+            <div class="pct">60%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-01-13 · 11:28–12:19</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 51 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">4096y</span><span class="score mid">27/50</span></div>
+            <h4>Xətti cəbr və analitik həndəsə</h4>
+            <div class="bar"><i class="mid" style="width:54%"></i></div>
+            <div class="pct">54%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-01-21 · 12:40–14:38</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 1 saat 58 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">2196y</span><span class="score mid">28/50</span></div>
+            <h4>Elektrik dövrələri nəzəriyyəsi-1</h4>
+            <div class="bar"><i class="mid" style="width:56%"></i></div>
+            <div class="pct">56%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-06-05 · 09:02–10:45</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 1 saat 42 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+          <div class="rcard">
+            <div class="rcard-top"><span class="code">1302y</span><span class="score good">42/50</span></div>
+            <h4>Azərbaycan tarixi</h4>
+            <div class="bar"><i class="good" style="width:84%"></i></div>
+            <div class="pct">84%</div>
+            <div class="rcard-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4.5" width="16" height="15" rx="2.5"/><path d="M8 3v3M16 3v3M4 9.5h16"/></svg>2025-06-24 · 16:27–17:05</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>Müddət: 38 dəq</span>
+            </div>
+            <button class="see">Suallara bax <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="foot-note">ATU Portal — dizayn konsepti · yalnız nümayiş məqsədilədir</div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // ---- watermark pattern (original abstract circuit+leaf motif, not the crest artwork) ----
+  const svgPattern = encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="280" height="280">
+      <g fill="none" stroke="#6E1A2C" stroke-width="1.2" opacity="0.5">
+        <circle cx="30" cy="40" r="3"/><circle cx="90" cy="20" r="2.2"/><circle cx="150" cy="60" r="3"/>
+        <circle cx="220" cy="30" r="2.2"/><circle cx="255" cy="110" r="3"/><circle cx="60" cy="130" r="2.2"/>
+        <circle cx="180" cy="150" r="3"/><circle cx="20" cy="220" r="2.2"/><circle cx="120" cy="240" r="3"/>
+        <circle cx="230" cy="230" r="2.2"/>
+        <path d="M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110"/>
+        <path d="M45 190c8-14 26-14 30 2c4 14-10 22-18 12" stroke-width="1"/>
+        <path d="M195 60c10-10 26-4 24 10c-2 12-18 14-22 2" stroke-width="1"/>
+      </g>
+    </svg>`);
+  document.documentElement.style.setProperty('--pattern', `url("data:image/svg+xml,${svgPattern}")`);
+
+  const svgPatternLight = encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="260">
+      <g fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.35">
+        <circle cx="30" cy="40" r="3"/><circle cx="90" cy="20" r="2.2"/><circle cx="150" cy="60" r="3"/>
+        <circle cx="220" cy="30" r="2.2"/><circle cx="60" cy="130" r="2.2"/><circle cx="180" cy="150" r="3"/>
+        <path d="M30 40L90 20M90 20L150 60M150 60L220 30M60 130L150 60M180 150L220 30"/>
+      </g>
+    </svg>`);
+  document.documentElement.style.setProperty('--pattern-light', `url("data:image/svg+xml,${svgPatternLight}")`);
+
+  // ---- sidebar nav sliding indicator + view switching ----
+  const nav = document.getElementById('mainNav');
+  const navIndicator = document.getElementById('navIndicator');
+  const items = [...nav.querySelectorAll('.nav-item')];
+  const views = [...document.querySelectorAll('.view')];
+
+  function placeIndicator(el){
+    navIndicator.style.transform = `translateY(${el.offsetTop}px)`;
+  }
+  function setActive(el){
+    items.forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    placeIndicator(el);
+    const target = el.dataset.view;
+    views.forEach(v=>v.classList.toggle('active', v.id === 'view-'+target));
+  }
+  items.forEach(el=>el.addEventListener('click', ()=>setActive(el)));
+  window.addEventListener('load', ()=>placeIndicator(document.querySelector('.nav-item.active')));
+  window.addEventListener('resize', ()=>placeIndicator(document.querySelector('.nav-item.active')));
+
+  // ---- exam tabs ----
+  const tabsWrap = document.getElementById('examTabs');
+  const tabIndicator = document.getElementById('tabIndicator');
+  const tabs = [...tabsWrap.querySelectorAll('.tab')];
+  const panels = { upcoming: document.getElementById('panel-upcoming'), past: document.getElementById('panel-past'), results: document.getElementById('panel-results') };
+
+  function placeTabIndicator(el){
+    tabIndicator.style.width = el.offsetWidth + 'px';
+    tabIndicator.style.transform = `translateX(${el.offsetLeft - 4}px)`;
+  }
+  function setTab(el){
+    tabs.forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    placeTabIndicator(el);
+    Object.entries(panels).forEach(([key,p])=>{ p.style.display = key === el.dataset.tab ? '' : 'none'; });
+  }
+  tabs.forEach(el=>el.addEventListener('click', ()=>setTab(el)));
+  window.addEventListener('load', ()=>placeTabIndicator(document.querySelector('.tab.active')));
+
+  // ---- count-up numbers ----
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target = parseInt(el.dataset.count,10);
+    let cur = 0;
+    const step = Math.max(1, target/24);
+    const tick = ()=>{ cur += step; if(cur>=target){ el.textContent = target; return; } el.textContent = Math.round(cur); requestAnimationFrame(tick); };
+    setTimeout(()=>requestAnimationFrame(tick), 550);
+  });
+</script>
+</body>
+</html>

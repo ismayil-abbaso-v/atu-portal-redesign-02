@@ -1,0 +1,132 @@
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] > .hidden.overflow-hidden {
+  border-radius: 1rem;
+  border-color: hsl(var(--border) / 0.75);
+  background: hsl(var(--background) / 0.82);
+  box-shadow: 0 10px 28px hsl(var(--foreground) / 0.035);
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] thead tr {
+  background: hsl(var(--muted) / 0.62);
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] thead th {
+  height: 2.9rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.7);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody tr {
+  background: hsl(var(--card));
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody tr:nth-child(even) {
+  background: hsl(var(--muted) / 0.18);
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody tr:hover {
+  background: hsl(var(--primary) / 0.045);
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody td {
+  border-bottom: 1px solid hsl(var(--border) / 0.52);
+  vertical-align: middle;
+}
+
+.student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  /* Gündəlik dərslərdə kart görünüşünü söndürüb əvvəlki cədvəl məntiqini saxlayırıq. */
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] > .animate-stagger {
+    display: none !important;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] > .hidden.overflow-hidden {
+    display: block !important;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] > .hidden.overflow-hidden::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] > .hidden.overflow-hidden::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: hsl(var(--border));
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] table {
+    min-width: 620px;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] thead th {
+    height: 2.65rem;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+    font-size: 0.62rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] tbody td {
+    padding: 0.72rem 0.65rem;
+    font-size: 0.76rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(1),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(1) {
+    width: 2.7rem;
+    min-width: 2.7rem;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: inherit;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(2),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(2) {
+    width: 6.7rem;
+    min-width: 6.7rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(3),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(3) {
+    min-width: 11.5rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(4),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(4) {
+    width: 5.8rem;
+    min-width: 5.8rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(5),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(5) {
+    width: 7.2rem;
+    min-width: 7.2rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] th:nth-child(6),
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] td:nth-child(6) {
+    width: 4.8rem;
+    min-width: 4.8rem;
+  }
+
+  .student-journal-daily-table [role="tabpanel"][id*="content-lessons"] button {
+    min-height: 2rem;
+  }
+}

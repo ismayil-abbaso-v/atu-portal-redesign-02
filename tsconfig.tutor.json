@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vite/client", "node"]
+  },
+  "include": [
+    "src/types/**/*.d.ts",
+    "src/components/tutor/**/*.tsx",
+    "src/components/dashboard/TutorDashboard.tsx",
+    "src/components/admin/group/GroupCourseDialog.tsx",
+    "src/components/admin/group/CourseSearchCombobox.tsx",
+    "src/components/admin/course/**/*.tsx",
+    "src/components/electronic-journal/**/*.tsx",
+    "src/components/calendar/**/*.tsx",
+    "src/lib/route-permissions.ts",
+    "src/lib/tutor-*.ts",
+    "src/lib/groups-i18n.ts",
+    "src/lib/course-detail-i18n.ts",
+    "src/lib/electronic-journal*.ts",
+    "src/lib/exam-scheduler-i18n.ts",
+    "src/lib/tutor-workspace-data.ts",
+    "src/lib/tutor-exam-schedule.ts"
+  ],
+  "exclude": ["src/**/*.test.ts"]
+}

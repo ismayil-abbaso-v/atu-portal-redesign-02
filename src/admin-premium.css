@@ -1,0 +1,388 @@
+/* Premium admin workspace — inspired by /menyu visual language, palette-aware and mobile-safe. */
+.admin-app-layout {
+  --admin-motion-ease: cubic-bezier(.22,1,.36,1);
+  --admin-panel-shadow: 0 10px 28px color-mix(in oklch, var(--primary) 5%, transparent);
+  --admin-panel-border: color-mix(in oklch, var(--primary) 9%, var(--border));
+}
+
+/* Admin navigation */
+.admin-app-layout > nav {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--admin-panel-border);
+  background:
+    radial-gradient(circle at 8% 20%, color-mix(in oklch, var(--primary) 7%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in oklch, var(--card) 99%, var(--primary) 1%), var(--card));
+  box-shadow: var(--admin-panel-shadow), inset 0 1px 0 rgb(255 255 255 / .04);
+  animation: adminPremiumNavIn .58s var(--admin-motion-ease) both;
+}
+
+.admin-app-layout > nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .35;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--primary) 13%, transparent) 1px, transparent 1.4px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary) 4%, transparent) 1px, transparent 1px);
+  background-size: 74px 74px, 74px 100%;
+  -webkit-mask-image: linear-gradient(90deg, black, rgb(0 0 0 / .45) 70%, transparent);
+  mask-image: linear-gradient(90deg, black, rgb(0 0 0 / .45) 70%, transparent);
+  animation: adminPremiumPattern 24s linear infinite;
+}
+
+.admin-app-layout > nav::after {
+  content: "";
+  position: absolute;
+  top: -75%;
+  bottom: -75%;
+  left: -18%;
+  width: 13%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-16deg);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 9%, transparent), transparent);
+  animation: adminPremiumSweep 10.2s ease-in-out 1.8s infinite;
+}
+
+.admin-app-layout > nav > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-app-layout > nav a {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition: transform .2s ease, border-color .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.admin-app-layout > nav a:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--primary) 9%, var(--border));
+}
+
+.admin-app-layout > nav a.bg-primary {
+  border-color: color-mix(in oklch, var(--primary) 74%, white 10%);
+  box-shadow: 0 8px 18px color-mix(in oklch, var(--primary) 17%, transparent), inset 0 1px 0 rgb(255 255 255 / .12);
+}
+
+.admin-app-layout > nav a.bg-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 24%, rgb(255 255 255 / .14) 50%, transparent 76%);
+  transform: translateX(-145%);
+  animation: adminPremiumActiveSheen 7.8s ease-in-out 1.5s infinite;
+}
+
+/* All admin PageHeader instances use the /menyu hero language. */
+.admin-app-layout > div.mt-4 > header.surface-card {
+  position: relative;
+  isolation: isolate;
+  contain: paint;
+  overflow: hidden;
+  min-height: 124px;
+  border-color: color-mix(in oklch, var(--primary) 58%, transparent);
+  color: var(--primary-foreground);
+  background:
+    radial-gradient(circle at 91% -30%, rgb(255 255 255 / .16), transparent 30%),
+    radial-gradient(circle at 68% 150%, rgb(255 255 255 / .07), transparent 36%),
+    linear-gradient(120deg,
+      color-mix(in oklch, var(--primary) 95%, black 5%) 0%,
+      var(--primary) 54%,
+      color-mix(in oklch, var(--primary) 84%, black 16%) 100%);
+  box-shadow:
+    0 13px 32px color-mix(in oklch, var(--primary) 12%, transparent),
+    inset 5px 0 0 color-mix(in oklch, var(--portal-gold) 66%, white 34%),
+    inset 0 1px 0 rgb(255 255 255 / .09);
+  animation: adminPremiumHeroIn .64s var(--admin-motion-ease) both;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / .28) 1px, transparent 1.45px),
+    linear-gradient(90deg, rgb(255 255 255 / .05) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / .045) 1px, transparent 1px);
+  background-size: 92px 92px, 72px 100%, 100% 72px;
+  -webkit-mask-image: linear-gradient(100deg, black 0%, rgb(0 0 0 / .78) 64%, transparent 98%);
+  mask-image: linear-gradient(100deg, black 0%, rgb(0 0 0 / .78) 64%, transparent 98%);
+  animation: adminPremiumHeroPattern 22s linear infinite;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card::after {
+  content: "";
+  position: absolute;
+  top: -65%;
+  bottom: -65%;
+  left: -22%;
+  width: 15%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-16deg);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .13), transparent);
+  animation: adminPremiumHeroSweep 9.3s ease-in-out 1.4s infinite;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card > .absolute.inset-x-0.top-0 {
+  opacity: .55;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .42), transparent) !important;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card h1 {
+  color: var(--primary-foreground) !important;
+  text-shadow: 0 1px 0 rgb(0 0 0 / .08);
+  animation: adminPremiumHeaderCopyIn .66s var(--admin-motion-ease) both;
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card button {
+  border-color: rgb(255 255 255 / .16) !important;
+  background: rgb(255 255 255 / .09) !important;
+  color: var(--primary-foreground) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .08);
+  backdrop-filter: blur(8px);
+}
+
+.admin-app-layout > div.mt-4 > header.surface-card button:hover {
+  background: rgb(255 255 255 / .15) !important;
+  border-color: rgb(255 255 255 / .25) !important;
+}
+
+/* Main admin sections and cards. */
+.admin-app-layout > div.mt-4 > :not(header) {
+  animation: adminPremiumSectionIn .64s var(--admin-motion-ease) .06s both;
+}
+
+.admin-app-layout > div.mt-4 :is(.rounded-3xl.bg-card, .surface-card):not(header) {
+  border: 1px solid var(--admin-panel-border);
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklch, var(--card) 99%, var(--primary) 1%),
+      color-mix(in oklch, var(--card) 97%, var(--background) 3%));
+  box-shadow: var(--admin-panel-shadow), inset 0 1px 0 rgb(255 255 255 / .035);
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background-color .22s ease;
+}
+
+@media (hover:hover) {
+  .admin-app-layout > div.mt-4 :is(.rounded-3xl.bg-card, .surface-card):not(header):hover {
+    border-color: color-mix(in oklch, var(--primary) 18%, var(--border));
+    box-shadow: 0 13px 30px color-mix(in oklch, var(--primary) 7%, transparent), inset 0 1px 0 rgb(255 255 255 / .04);
+  }
+}
+
+/* Dashboard statistics: staggered entry + calm hover depth. */
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card) {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, currentColor 7%, var(--border));
+  box-shadow: 0 5px 16px color-mix(in oklch, var(--primary) 3%, transparent);
+  animation: adminPremiumCardIn .58s var(--admin-motion-ease) both;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card)::after {
+  content: "";
+  position: absolute;
+  right: -36px;
+  bottom: -48px;
+  width: 112px;
+  height: 112px;
+  border: 1px solid color-mix(in oklch, currentColor 10%, transparent);
+  border-radius: 999px;
+  opacity: .28;
+  pointer-events: none;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(2) { animation-delay: 55ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(3) { animation-delay: 110ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(4) { animation-delay: 165ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(5) { animation-delay: 220ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(6) { animation-delay: 275ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(7) { animation-delay: 330ms; }
+.admin-app-layout .grid > div.rounded-3xl:not(.bg-card):nth-child(8) { animation-delay: 385ms; }
+
+@media (hover:hover) {
+  .admin-app-layout .grid > div.rounded-3xl:not(.bg-card):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 13px 24px color-mix(in oklch, var(--primary) 7%, transparent);
+  }
+  .admin-app-layout .grid > div.rounded-3xl:not(.bg-card):hover::after {
+    transform: scale(1.12) translate(-4px,-4px);
+    opacity: .5;
+  }
+}
+
+/* Toolbars, form controls and filters. */
+.admin-app-layout input,
+.admin-app-layout button,
+.admin-app-layout [role="combobox"] {
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.admin-app-layout input:focus,
+.admin-app-layout [role="combobox"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 10%, transparent);
+}
+
+.admin-app-layout button:not(:disabled):active {
+  transform: scale(.985);
+}
+
+/* Tables and list rows. */
+.admin-app-layout table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-app-layout tbody tr {
+  animation: adminPremiumRowIn .46s var(--admin-motion-ease) both;
+  transition: background-color .18s ease, box-shadow .18s ease;
+}
+
+.admin-app-layout tbody tr:nth-child(2) { animation-delay: 35ms; }
+.admin-app-layout tbody tr:nth-child(3) { animation-delay: 70ms; }
+.admin-app-layout tbody tr:nth-child(4) { animation-delay: 105ms; }
+.admin-app-layout tbody tr:nth-child(5) { animation-delay: 140ms; }
+.admin-app-layout tbody tr:nth-child(6) { animation-delay: 175ms; }
+.admin-app-layout tbody tr:nth-child(7) { animation-delay: 210ms; }
+.admin-app-layout tbody tr:nth-child(8) { animation-delay: 245ms; }
+
+@media (hover:hover) {
+  .admin-app-layout tbody tr:hover {
+    background: color-mix(in oklch, var(--primary) 4%, transparent);
+  }
+}
+
+/* Dialogs opened from admin routes (portal-rendered). */
+body:has(.admin-app-layout) [role="dialog"] {
+  animation: adminPremiumDialogIn .3s var(--admin-motion-ease) both;
+}
+
+.dark .admin-app-layout > nav,
+.dark .admin-app-layout > div.mt-4 :is(.rounded-3xl.bg-card, .surface-card):not(header) {
+  box-shadow: 0 14px 34px rgb(0 0 0 / .16), inset 0 1px 0 rgb(255 255 255 / .025);
+}
+
+@keyframes adminPremiumNavIn {
+  from { opacity:0; transform:translateY(-7px) scale(.996); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumPattern {
+  to { background-position:74px 37px,74px 0; }
+}
+
+@keyframes adminPremiumSweep {
+  0%,18% { transform:translateX(0) skewX(-16deg); opacity:0; }
+  30% { opacity:.65; }
+  60% { transform:translateX(920%) skewX(-16deg); opacity:.8; }
+  74%,100% { transform:translateX(920%) skewX(-16deg); opacity:0; }
+}
+
+@keyframes adminPremiumActiveSheen {
+  0%,64% { transform:translateX(-145%); opacity:0; }
+  74% { opacity:1; }
+  92%,100% { transform:translateX(145%); opacity:0; }
+}
+
+@keyframes adminPremiumHeroIn {
+  from { opacity:0; transform:translateY(8px) scale(.997); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumHeroPattern {
+  to { background-position:92px 46px,72px 0,0 36px; }
+}
+
+@keyframes adminPremiumHeroSweep {
+  0%,16% { transform:translateX(0) skewX(-16deg); opacity:0; }
+  28% { opacity:.11; }
+  58% { transform:translateX(760%) skewX(-16deg); opacity:.14; }
+  72%,100% { transform:translateX(760%) skewX(-16deg); opacity:0; }
+}
+
+@keyframes adminPremiumHeaderCopyIn {
+  from { opacity:0; transform:translateY(7px); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumSectionIn {
+  from { opacity:0; transform:translateY(9px); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumCardIn {
+  from { opacity:0; transform:translateY(10px) scale(.992); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumRowIn {
+  from { opacity:0; transform:translateY(5px); }
+  to { opacity:1; transform:none; }
+}
+
+@keyframes adminPremiumDialogIn {
+  from { opacity:0; transform:translateY(7px) scale(.985); }
+  to { opacity:1; transform:none; }
+}
+
+@media (max-width:639px) {
+  .admin-app-layout > nav {
+    border-radius: 20px;
+    box-shadow: 0 6px 16px color-mix(in oklch, var(--primary) 4%, transparent);
+  }
+
+  .admin-app-layout > nav::after,
+  .admin-app-layout > div.mt-4 > header.surface-card::after {
+    display: none;
+  }
+
+  .admin-app-layout > nav::before {
+    opacity: .2;
+    animation: none;
+  }
+
+  .admin-app-layout > div.mt-4 > header.surface-card {
+    min-height: 104px;
+    box-shadow: 0 8px 20px color-mix(in oklch, var(--primary) 8%, transparent), inset 4px 0 0 color-mix(in oklch, var(--portal-gold) 62%, white 38%);
+  }
+
+  .admin-app-layout > div.mt-4 > header.surface-card::before {
+    opacity: .12;
+    background-size: 62px 62px,54px 100%,100% 54px;
+    animation: none;
+  }
+
+  .admin-app-layout .grid > div.rounded-3xl:not(.bg-card):hover,
+  .admin-app-layout > div.mt-4 :is(.rounded-3xl.bg-card, .surface-card):not(header):hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .admin-app-layout *,
+  .admin-app-layout *::before,
+  .admin-app-layout *::after,
+  body:has(.admin-app-layout) [role="dialog"] {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}

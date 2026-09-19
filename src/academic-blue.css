@@ -1,0 +1,245 @@
+/*
+ * Academic palette additions + palette-aware navigation.
+ * ATU Klassik (original) is intentionally NOT overridden in this file.
+ *
+ * IMPORTANT:
+ * - The dashboard greeting keeps its exact original geometry and layout.
+ * - Login surfaces remain palette-invariant.
+ * - Sidebar/menu surfaces follow the active palette through --sidebar / --background.
+ * - The ATU logo badge always keeps the institutional maroon background.
+ */
+
+:root {
+  --atu-login-surface-fixed: oklch(.975 .012 73);
+  --atu-login-brand-fixed: #65001d;
+
+  /* Greeting palette layer — color only; never geometry/layout. */
+  --dashboard-greeting-secondary: var(--portal-gold);
+  --dashboard-greeting-pattern-opacity: .18;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%236E1A2C' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.dark {
+  --atu-login-surface-fixed: oklch(.145 .010 20);
+  --dashboard-greeting-pattern-opacity: .24;
+}
+
+/*
+ * ATU Klassik + dark mode: balanced contrast without changing the design.
+ * Only color/visibility values are adjusted here — no spacing, size or shape.
+ */
+html.dark:not([data-palette]) {
+  --dashboard-greeting-secondary: oklch(.77 .115 76);
+  --dashboard-greeting-pattern-opacity: .25;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%238B2744' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+  --dashboard-greeting-classic-primary: oklch(.59 .17 15);
+  --dashboard-greeting-classic-muted: oklch(.73 .018 48);
+}
+
+/* Academic palette (rose key) — refined sapphire/azure system. */
+html[data-palette="rose"] {
+  --portal-gold: oklch(.70 .105 76);
+  --portal-gold-soft: oklch(.935 .035 76);
+  --chart-1: oklch(.56 .15 247);
+  --chart-2: oklch(.69 .12 220);
+  --chart-3: oklch(.72 .13 76);
+  --chart-4: oklch(.64 .12 157);
+  --chart-5: oklch(.61 .14 287);
+
+  --dashboard-greeting-secondary: oklch(.69 .14 220);
+  --dashboard-greeting-pattern-opacity: .20;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%232E86C1' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html.dark[data-palette="rose"] {
+  --portal-gold: oklch(.77 .115 76);
+  --portal-gold-soft: oklch(.285 .04 76);
+  --chart-1: oklch(.70 .14 242);
+  --chart-2: oklch(.74 .11 217);
+  --chart-3: oklch(.78 .12 75);
+  --chart-4: oklch(.71 .12 157);
+  --chart-5: oklch(.70 .13 287);
+
+  --dashboard-greeting-secondary: oklch(.76 .12 220);
+  --dashboard-greeting-pattern-opacity: .28;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%233FA9EA' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Forest palette: same greeting design, only green-family color treatment. */
+html[data-palette="forest"] {
+  --dashboard-greeting-secondary: oklch(.67 .12 128);
+  --dashboard-greeting-pattern-opacity: .19;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%233F9B68' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html.dark[data-palette="forest"] {
+  --dashboard-greeting-secondary: oklch(.76 .12 125);
+  --dashboard-greeting-pattern-opacity: .26;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%2358B87A' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Sunset palette: same greeting design, only warm terracotta/amber color treatment. */
+html[data-palette="sunset"] {
+  --dashboard-greeting-secondary: oklch(.69 .14 70);
+  --dashboard-greeting-pattern-opacity: .19;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%23C96B35' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html.dark[data-palette="sunset"] {
+  --dashboard-greeting-secondary: oklch(.78 .13 72);
+  --dashboard-greeting-pattern-opacity: .26;
+  --dashboard-greeting-pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cg fill='none' stroke='%23E29357' stroke-width='1.2'%3E%3Ccircle cx='30' cy='40' r='3'/%3E%3Ccircle cx='90' cy='20' r='2.2'/%3E%3Ccircle cx='150' cy='60' r='3'/%3E%3Ccircle cx='220' cy='30' r='2.2'/%3E%3Ccircle cx='255' cy='110' r='3'/%3E%3Ccircle cx='60' cy='130' r='2.2'/%3E%3Ccircle cx='180' cy='150' r='3'/%3E%3Ccircle cx='20' cy='220' r='2.2'/%3E%3Ccircle cx='120' cy='240' r='3'/%3E%3Ccircle cx='230' cy='230' r='2.2'/%3E%3Cpath d='M30 40L90 20M90 20L150 60M150 60L220 30M220 30L255 110M60 130L150 60M60 130L20 220M120 240L60 130M120 240L230 230M180 150L230 230M180 150L255 110'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html[data-palette="rose"] .surface-card,
+html[data-palette="rose"] .rounded-3xl.bg-card {
+  box-shadow:
+    0 4px 16px rgb(24 82 136 / .055),
+    0 1px 2px rgb(12 47 78 / .025);
+}
+
+html[data-palette="rose"] .surface-card:hover,
+html[data-palette="rose"] .rounded-3xl.bg-card:hover {
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border));
+  box-shadow:
+    0 8px 22px rgb(24 82 136 / .075),
+    0 1px 2px rgb(12 47 78 / .03);
+}
+
+html.dark[data-palette="rose"] body {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 7% -12%, color-mix(in oklch, var(--primary) 11%, transparent), transparent 34rem),
+    radial-gradient(circle at 96% 14%, color-mix(in oklch, var(--primary) 4%, transparent), transparent 26rem),
+    linear-gradient(180deg, rgb(255 255 255 / .008), transparent 19rem);
+}
+
+/*
+ * Dashboard greeting: preserve the original component shape exactly.
+ * Palette rules and the entrance animation only affect the decorative layer.
+ */
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0 {
+  opacity: var(--dashboard-greeting-pattern-opacity) !important;
+  background-image: none !important;
+}
+
+/*
+ * Rebuild the exact same tiled pattern in two alternating vertical groups.
+ * ScaleY gives a visible “growing/drawing into place” entrance and ends at the
+ * exact original geometry. Half grows bottom -> top, half top -> bottom.
+ */
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::before,
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--dashboard-greeting-pattern-image);
+  background-repeat: repeat;
+  background-position: 0 0;
+  background-size: 280px 280px;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::before {
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 140px, transparent 140px 280px);
+  mask-image: repeating-linear-gradient(90deg, #000 0 140px, transparent 140px 280px);
+  transform-origin: center bottom;
+  animation: dashboard-pattern-rise 1.15s cubic-bezier(.16, 1, .3, 1) 80ms both;
+}
+
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::after {
+  -webkit-mask-image: repeating-linear-gradient(90deg, transparent 0 140px, #000 140px 280px);
+  mask-image: repeating-linear-gradient(90deg, transparent 0 140px, #000 140px 280px);
+  transform-origin: center top;
+  animation: dashboard-pattern-fall 1.22s cubic-bezier(.16, 1, .3, 1) 140ms both;
+}
+
+@keyframes dashboard-pattern-rise {
+  0% { transform: scaleY(.015); opacity: .08; }
+  36% { opacity: .72; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes dashboard-pattern-fall {
+  0% { transform: scaleY(.015); opacity: .08; }
+  38% { opacity: .72; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::before,
+  .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-0::after {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] > div.absolute.inset-y-0.left-0 {
+  background-image: linear-gradient(
+    to bottom,
+    var(--primary),
+    var(--dashboard-greeting-secondary)
+  ) !important;
+}
+
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] span.text-\[var\(--portal-gold\)\] {
+  color: var(--dashboard-greeting-secondary) !important;
+}
+
+/* Keep the progress ring palette-aware while preserving its exact SVG geometry. */
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] svg circle:first-of-type {
+  stroke: color-mix(in oklch, var(--primary) 16%, var(--accent)) !important;
+}
+
+.animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] svg circle:last-of-type {
+  stroke: var(--primary) !important;
+}
+
+/* ATU Classic dark greeting: moderate separation, still color-only. */
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] {
+  border-color: color-mix(in oklch, var(--dashboard-greeting-classic-primary) 18%, var(--border));
+}
+
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] h1.text-primary,
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] .font-data.text-primary {
+  color: var(--dashboard-greeting-classic-primary) !important;
+}
+
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] svg circle:first-of-type {
+  stroke: color-mix(in oklch, var(--dashboard-greeting-classic-primary) 20%, var(--accent)) !important;
+}
+
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] svg circle:last-of-type {
+  stroke: var(--dashboard-greeting-classic-primary) !important;
+}
+
+html.dark:not([data-palette]) .animate-stagger > div.relative.overflow-hidden[class*="rounded-[28px]"][class*="bg-card"] .text-muted-foreground {
+  color: var(--dashboard-greeting-classic-muted);
+}
+
+/* Login BACKGROUNDS never follow selectable palettes. */
+div.grid[class*="min-h-[100dvh]"][class*="lg:grid-cols"]:has(img[alt="Azərbaycan Texnologiya Universiteti loqosu"]) {
+  background: var(--atu-login-surface-fixed) !important;
+}
+
+div.grid[class*="min-h-[100dvh]"][class*="lg:grid-cols"]:has(img[alt="Azərbaycan Texnologiya Universiteti loqosu"]) > div {
+  background-color: var(--atu-login-surface-fixed) !important;
+}
+
+div.grid[class*="min-h-[100dvh]"][class*="lg:grid-cols"]:has(img[alt="Azərbaycan Texnologiya Universiteti loqosu"]) > div:first-child > div.pointer-events-none.absolute {
+  background: var(--atu-login-brand-fixed) !important;
+}
+
+/*
+ * Sidebar intentionally has no fixed background override here.
+ * Desktop uses from-sidebar -> background and mobile uses bg-background,
+ * so both automatically follow the selected palette tokens.
+ */
+
+/* ATU institutional logo background is invariant across every palette/theme. */
+aside span:has(> img[alt="ATU"]) {
+  background: var(--atu-login-brand-fixed) !important;
+}

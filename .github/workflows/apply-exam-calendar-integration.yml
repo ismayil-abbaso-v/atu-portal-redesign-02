@@ -1,0 +1,77 @@
+# Exam schedule calendar integration workflow
+name: Apply exam calendar integration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-exam-calendar-integration.yml'
+      - 'src/routes/_authenticated/imtahanlar.tsx'
+      - 'src/routes/_authenticated/teqvim.tsx'
+      - 'src/components/calendar/CalendarGrid.tsx'
+      - 'src/components/calendar/DayDetails.tsx'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply integration patches
+        shell: python
+        run: |
+          from pathlib import Path
+
+          # 1) Student page: make the existing "İmtahan cədvəli" action functional.
+          p = Path('src/routes/_authenticated/imtahanlar.tsx')
+          s = p.read_text()
+          broken = '''      ) : null}\nfunction StudentDetailsModal({'''
+          fixed = '''      ) : null}\n    </div>\n  );\n}\n\nfunction StudentDetailsModal({'''
+          if broken in s:
+              s = s.replace(broken, fixed, 1)
+
+          marker = '''      <ExamQuestionsDialog\n        result={secilmisSualNeticesi}'''
+          button = '''      <div className="flex justify-end">\n        <Button asChild className="rounded-xl font-bold">\n          <Link to="/teqvim">\n            <Calendar className="mr-2 size-4" />\n            İmtahan cədvəli\n          </Link>\n        </Button>\n      </div>\n\n'''
+          if 'İmtahan cədvəli' not in s and marker in s:
+              s = s.replace(marker, button + marker, 1)
+          p.write_text(s)
+
+          # 2) Calendar route: merge exam_schedule records into the existing calendar.
+          p = Path('src/routes/_authenticated/teqvim.tsx')
+          s = p.read_text()
+          event_marker = '''  // Tyutorun öz qrupları\n'''
+          exam_query = '''  // İmtahan cədvəli qeydləri. RLS tələbənin yalnız öz qrupunu,\n  // tyutor/admin/dekan isə icazəli qeydləri qaytarır.\n  const { data: examSchedules = [] } = useQuery({\n    queryKey: ["exam-schedule-calendar", ay, il, userId],\n    queryFn: async () => {\n      if (!userId) return [];\n      const { data, error } = await supabase\n        .from("exam_schedule")\n        .select("*, groups(id, ad), courses(id, ad)")\n        .gte("imtahan_tarixi", startDate)\n        .lte("imtahan_tarixi", endDate)\n        .order("imtahan_tarixi", { ascending: true });\n      if (error) throw error;\n      return data ?? [];\n    },\n    enabled: !!userId,\n  });\n\n  // Tələbənin nəticəsi ilə eyni fənn + tarix uyğunluğu üçün tamamlanmış\n  // detallı nəticələri və tarix sahəsi olan score qeydlərini oxuyuruq.\n  const { data: completedExamResults = [] } = useQuery({\n    queryKey: ["exam-results-calendar-status", userId],\n    queryFn: async () => {\n      if (!userId) return { detailed: [], scores: [] };\n      const [detailedResult, scoresResult] = await Promise.all([\n        supabase.from("exam_detailed_results").select("*").eq("student_id", userId),\n        supabase.from("exam_scores").select("*").eq("user_id", userId),\n      ]);\n      if (detailedResult.error) throw detailedResult.error;\n      if (scoresResult.error) throw scoresResult.error;\n      return { detailed: detailedResult.data ?? [], scores: scoresResult.data ?? [] };\n    },\n    enabled: !!userId,\n  });\n\n  const completedExamKeys = new Set<string>();\n  for (const row of completedExamResults.detailed as Array<Record<string, unknown>>) {\n    const courseId = typeof row.course_id === "string" ? row.course_id : null;\n    const completedAt = typeof row.exam_completed_at === "string" ? row.exam_completed_at : null;\n    if (courseId && completedAt) completedExamKeys.add(`${courseId}:${completedAt.slice(0, 10)}`);\n  }\n  for (const row of completedExamResults.scores as Array<Record<string, unknown>>) {\n    const courseId = typeof row.course_id === "string" ? row.course_id : null;\n    for (const key of ["imtahan_tarixi", "exam_date", "tarix"]) {\n      const dateValue = typeof row[key] === "string" ? row[key] : null;\n      if (courseId && dateValue) completedExamKeys.add(`${courseId}:${dateValue.slice(0, 10)}`);\n    }\n  }\n\n  const examCalendarEvents = examSchedules.map((exam: any) => {\n    const key = `${exam.course_id}:${exam.imtahan_tarixi}`;\n    const completed = completedExamKeys.has(key);\n    return {\n      id: `exam-${exam.id}`,\n      baslıq: `İmtahan — ${exam.courses?.ad ?? "Fənn"}`,\n      tesvir: `Otaq: ${exam.otaq} • Status: ${completed ? "keçirilib" : "gözlənilir"}`,\n      tarix: exam.imtahan_tarixi,\n      baslangic_saat: exam.baslangic_saat,\n      bitme_saat: exam.baslangic_saat,\n      group_id: exam.group_id,\n      course_id: exam.course_id,\n      yaradan_id: exam.yaradan_id ?? userId ?? "",\n      created_at: exam.created_at,\n      updated_at: exam.updated_at,\n      groups: exam.groups ?? null,\n      courses: exam.courses ?? null,\n      profiles: null,\n      isExam: true,\n      examCompleted: completed,\n    };\n  });\n\n  const calendarEvents = [...events, ...examCalendarEvents];\n\n'''
+          if 'exam-schedule-calendar' not in s and event_marker in s:
+              s = s.replace(event_marker, exam_query + event_marker, 1)
+          s = s.replace('const filterTədbirlər = events.filter((ev) =>', 'const filterTədbirlər = calendarEvents.filter((ev) =>', 1)
+          p.write_text(s)
+
+          # 3) Calendar grid: exams are visually distinct.
+          p = Path('src/components/calendar/CalendarGrid.tsx')
+          s = p.read_text()
+          old = '''                {gunTədbirləri.slice(0, gorunenLimit).map((ev) => (\n                  <div\n                    key={ev.id}\n                    className="h-[18px] px-1.5 bg-success/15 border-l-2 border-success text-[9px] font-bold text-success rounded-sm truncate flex items-center"\n                    title={ev.baslıq}\n                  >\n                    {ev.baslıq}\n                  </div>\n                ))}'''
+          new = '''                {gunTədbirləri.slice(0, gorunenLimit).map((ev) => {\n                  const examEvent = ev as EventWithDetails & { isExam?: boolean; examCompleted?: boolean };\n                  const examClass = examEvent.isExam\n                    ? examEvent.examCompleted\n                      ? "bg-success/20 border-success text-success"\n                      : "bg-warning/20 border-warning text-warning-foreground"\n                    : "bg-success/15 border-success text-success";\n                  return (\n                    <div\n                      key={ev.id}\n                      className={`h-[18px] px-1.5 border-l-2 text-[9px] font-bold rounded-sm truncate flex items-center ${examClass}`}\n                      title={ev.baslıq}\n                    >\n                      {examEvent.isExam ? "📝 " : ""}{ev.baslıq}\n                    </div>\n                  );\n                })}'''
+          if old in s:
+              s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          # 4) Day details: exam icon/status and no CRUD controls for exam records.
+          p = Path('src/components/calendar/DayDetails.tsx')
+          s = p.read_text()
+          s = s.replace('import { CalendarOff, Clock, Trash2, Edit2, Users, BookOpen } from "lucide-react";', 'import { CalendarOff, Clock, Trash2, Edit2, Users, BookOpen, ClipboardCheck } from "lucide-react";', 1)
+          s = s.replace('''          events.map((event) => {\n            const canManage =''', '''          events.map((event) => {\n            const examEvent = event as EventWithDetails & { isExam?: boolean; examCompleted?: boolean };\n            const canManage =''', 1)
+          s = s.replace('''                    {hasWriteAccess && canManage ? (''', '''                    {examEvent.isExam ? (\n                      <ClipboardCheck className={`size-4 ${examEvent.examCompleted ? "text-success" : "text-warning"}`} aria-label="İmtahan" />\n                    ) : hasWriteAccess && canManage ? (''', 1)
+          p.write_text(s)
+
+      - name: Commit generated changes
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/routes/_authenticated/imtahanlar.tsx src/routes/_authenticated/teqvim.tsx src/components/calendar/CalendarGrid.tsx src/components/calendar/DayDetails.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m "feat: show exam schedule in calendar"
+          git push

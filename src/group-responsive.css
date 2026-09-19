@@ -1,0 +1,43 @@
+/* Qruplar bölməsi: sidebar genişliyi və real content eni əsasında responsiv davranış. */
+.admin-app-layout,
+.admin-app-layout > div,
+.admin-app-layout main,
+.admin-app-layout [data-slot="page"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Qruplar kartları viewport breakpoint-i ilə deyil, mövcud content sahəsi ilə uyğunlaşır. */
+.admin-app-layout [class*="xl:grid-cols-6"] {
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+}
+
+/* Daralan sahədə sabit 320px yan panel əsas məzmunu ekrandan çıxarmasın. */
+@media (max-width: 1450px) {
+  .admin-app-layout [class*="lg:grid-cols-[1fr_320px]"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* Toolbar: axtarış və əməliyyat düymələri bir-birini sıxışdırmadan yeni sətrə keçsin. */
+@media (max-width: 1100px) {
+  .admin-app-layout [class*="min-w-[200px]"] {
+    min-width: min(100%, 200px);
+  }
+
+  .admin-app-layout [class*="ml-auto"][class*="flex-wrap"] {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Kiçik enlərdə dialoq və seçim siyahıları təhlükəsiz qalır. */
+@media (max-width: 700px) {
+  .admin-app-layout [role="dialog"] {
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .admin-app-layout [class*="grid-cols-2"] {
+    min-width: 0;
+  }
+}

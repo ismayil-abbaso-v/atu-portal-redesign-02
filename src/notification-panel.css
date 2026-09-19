@@ -1,0 +1,294 @@
+/* Notification dropdown — palette-aware, polished and mobile-safe. */
+.notification-panel {
+  isolation: isolate;
+  contain: paint;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklch, var(--card) 97%, var(--primary) 3%) 0%,
+      var(--card) 42%,
+      color-mix(in oklch, var(--card) 98%, var(--background) 2%) 100%);
+  box-shadow:
+    0 22px 64px color-mix(in oklch, var(--primary) 13%, transparent),
+    0 2px 8px rgb(0 0 0 / .06),
+    inset 0 1px 0 rgb(255 255 255 / .07);
+}
+
+.notification-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .34;
+  background-image:
+    radial-gradient(circle at 86% 3%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 9rem),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--primary) 4%, transparent) 1px, transparent 1px);
+  background-size: auto, 42px 42px, 42px 42px;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 75%);
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+}
+
+.notification-panel__topline {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 0;
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.notification-panel--open .notification-panel__topline {
+  animation: notificationTopline .72s cubic-bezier(.22,1,.36,1) .05s forwards;
+}
+
+.notification-panel__header {
+  position: relative;
+  background: color-mix(in oklch, var(--card) 84%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.notification-panel__header-copy {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.notification-panel--open .notification-panel__header-copy {
+  animation: notificationHeaderIn .48s cubic-bezier(.22,1,.36,1) .08s forwards;
+}
+
+.notification-panel__mark-all {
+  transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.notification-panel__mark-all:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+.notification-panel__list {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--primary) 18%, transparent) transparent;
+}
+
+.notification-panel__item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  opacity: 0;
+  transform: translateY(8px) scale(.992);
+  transition:
+    background-color .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease,
+    opacity .2s ease;
+}
+
+.notification-panel--open .notification-panel__item {
+  animation: notificationItemIn .52s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.notification-panel__item::after {
+  content: "";
+  position: absolute;
+  inset-block: 7px;
+  left: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  opacity: .7;
+  transition: transform .2s ease;
+}
+
+.notification-panel__item:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--primary) 12%, var(--border));
+  box-shadow: 0 7px 16px color-mix(in oklch, var(--primary) 6%, transparent);
+}
+
+.notification-panel__item:hover::after {
+  transform: scaleY(1);
+}
+
+.notification-panel__dot {
+  position: relative;
+  box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 28%, transparent);
+}
+
+.notification-panel--open .notification-panel__item:not(.notification-panel__item--read) .notification-panel__dot {
+  animation: notificationDotPulse 2.8s ease-out 1.1s infinite;
+}
+
+.notification-panel__skeleton {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--primary) 7%, var(--border));
+  background: color-mix(in oklch, var(--muted) 58%, var(--card));
+}
+
+.notification-panel__skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 20%, rgb(255 255 255 / .18) 45%, transparent 70%);
+  transform: translateX(-110%);
+  animation: notificationShimmer 1.25s ease-in-out infinite;
+}
+
+.notification-panel__skeleton-line {
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--muted-foreground) 12%, var(--muted));
+}
+
+.notification-panel__empty {
+  opacity: 0;
+  transform: translateY(7px);
+}
+
+.notification-panel--open .notification-panel__empty {
+  animation: notificationEmptyIn .55s cubic-bezier(.22,1,.36,1) .12s forwards;
+}
+
+.notification-panel__empty-icon {
+  position: relative;
+}
+
+.notification-panel__empty-icon::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--primary) 18%, transparent);
+  opacity: 0;
+}
+
+.notification-panel--open .notification-panel__empty-icon::after {
+  animation: notificationEmptyRing 2.6s ease-out .7s infinite;
+}
+
+.notification-panel__footer {
+  background: color-mix(in oklch, var(--card) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.notification-panel__footer-link {
+  transition: color .2s ease, background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.notification-panel__footer-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+.notification-panel__footer-link svg {
+  transition: transform .2s ease;
+}
+
+.notification-panel__footer-link:hover svg {
+  transform: translateX(2px);
+}
+
+@keyframes notificationTopline {
+  0% { transform: scaleX(0); opacity: 0; }
+  25% { opacity: .9; }
+  100% { transform: scaleX(1); opacity: .65; }
+}
+
+@keyframes notificationHeaderIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes notificationItemIn {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes notificationDotPulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 28%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 7px transparent; }
+}
+
+@keyframes notificationShimmer {
+  to { transform: translateX(110%); }
+}
+
+@keyframes notificationEmptyIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes notificationEmptyRing {
+  0% { opacity: .55; transform: scale(.76); }
+  70%,100% { opacity: 0; transform: scale(1.25); }
+}
+
+@media (max-width: 639px) {
+  .notification-panel {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    top: calc(env(safe-area-inset-top, 0px) + 76px) !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 88px);
+    display: flex;
+    flex-direction: column;
+    transform-origin: top center !important;
+    box-shadow: 0 14px 38px color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+
+  .notification-panel__header,
+  .notification-panel__footer {
+    flex: 0 0 auto;
+  }
+
+  .notification-panel__header {
+    gap: 8px;
+  }
+
+  .notification-panel__header-copy {
+    min-width: 0;
+  }
+
+  .notification-panel__mark-all {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .notification-panel__list {
+    min-height: 0;
+    max-height: none !important;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .notification-panel__item:hover,
+  .notification-panel__footer-link:hover,
+  .notification-panel__mark-all:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-panel__topline,
+  .notification-panel__header-copy,
+  .notification-panel__item,
+  .notification-panel__dot,
+  .notification-panel__skeleton::after,
+  .notification-panel__empty,
+  .notification-panel__empty-icon::after {
+    animation: none !important;
+  }
+
+  .notification-panel__topline { transform: scaleX(1); opacity: .65; }
+  .notification-panel__header-copy,
+  .notification-panel__item,
+  .notification-panel__empty { opacity: 1; transform: none; }
+}
