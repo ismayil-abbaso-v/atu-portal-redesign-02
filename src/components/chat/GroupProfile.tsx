@@ -78,11 +78,11 @@ export function GroupProfile({ group, members, messages, onClose }: GroupProfile
   );
 
   return (
-    <div className="w-80 h-full bg-card border-l border-border flex flex-col shrink-0 min-w-0">
+    <div className="chat-profile-panel w-80 h-full bg-card border-l border-border flex flex-col shrink-0 min-w-0">
       <div className="h-16 px-4 border-b border-border flex items-center justify-between shrink-0 select-none">
         <h3 className="font-bold text-sm text-foreground">Qrup Profili</h3>
         {onClose ? (
-          <button onClick={onClose} className="p-1 hover:bg-muted rounded-xl text-muted-foreground">
+          <button type="button" onClick={onClose} aria-label="Bağla" className="p-1 hover:bg-muted rounded-xl text-muted-foreground">
             <X className="size-5" />
           </button>
         ) : null}

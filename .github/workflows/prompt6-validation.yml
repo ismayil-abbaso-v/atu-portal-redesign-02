@@ -1,0 +1,40 @@
+name: Prompt 6 validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint Prompt 6 TypeScript
+        run: >
+          npx eslint --rule 'prettier/prettier: off'
+          src/routes/_authenticated/sohbet.tsx
+          src/routes/_authenticated/kitabxana.tsx
+          src/components/chat/GroupList.tsx
+          src/components/chat/MessageThread.tsx
+          src/components/chat/GroupProfile.tsx
+          src/components/library/LibraryHero.tsx
+          src/components/library/CategoryGrid.tsx
+          src/components/library/RecentBooks.tsx
+      - name: Repository lint baseline
+        continue-on-error: true
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build

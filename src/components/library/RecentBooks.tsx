@@ -1,59 +1,91 @@
 import { useQuery } from "@tanstack/react-query";
-import { BookMarked, Sparkles } from "lucide-react";
+import { BookMarked, BookOpenCheck, Database, Layers3, Sparkles } from "lucide-react";
 
 import { EmptyState } from "@/components/layout/EmptyState";
 import { supabase } from "@/integrations/supabase/client";
+import { kitabxanaKateqoriyalari } from "@/lib/library-categories";
+import { usePageI18n } from "@/lib/i18n-extra";
 
 import { BookCard, type LibraryBook } from "./BookCard";
 
+const COPY = {
+  az: { featured: "Seçilmiş resurslar", latest: "Son əlavə olunanlar", overview: "Kitabxana icmalı", resources: "Rəqəmsal resurs", categories: "Kateqoriya", formats: "Görünən formatlar", databases: "Akademik verilənlər bazaları", databaseNote: "Xarici akademik baza inteqrasiyası hazırkı portalda aktiv deyil.", empty: "Hələ kitabxanaya kitab əlavə olunmayıb." },
+  tr: { featured: "Seçili kaynaklar", latest: "Son eklenenler", overview: "Kütüphane özeti", resources: "Dijital kaynak", categories: "Kategori", formats: "Görünen formatlar", databases: "Akademik veri tabanları", databaseNote: "Harici akademik veri tabanı entegrasyonu mevcut portalda etkin değil.", empty: "Kütüphaneye henüz kitap eklenmedi." },
+  en: { featured: "Featured resources", latest: "Recently added", overview: "Library overview", resources: "Digital resources", categories: "Categories", formats: "Visible formats", databases: "Academic databases", databaseNote: "External academic database integration is not enabled in the current portal.", empty: "No books have been added to the library yet." },
+  ru: { featured: "Избранные ресурсы", latest: "Недавно добавленные", overview: "Обзор библиотеки", resources: "Цифровые ресурсы", categories: "Категории", formats: "Доступные форматы", databases: "Академические базы данных", databaseNote: "Интеграция внешних академических баз данных в текущем портале не активна.", empty: "В библиотеку пока не добавлены книги." },
+} as const;
+
 export function RecentBooks({ onKitabSec }: { onKitabSec: (kitab: LibraryBook) => void }) {
-  const { data: kitablar = [], isLoading } = useQuery({
+  const { locale } = usePageI18n();
+  const copy = COPY[locale as keyof typeof COPY] ?? COPY.az;
+  const { data, isLoading } = useQuery({
     queryKey: ["library-books-recent"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: rows, error, count } = await supabase
         .from("library_books")
-        .select("*")
+        .select("*", { count: "exact" })
         .order("elave_olunma_tarixi", { ascending: false })
         .limit(10);
       if (error) throw error;
-      return (data ?? []) as LibraryBook[];
+      return { books: (rows ?? []) as LibraryBook[], count: count ?? 0 };
     },
   });
 
+  const books = data?.books ?? [];
+  const featured = books.slice(0, 5);
+  const latest = books.slice(0, 3);
+  const formats = Array.from(new Set(books.map((book) => book.format).filter(Boolean))).slice(0, 3);
+
+  if (isLoading) {
+    return <section className="library-reference-overview"><div className="library-featured-grid">{Array.from({ length: 5 }).map((_, index) => <div key={index} className="library-reference-skeleton" />)}</div></section>;
+  }
+
+  if (!books.length) {
+    return <section className="library-reference-overview"><EmptyState icon={BookMarked} mesaj={copy.empty} /></section>;
+  }
+
   return (
-    <section className="library-premium-section rounded-[28px] p-5 sm:p-6 lg:p-7">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="library-recent-header-icon flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <Sparkles className="size-5" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-primary">Yeni kolleksiya</p>
-            <h2 className="truncate font-display text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">Son Əlavə Olanlar</h2>
-          </div>
+    <section className="library-reference-layout">
+      <div className="library-reference-main">
+        <div className="library-reference-section-heading">
+          <div><span><Sparkles aria-hidden /></span><h2>{copy.featured}</h2></div>
+          <small>{featured.length}</small>
         </div>
-        {!isLoading && kitablar.length > 0 ? (
-          <span className="hidden rounded-full border border-border bg-muted/40 px-3 py-1.5 text-xs font-semibold text-muted-foreground sm:inline-flex">
-            {kitablar.length} kitab
-          </span>
-        ) : null}
+        <div className="library-featured-grid">
+          {featured.map((book) => <BookCard key={book.id} kitab={book} yeni onClick={() => onKitabSec(book)} />)}
+        </div>
+
+        <div className="library-reference-section-heading library-reference-section-heading--latest">
+          <div><span><BookOpenCheck aria-hidden /></span><h2>{copy.latest}</h2></div>
+        </div>
+        <div className="library-latest-list">
+          {latest.map((book) => (
+            <button key={book.id} type="button" onClick={() => onKitabSec(book)}>
+              <span className="library-latest-list__cover">
+                {book.uz_qabigi_url ? <img src={book.uz_qabigi_url} alt="" loading="lazy" /> : <BookMarked aria-hidden />}
+              </span>
+              <span className="library-latest-list__copy"><strong>{book.ad}</strong><small>{book.muellif}</small></span>
+              <span className="library-latest-list__format">{book.format}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-muted" />
-          ))}
-        </div>
-      ) : kitablar.length === 0 ? (
-        <EmptyState icon={BookMarked} mesaj="Hələ kitabxanaya kitab əlavə olunmayıb." />
-      ) : (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-5 lg:gap-x-5">
-          {kitablar.map((kitab) => (
-            <BookCard key={kitab.id} kitab={kitab} yeni onClick={() => onKitabSec(kitab)} />
-          ))}
-        </div>
-      )}
+      <aside className="library-reference-side">
+        <section>
+          <div className="library-side-heading"><h3>{copy.overview}</h3></div>
+          <div className="library-side-stats">
+            <div><span><BookMarked aria-hidden /></span><p><strong>{data?.count ?? 0}</strong><small>{copy.resources}</small></p></div>
+            <div><span><Layers3 aria-hidden /></span><p><strong>{kitabxanaKateqoriyalari.length}</strong><small>{copy.categories}</small></p></div>
+          </div>
+          <div className="library-format-summary"><small>{copy.formats}</small><strong>{formats.length ? formats.join(" · ") : "—"}</strong></div>
+        </section>
+
+        <section>
+          <div className="library-side-heading"><h3>{copy.databases}</h3><Database aria-hidden /></div>
+          <p className="library-database-note">{copy.databaseNote}</p>
+        </section>
+      </aside>
     </section>
   );
 }

@@ -1,78 +1,62 @@
-import { BookOpen, Search, Sparkles } from "lucide-react";
+import { BookOpen, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+
+import libraryHeroImage from "@/assets/library-hero.svg";
+import { kitabxanaKateqoriyalari } from "@/lib/library-categories";
 import { usePageI18n } from "@/lib/i18n-extra";
 
-export function LibraryHero({ axtaris, onAxtarisDeyis }: { axtaris: string; onAxtarisDeyis: (deyer: string) => void }) {
-  const { t } = usePageI18n();
+const COPY = {
+  az: { title: "Kitabxana", subtitle: "Biliyə daha yaxın olaq!", description: "Elmi bilik, araşdırma və inkişaf üçün rəqəmsal resurslar.", quote: "Kitablar dünyanı anlamağın ən etibarlı yollarından biridir.", advanced: "Ətraflı axtarış", categories: "Kateqoriyalar" },
+  tr: { title: "Kütüphane", subtitle: "Bilgiye daha yakın olalım!", description: "Bilim, araştırma ve gelişim için dijital kaynaklar.", quote: "Kitaplar dünyayı anlamanın en güvenilir yollarından biridir.", advanced: "Gelişmiş arama", categories: "Kategoriler" },
+  en: { title: "Library", subtitle: "Move closer to knowledge.", description: "Digital resources for learning, research and development.", quote: "Books remain one of the most reliable ways to understand the world.", advanced: "Advanced search", categories: "Categories" },
+  ru: { title: "Библиотека", subtitle: "Ближе к знаниям!", description: "Цифровые ресурсы для обучения, исследований и развития.", quote: "Книги остаются одним из самых надёжных способов понять мир.", advanced: "Расширенный поиск", categories: "Категории" },
+} as const;
+
+export function LibraryHero({ axtaris, onAxtarisDeyis, onKateqoriyaSec }: { axtaris: string; onAxtarisDeyis: (deyer: string) => void; onKateqoriyaSec: (kateqoriya: string) => void }) {
+  const { locale, t } = usePageI18n();
+  const copy = COPY[locale as keyof typeof COPY] ?? COPY.az;
   const [deyer, setDeyer] = useState(axtaris);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
   useEffect(() => { setDeyer(axtaris); }, [axtaris]);
   useEffect(() => {
-    const zamanlayici = setTimeout(() => onAxtarisDeyis(deyer.trim()), 400);
-    return () => clearTimeout(zamanlayici);
+    const timer = setTimeout(() => onAxtarisDeyis(deyer.trim()), 400);
+    return () => clearTimeout(timer);
   }, [deyer, onAxtarisDeyis]);
 
-  function axtarisGonder() { onAxtarisDeyis(deyer.trim()); }
+  function submitSearch() {
+    onAxtarisDeyis(deyer.trim());
+  }
 
   return (
-    <section className="library-premium-hero relative isolate overflow-hidden rounded-[28px] px-5 py-7 text-primary-foreground sm:px-8 sm:py-9 lg:px-10 lg:py-10">
-      <span aria-hidden className="library-premium-hero__pattern" />
-      <span aria-hidden className="library-premium-hero__glow library-premium-hero__glow--one" />
-      <span aria-hidden className="library-premium-hero__glow library-premium-hero__glow--two" />
-      <span aria-hidden className="library-premium-hero__accent" />
-      <span aria-hidden className="library-premium-hero__sweep" />
-
-      <div className="relative z-10 grid items-center gap-7 lg:grid-cols-[minmax(0,1fr)_390px] lg:gap-10">
-        <div className="library-premium-hero__copy min-w-0">
-          <div className="library-premium-hero__eyebrow mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-primary-foreground/85 backdrop-blur-sm sm:text-[11px]">
-            <BookOpen className="size-3.5" />
-            Rəqəmsal kitabxana
-          </div>
-
-          <h1 className="max-w-3xl font-display text-3xl font-semibold tracking-[-0.035em] sm:text-4xl lg:text-[2.9rem] lg:leading-[1.04]">
-            {t("library.title")}
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-primary-foreground/76 sm:text-base">
-            {t("library.description")}
-          </p>
-
-          <div className="library-premium-search mt-6 flex max-w-3xl flex-col gap-2 rounded-2xl p-1.5 sm:flex-row sm:items-center">
-            <div className="library-premium-search__field flex min-w-0 flex-1 items-center gap-2.5">
-              <Search className="size-5 shrink-0 text-primary-foreground/72" />
-              <input
-                value={deyer}
-                onChange={(e) => setDeyer(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") axtarisGonder(); }}
-                placeholder={t("library.searchPlaceholder")}
-                className="library-premium-search__input h-12 min-w-0 flex-1 border-0 bg-transparent px-3 text-sm text-primary-foreground shadow-none outline-none ring-0 placeholder:text-primary-foreground/52 focus:border-0 focus:outline-none focus:ring-0"
-              />
-            </div>
-            <Button type="button" onClick={axtarisGonder} className="library-premium-search__button h-12 shrink-0 rounded-xl px-7 font-bold">
-              {t("library.searchButton")}
-            </Button>
-          </div>
-
-          <div className="library-premium-hero__note mt-5 inline-flex items-center gap-2 text-xs font-medium text-primary-foreground/68 sm:text-sm">
-            <Sparkles className="size-4" />
-            Kitabları kəşf edin, oxuyun və biliklərinizi genişləndirin.
-          </div>
+    <>
+      <section className="library-reference-hero" style={{ backgroundImage: `url(${libraryHeroImage})` }}>
+        <div className="library-reference-hero__shade" aria-hidden />
+        <div className="library-reference-hero__copy">
+          <h1>{copy.title}</h1>
+          <p>{copy.subtitle}</p>
+          <span>{copy.description}</span>
         </div>
+        <div className="library-reference-hero__mark" aria-hidden><BookOpen /></div>
+        <blockquote>“{copy.quote}”</blockquote>
+      </section>
 
-        <div className="library-premium-hero__visual" aria-hidden>
-          <span className="library-shelf__arch" />
-          <span className="library-shelf__halo" />
-          <div className="library-shelf__books">
-            <span className="library-shelf__book library-shelf__book--1" />
-            <span className="library-shelf__book library-shelf__book--2" />
-            <span className="library-shelf__book library-shelf__book--3" />
-            <span className="library-shelf__book library-shelf__book--4" />
-            <span className="library-shelf__book library-shelf__book--5" />
-            <span className="library-shelf__book library-shelf__book--6" />
-          </div>
-          <span className="library-shelf__line" />
+      <section className="library-reference-search">
+        <div className="library-reference-search__bar">
+          <Search aria-hidden />
+          <input value={deyer} onChange={(event) => setDeyer(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") submitSearch(); }} placeholder={t("library.searchPlaceholder")} aria-label={t("library.searchPlaceholder")} />
+          <button type="button" onClick={submitSearch}>{t("library.searchButton")}</button>
         </div>
-      </div>
-    </section>
+        <button type="button" className="library-reference-search__advanced" aria-expanded={advancedOpen} onClick={() => setAdvancedOpen((value) => !value)}>
+          <SlidersHorizontal aria-hidden />{copy.advanced}
+        </button>
+
+        {advancedOpen ? (
+          <div className="library-reference-search__categories" aria-label={copy.categories}>
+            {kitabxanaKateqoriyalari.map(({ ad }) => <button key={ad} type="button" onClick={() => onKateqoriyaSec(ad)}>{ad}</button>)}
+          </div>
+        ) : null}
+      </section>
+    </>
   );
 }

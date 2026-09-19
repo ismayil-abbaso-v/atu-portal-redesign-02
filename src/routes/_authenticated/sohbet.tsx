@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { MessageCircleMore } from "lucide-react";
 import { toast } from "sonner";
 
 import { GroupList } from "@/components/chat/GroupList";
@@ -11,9 +12,18 @@ import { useUserRoles } from "@/hooks/use-user-role";
 import type { Database } from "@/integrations/supabase/types";
 import { usePageI18n } from "@/lib/i18n-extra";
 import "@/chat-panel.css";
+import chatHero from "@/assets/chat-hero.svg";
+import "@/chat-library-redesign.css";
 
 type ChatGroup = Database["public"]["Tables"]["chat_groups"]["Row"];
 type LastMessage = Database["public"]["Views"]["chat_group_last_message"]["Row"];
+
+const CHAT_HERO = {
+  az: { title: "Söhbət", subtitle: "Universitet ictimaiyyəti ilə daim əlaqədə olun!", quote: "Fikirlərini paylaş, daha böyük imkanlar yarat." },
+  tr: { title: "Sohbet", subtitle: "Üniversite topluluğuyla her zaman bağlantıda kalın!", quote: "Fikirlerini paylaş, daha büyük fırsatlar yarat." },
+  en: { title: "Chat", subtitle: "Stay connected with the university community.", quote: "Share your ideas and create greater opportunities." },
+  ru: { title: "Чат", subtitle: "Оставайтесь на связи с университетским сообществом.", quote: "Делитесь идеями и создавайте больше возможностей." },
+} as const;
 
 export const Route = createFileRoute("/_authenticated/sohbet")({
   head: () => ({ meta: [
@@ -83,15 +93,50 @@ function SohbetSehifesi() {
   async function handleSendMessage(text: string, fileUrl?: string, fileType?: "sekil" | "video" | "ses" | "fayl") { await sendMessageMutation.mutateAsync({ text, ...(fileUrl ? { fileUrl } : {}), ...(fileType ? { fileType } : {}) }); }
   const activeGroup = groups.find((g) => g.id === selectedGroupId) || null;
 
+  const hero = CHAT_HERO[locale as keyof typeof CHAT_HERO] ?? CHAT_HERO.az;
+
   return (
-    <div className="chat-shell flex h-[calc(100vh-140px)] flex-1 overflow-hidden rounded-[28px] border border-border/80 bg-card md:h-[calc(100vh-100px)]">
-      <div className="flex h-full min-w-0 flex-1 md:hidden">
-        {mobileView === "list" ? <div className="h-full w-full min-w-0"><GroupList groups={groups} lastMessages={lastMessages} selectedGroupId={selectedGroupId} onSelectGroup={(id) => { setSelectedGroupId(id); setMobileView("thread"); }} axtaris={axtaris} onAxtarisChange={setAxtaris} /></div> : mobileView === "thread" ? <div className="h-full w-full min-w-0"><MessageThread group={activeGroup} messages={messages} userId={userId} onSendMessage={handleSendMessage} onBack={() => setMobileView("list")} onToggleProfile={() => setMobileView("profile")} /></div> : <div className="h-full w-full min-w-0"><GroupProfile group={activeGroup} members={members} messages={messages} onClose={() => setMobileView("thread")} /></div>}
-      </div>
-      <div className="hidden h-full min-w-0 flex-1 md:flex">
-        <div className="w-[320px] shrink-0 border-r border-border/70"><GroupList groups={groups} lastMessages={lastMessages} selectedGroupId={selectedGroupId} onSelectGroup={setSelectedGroupId} axtaris={axtaris} onAxtarisChange={setAxtaris} /></div>
-        <div className="min-w-0 flex-1"><MessageThread group={activeGroup} messages={messages} userId={userId} onSendMessage={handleSendMessage} onBack={() => setSelectedGroupId("")} onToggleProfile={() => setShowProfile(true)} /></div>
-        {showProfile ? <div className="w-[320px] shrink-0 border-l border-border/70"><GroupProfile group={activeGroup} members={members} messages={messages} onClose={() => setShowProfile(false)} /></div> : null}
+    <div className="chat-redesign-page animate-page-enter" data-mobile-view={mobileView}>
+      <section className="chat-redesign-hero" style={{ backgroundImage: `url(${chatHero})` }}>
+        <div className="chat-redesign-hero__shade" aria-hidden />
+        <div className="chat-redesign-hero__copy">
+          <h1>{hero.title}</h1>
+          <p>{hero.subtitle}</p>
+        </div>
+        <div className="chat-redesign-hero__bubble" aria-hidden><MessageCircleMore /></div>
+        <blockquote>“{hero.quote}”</blockquote>
+      </section>
+
+      <div className="chat-shell chat-redesign-shell flex flex-1 overflow-hidden border border-border/80 bg-card">
+        <div className="flex h-full min-w-0 flex-1 md:hidden">
+          {mobileView === "list" ? (
+            <div className="h-full w-full min-w-0">
+              <GroupList groups={groups} lastMessages={lastMessages} selectedGroupId={selectedGroupId} onSelectGroup={(id) => { setSelectedGroupId(id); setMobileView("thread"); }} axtaris={axtaris} onAxtarisChange={setAxtaris} />
+            </div>
+          ) : mobileView === "thread" ? (
+            <div className="h-full w-full min-w-0">
+              <MessageThread group={activeGroup} messages={messages} userId={userId} memberCount={members.length} onSendMessage={handleSendMessage} onBack={() => setMobileView("list")} onToggleProfile={() => setMobileView("profile")} />
+            </div>
+          ) : (
+            <div className="h-full w-full min-w-0">
+              <GroupProfile group={activeGroup} members={members} messages={messages} onClose={() => setMobileView("thread")} />
+            </div>
+          )}
+        </div>
+
+        <div className="hidden h-full min-w-0 flex-1 md:flex">
+          <div className="w-[35%] min-w-[300px] max-w-[390px] shrink-0 border-r border-border/70">
+            <GroupList groups={groups} lastMessages={lastMessages} selectedGroupId={selectedGroupId} onSelectGroup={setSelectedGroupId} axtaris={axtaris} onAxtarisChange={setAxtaris} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <MessageThread group={activeGroup} messages={messages} userId={userId} memberCount={members.length} onSendMessage={handleSendMessage} onBack={() => setSelectedGroupId("")} onToggleProfile={() => setShowProfile(true)} />
+          </div>
+          {showProfile ? (
+            <div className="w-[300px] shrink-0 border-l border-border/70">
+              <GroupProfile group={activeGroup} members={members} messages={messages} onClose={() => setShowProfile(false)} />
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );
