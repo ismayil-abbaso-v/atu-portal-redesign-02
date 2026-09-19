@@ -73,6 +73,17 @@ export function AppHeader({
   }, [pathname]);
 
   useEffect(() => {
+    const closeHeaderOverlays = () => {
+      setMobileSearchOpen(false);
+      setOpen(false);
+      setProfileOpen(false);
+    };
+
+    window.addEventListener("portal:mobile-secondary-menu-open", closeHeaderOverlays);
+    return () => window.removeEventListener("portal:mobile-secondary-menu-open", closeHeaderOverlays);
+  }, []);
+
+  useEffect(() => {
     if (!mobileSearchOpen && !open && !profileOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
