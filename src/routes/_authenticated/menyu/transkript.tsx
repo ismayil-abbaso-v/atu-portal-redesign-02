@@ -48,6 +48,7 @@ import {
   type TranscriptSemester,
   type TranscriptStudentInfo,
 } from "@/lib/transcript-docx";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/menyu/transkript")({
   head: () => ({
