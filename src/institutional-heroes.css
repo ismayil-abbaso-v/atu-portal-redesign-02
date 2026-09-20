@@ -16,6 +16,18 @@
   max-width: min(34cqw, 33rem);
 }
 
+/*
+ * The current chat/library WebP heroes already contain their own right-side
+ * composition. The older Prompt 6 polygon was a separate presentation layer
+ * that now obscures the image (most visibly across the bottom on mobile).
+ * Disable it route-scoped at every width; the dedicated shade remains the
+ * only contrast layer.
+ */
+[data-route="/sohbet"] .chat-redesign-hero::after,
+[data-route="/kitabxana"] .library-reference-hero::after {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .student-home-hero,
   .student-home-skeleton__hero {
