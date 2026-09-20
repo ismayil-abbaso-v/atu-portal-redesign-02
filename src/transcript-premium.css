@@ -1161,7 +1161,7 @@
 
 @container portal-content (max-width: 430px) {
   .transcript-page-header__eyebrow {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .transcript-page-header__title {
