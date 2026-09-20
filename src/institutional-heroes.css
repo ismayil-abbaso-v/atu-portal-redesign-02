@@ -1,24 +1,24 @@
 /* Route-scoped institutional hero refinements. Global header/navigation are intentionally excluded. */
 
-[data-route="/ev"] .student-home {
+.student-home {
   container-type: inline-size;
   container-name: student-home;
 }
 
-[data-route="/ev"] .student-home-hero,
-[data-route="/ev"] .student-home-skeleton__hero {
+.student-home-hero,
+.student-home-skeleton__hero {
   min-height: 340px;
   height: clamp(340px, 28cqw, 460px);
   background-position: 50% center;
 }
 
-[data-route="/ev"] .student-home-hero__copy {
+.student-home-hero__copy {
   max-width: min(34cqw, 33rem);
 }
 
 @media (max-width: 767px) {
-  [data-route="/ev"] .student-home-hero,
-  [data-route="/ev"] .student-home-skeleton__hero {
+  .student-home-hero,
+  .student-home-skeleton__hero {
     min-height: 286px !important;
     height: clamp(286px, 82cqw, 326px) !important;
     border: 1px solid rgb(108 15 46 / 0.16);
@@ -31,7 +31,7 @@
     box-shadow: 0 10px 30px rgb(55 13 28 / 0.1);
   }
 
-  [data-route="/ev"] .student-home-hero__shade {
+  .student-home-hero__shade {
     background: linear-gradient(
       90deg,
       rgb(255 255 255 / 1) 0%,
@@ -42,7 +42,7 @@
     );
   }
 
-  [data-route="/ev"] .student-home-hero__copy {
+  .student-home-hero__copy {
     top: clamp(25px, 7cqw, 32px);
     left: clamp(18px, 5.5cqw, 24px);
     right: auto;
@@ -50,30 +50,30 @@
     max-width: none;
   }
 
-  [data-route="/ev"] .student-home-skeleton__copy {
+  .student-home-skeleton__copy {
     top: clamp(25px, 7cqw, 32px);
     left: clamp(18px, 5.5cqw, 24px);
     width: min(70%, 19rem);
     transform: none;
   }
 
-  [data-route="/ev"] .student-home-skeleton__title {
+  .student-home-skeleton__title {
     width: 86%;
     height: clamp(34px, 9cqw, 42px);
   }
 
-  [data-route="/ev"] .student-home-skeleton__body {
+  .student-home-skeleton__body {
     width: 72%;
     height: 14px;
   }
 
-  [data-route="/ev"] .student-home-hero__copy p {
+  .student-home-hero__copy p {
     margin-bottom: 3px;
     font-size: clamp(0.96rem, 4.2vw, 1.08rem);
     line-height: 1.25;
   }
 
-  [data-route="/ev"] .student-home-hero__copy h1 {
+  .student-home-hero__copy h1 {
     max-width: 15ch;
     font-size: clamp(1.9rem, 8.8vw, 2.45rem);
     line-height: 0.98;
@@ -81,7 +81,7 @@
     text-wrap: balance;
   }
 
-  [data-route="/ev"] .student-home-hero__copy span {
+  .student-home-hero__copy span {
     max-width: 30ch;
     margin-top: 14px;
     color: #3d3b3c;
@@ -91,8 +91,8 @@
     text-wrap: pretty;
   }
 
-  [data-route="/ev"] .student-home-hero__quote,
-  [data-route="/ev"] .student-home-hero__words,
+  .student-home-hero__quote,
+  .student-home-hero__words,
   [data-route="/elektron-jurnal"] .journal-redesign-hero blockquote,
   [data-route="/teqvim"] .calendar-redesign-hero__quote,
   [data-route="/imtahanlar"] .exam-reference-hero__right,
@@ -246,14 +246,14 @@
 }
 
 @media (max-width: 359px) {
-  [data-route="/ev"] .student-home-hero,
-  [data-route="/ev"] .student-home-skeleton__hero {
+  .student-home-hero,
+  .student-home-skeleton__hero {
     min-height: 278px !important;
     height: 278px !important;
     background-position: 67% center;
   }
 
-  [data-route="/ev"] .student-home-hero__copy {
+  .student-home-hero__copy {
     width: 86%;
   }
 
