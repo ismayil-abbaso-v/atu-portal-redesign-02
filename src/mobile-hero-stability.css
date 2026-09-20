@@ -532,8 +532,8 @@
       .settings-page-hero__back
       ~ .settings-page-hero__copy {
       top: 50%;
-      left: 74px;
-      width: min(calc(100% - 92px), 18rem);
+      left: 24px;
+      width: min(70%, 19rem);
       max-width: none;
       transform: translateY(-50%);
     }
