@@ -510,6 +510,12 @@
       background-position: var(--hero-position-mobile);
     }
 
+    /* Profile keeps desktop back navigation, but the phone hero intentionally
+       has no back control because primary navigation is always available below. */
+    .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__back {
+      display: none;
+    }
+
     .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__shade {
       background: linear-gradient(
         90deg,
