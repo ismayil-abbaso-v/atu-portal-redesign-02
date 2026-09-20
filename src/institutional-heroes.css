@@ -11,6 +11,127 @@
  *   MOBILE  <= 640px
  */
 
+/* ------------------------------------------------------------------------- */
+/* Route-specific image focal points                                         */
+/* ------------------------------------------------------------------------- */
+/*
+ * All values are intentionally route-specific. The assets share a wide
+ * format, but their subjects do not occupy the same place:
+ * - x keeps the still-life/architectural subject in view while preserving
+ *   the copy-safe left side;
+ * - y biases desk/document/book compositions slightly downward on wide
+ *   crops so lower objects are not unnecessarily cut off.
+ *
+ * Each route supplies WIDE / COMPACT / MOBILE values. The same custom
+ * properties are consumed by the container-query contract below, so opening
+ * the sidebar or zooming the browser changes the focal point with the
+ * rendered hero width rather than with viewport width alone.
+ */
+[data-route="/ev"] {
+  --hero-position-wide: 54% 50%;
+  --hero-position-compact: 61% 50%;
+  --hero-position-mobile: 69% 50%;
+}
+
+[data-route="/elektron-jurnal"] {
+  --hero-position-wide: 61% 52%;
+  --hero-position-compact: 66% 52%;
+  --hero-position-mobile: 70% 50%;
+}
+
+[data-route="/teqvim"] {
+  --hero-position-wide: 60% 56%;
+  --hero-position-compact: 66% 55%;
+  --hero-position-mobile: 71% 52%;
+}
+
+[data-route="/imtahanlar"] {
+  --hero-position-wide: 64% 57%;
+  --hero-position-compact: 69% 55%;
+  --hero-position-mobile: 73% 52%;
+}
+
+[data-route="/sohbet"] {
+  --hero-position-wide: 61% 50%;
+  --hero-position-compact: 68% 50%;
+  --hero-position-mobile: 74% 50%;
+}
+
+[data-route="/kitabxana"] {
+  --hero-position-wide: 63% 60%;
+  --hero-position-compact: 69% 58%;
+  --hero-position-mobile: 74% 54%;
+}
+
+[data-route="/ofis"] {
+  --hero-position-wide: 62% 57%;
+  --hero-position-compact: 69% 56%;
+  --hero-position-mobile: 74% 53%;
+}
+
+[data-route="/bildirisler"] {
+  --hero-position-wide: 65% 52%;
+  --hero-position-compact: 72% 52%;
+  --hero-position-mobile: 77% 50%;
+}
+
+[data-route="/menyu"] {
+  --hero-position-wide: 64% 50%;
+  --hero-position-compact: 71% 50%;
+  --hero-position-mobile: 75% 50%;
+}
+
+[data-route="/menyu/profil"] {
+  --hero-position-wide: 64% 58%;
+  --hero-position-compact: 72% 56%;
+  --hero-position-mobile: 76% 52%;
+}
+
+[data-route="/menyu/tehlukesizlik"] {
+  --hero-position-wide: 65% 50%;
+  --hero-position-compact: 72% 50%;
+  --hero-position-mobile: 76% 50%;
+}
+
+[data-route="/menyu/bildiris"] {
+  --hero-position-wide: 64% 54%;
+  --hero-position-compact: 72% 53%;
+  --hero-position-mobile: 77% 50%;
+}
+
+[data-route="/menyu/gorunus"] {
+  --hero-position-wide: 62% 50%;
+  --hero-position-compact: 70% 50%;
+  --hero-position-mobile: 74% 50%;
+}
+
+[data-route="/menyu/yardim"] {
+  --hero-position-wide: 64% 54%;
+  --hero-position-compact: 71% 53%;
+  --hero-position-mobile: 75% 50%;
+}
+
+[data-route="/menyu/transkript"] {
+  --hero-position-wide: 64% 58%;
+  --hero-position-compact: 71% 56%;
+  --hero-position-mobile: 76% 53%;
+}
+
+/* WIDE state: make the route focal point authoritative even when the legacy
+ * source stylesheet still declares background-position:center. */
+[data-route="/ev"] .student-home-hero,
+[data-route="/elektron-jurnal"] .journal-redesign-hero,
+[data-route="/teqvim"] .calendar-redesign-hero,
+[data-route="/imtahanlar"] .exam-reference-hero,
+[data-route="/sohbet"] .chat-redesign-hero,
+[data-route="/kitabxana"] .library-reference-hero,
+[data-route="/ofis"] .office-reference-hero,
+[data-route="/bildirisler"] .notification-reference-hero,
+[data-route^="/menyu"] .settings-page-hero,
+[data-route="/menyu/transkript"] .transcript-page-header {
+  background-position: var(--hero-position-wide, center);
+}
+
 [data-route="/ev"] .student-home {
   container-type: inline-size;
   container-name: student-home;
@@ -84,10 +205,23 @@
 /* ------------------------------------------------------------------------- */
 @container portal-content (min-width: 641px) and (max-width: 1040px) {
   [data-route="/ev"] .student-home-hero,
+  [data-route="/elektron-jurnal"] .journal-redesign-hero,
+  [data-route="/teqvim"] .calendar-redesign-hero,
+  [data-route="/imtahanlar"] .exam-reference-hero,
+  [data-route="/sohbet"] .chat-redesign-hero,
+  [data-route="/kitabxana"] .library-reference-hero,
+  [data-route="/ofis"] .office-reference-hero,
+  [data-route="/bildirisler"] .notification-reference-hero,
+  [data-route^="/menyu"] .settings-page-hero,
+  [data-route="/menyu/transkript"] .transcript-page-header {
+    background-position: var(--hero-position-compact, center);
+  }
+
+  [data-route="/ev"] .student-home-hero,
   [data-route="/ev"] .student-home-skeleton__hero {
     min-height: 300px;
     height: clamp(300px, 34cqw, 360px);
-    background-position: 60% center;
+    background-position: var(--hero-position-compact, 61% 50%);
   }
 
   [data-route="/ev"] .student-home-hero__copy {
@@ -116,7 +250,7 @@
 
   [data-route="/elektron-jurnal"] .journal-redesign-hero {
     min-height: 250px;
-    background-position: 66% center;
+    background-position: var(--hero-position-compact, 66% 52%);
   }
 
   [data-route="/elektron-jurnal"] .journal-redesign-hero__overlay {
@@ -154,7 +288,7 @@
   [data-route="/teqvim"] .calendar-redesign-hero,
   [data-route="/imtahanlar"] .exam-reference-hero {
     min-height: 238px;
-    background-position: 68% center;
+    background-position: var(--hero-position-compact, 68% 50%);
   }
 
   [data-route="/teqvim"] .calendar-redesign-hero__copy,
@@ -190,12 +324,12 @@
 
   [data-route="/sohbet"] .chat-redesign-hero {
     min-height: 214px;
-    background-position: 69% center;
+    background-position: var(--hero-position-compact, 68% 50%);
   }
 
   [data-route="/kitabxana"] .library-reference-hero {
     min-height: 236px;
-    background-position: 69% center;
+    background-position: var(--hero-position-compact, 69% 58%);
   }
 
   [data-route="/sohbet"] .chat-redesign-hero__copy,
@@ -236,7 +370,7 @@
   [data-route="/ofis"] .office-reference-hero,
   [data-route="/bildirisler"] .notification-reference-hero {
     min-height: 230px;
-    background-position: 69% center;
+    background-position: var(--hero-position-compact, 70% 54%);
   }
 
   [data-route="/ofis"] .office-reference-hero__copy,
@@ -266,7 +400,7 @@
 
   [data-route^="/menyu"] .settings-page-hero {
     min-height: 244px;
-    background-position: 69% center;
+    background-position: var(--hero-position-compact, 71% 50%);
   }
 
   [data-route="/menyu"] .menu-reference-page .settings-page-hero {
@@ -311,6 +445,19 @@
 /* ------------------------------------------------------------------------- */
 @container portal-content (max-width: 640px) {
   [data-route="/ev"] .student-home-hero,
+  [data-route="/elektron-jurnal"] .journal-redesign-hero,
+  [data-route="/teqvim"] .calendar-redesign-hero,
+  [data-route="/imtahanlar"] .exam-reference-hero,
+  [data-route="/sohbet"] .chat-redesign-hero,
+  [data-route="/kitabxana"] .library-reference-hero,
+  [data-route="/ofis"] .office-reference-hero,
+  [data-route="/bildirisler"] .notification-reference-hero,
+  [data-route^="/menyu"] .settings-page-hero,
+  [data-route="/menyu/transkript"] .transcript-page-header {
+    background-position: var(--hero-position-mobile, center);
+  }
+
+  [data-route="/ev"] .student-home-hero,
   [data-route="/ev"] .student-home-skeleton__hero {
     min-height: 286px;
     height: clamp(286px, 82cqw, 326px);
@@ -318,7 +465,7 @@
     border-radius: 20px;
     background-color: #f8f4f2;
     background-image: url("./assets/student-home-hero.webp");
-    background-position: 69% center;
+    background-position: var(--hero-position-mobile, 69% 50%);
     background-size: auto 100%;
     background-repeat: no-repeat;
     box-shadow: 0 10px 30px rgb(55 13 28 / 0.1);
@@ -403,7 +550,7 @@
   [data-route="/elektron-jurnal"] .journal-redesign-hero {
     min-height: clamp(248px, 42cqw, 270px);
     border-radius: 18px;
-    background-position: 68% center;
+    background-position: var(--hero-position-mobile, 70% 50%);
   }
 
   [data-route="/elektron-jurnal"] .journal-redesign-hero__overlay {
@@ -448,13 +595,13 @@
   [data-route="/teqvim"] .calendar-redesign-hero {
     min-height: 238px;
     border-radius: 17px;
-    background-position: 69% center;
+    background-position: var(--hero-position-mobile, 71% 52%);
   }
 
   [data-route="/imtahanlar"] .exam-reference-hero {
     min-height: 226px;
     border-radius: 17px;
-    background-position: 68% center;
+    background-position: var(--hero-position-mobile, 73% 52%);
   }
 
   [data-route="/teqvim"] .calendar-redesign-hero__shade,
@@ -533,13 +680,13 @@
   [data-route="/sohbet"] .chat-redesign-hero {
     min-height: 206px;
     border-radius: 17px;
-    background-position: 70% center;
+    background-position: var(--hero-position-mobile, 74% 50%);
   }
 
   [data-route="/kitabxana"] .library-reference-hero {
     min-height: 224px;
     border-radius: 17px;
-    background-position: 70% center;
+    background-position: var(--hero-position-mobile, 74% 54%);
   }
 
   [data-route="/kitabxana"] .library-reference-hero__copy > span {
@@ -552,14 +699,14 @@
   [data-route="/bildirisler"] .notification-reference-hero {
     min-height: 218px;
     border-radius: 17px;
-    background-position: 70% center;
+    background-position: var(--hero-position-mobile, 75% 51%);
   }
 
   [data-route^="/menyu"] .settings-page-hero,
   [data-route^="/menyu"] .menu-reference-page .settings-page-hero {
     min-height: 244px;
     border-radius: 17px;
-    background-position: 70% center;
+    background-position: var(--hero-position-mobile, 75% 50%);
   }
 
   [data-route^="/menyu"] .settings-page-hero__shade {
@@ -621,7 +768,7 @@
   [data-route="/ev"] .student-home-skeleton__hero {
     min-height: 278px;
     height: 278px;
-    background-position: 67% center;
+    background-position: var(--hero-position-mobile, 69% 50%);
   }
 
   [data-route="/ev"] .student-home-hero__copy {
@@ -642,7 +789,7 @@
 @media (max-width: 767px) {
   [data-route="/menyu/transkript"] .transcript-page-header {
     min-height: 228px !important;
-    background-position: 70% center;
+    background-position: var(--hero-position-mobile, 76% 53%);
   }
 
   [data-route="/menyu/transkript"] .transcript-page-header::after {
