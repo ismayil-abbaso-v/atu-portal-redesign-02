@@ -242,6 +242,7 @@ function GorunusSehifesi() {
   return (
     <div className="appearance-page prompt8-appearance">
       <SettingsPageHero
+        variant="appearance"
         image={appearanceHero}
         eyebrow={APPEARANCE_HERO[locale].eyebrow}
         title={t("settings.appearance")}

@@ -90,6 +90,7 @@ function YardimSehifesi() {
   return (
     <div className="help-page prompt8-help settings-page-stack">
       <SettingsPageHero
+        variant="help"
         image={helpHero}
         eyebrow={HELP_HERO[locale].eyebrow}
         title={tx("page.title")}

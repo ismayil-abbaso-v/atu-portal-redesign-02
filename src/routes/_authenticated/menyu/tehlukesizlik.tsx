@@ -213,7 +213,16 @@ function TehlukesizlikSehifesi() {
   const hero = SECURITY_HERO[locale];
 
   return <div className="settings-page-stack security-settings-redesign">
-    <SettingsPageHero image={securityHero} eyebrow={hero.eyebrow} title={t("title")} subtitle={hero.subtitle} quote={hero.quote} icon={<ShieldCheck />} backLabel={t("cancel")} />
+    <SettingsPageHero
+      variant="security"
+      image={securityHero}
+      eyebrow={hero.eyebrow}
+      title={t("title")}
+      subtitle={hero.subtitle}
+      quote={hero.quote}
+      icon={<ShieldCheck />}
+      backLabel={t("cancel")}
+    />
     <div className="grid gap-4 xl:grid-cols-[38%_62%]">
       <section className="min-w-0 rounded-[24px] border border-border/50 bg-card p-5 shadow-sm">
         <h2 className="mb-6 text-[20px] font-bold tracking-tight text-foreground">{t("loginSecurity")}</h2>

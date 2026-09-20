@@ -11,6 +11,7 @@ import { useLegacyPageI18nBridge } from "@/lib/legacy-page-i18n";
 import "@/role-workspace-redesign.css";
 import "@/mobile-native.css";
 import "@/institutional-heroes.css";
+import "@/mobile-hero-stability.css";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,

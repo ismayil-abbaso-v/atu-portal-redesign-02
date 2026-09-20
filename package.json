@@ -10,7 +10,7 @@
     "build": "vite build && npm run typecheck",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
-    "test": "bun test src/lib/electronic-journal.test.ts src/lib/schedule.test.ts src/lib/electronic-journal-i18n.test.ts src/lib/notification-hub-i18n.test.ts src/lib/tutor-prompt78-i18n.test.ts src/lib/official-exam-integration.test.ts src/lib/official-result-sync.test.ts src/lib/exam-material-i18n.test.ts src/lib/mobile-navigation.test.ts",
+    "test": "bun test src/lib/electronic-journal.test.ts src/lib/schedule.test.ts src/lib/electronic-journal-i18n.test.ts src/lib/notification-hub-i18n.test.ts src/lib/tutor-prompt78-i18n.test.ts src/lib/official-exam-integration.test.ts src/lib/official-result-sync.test.ts src/lib/exam-material-i18n.test.ts src/lib/mobile-navigation.test.ts src/lib/hero-visual-fingerprint.test.ts",
     "qa:responsive-a11y": "node scripts/prompt16-responsive-a11y-guard.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",

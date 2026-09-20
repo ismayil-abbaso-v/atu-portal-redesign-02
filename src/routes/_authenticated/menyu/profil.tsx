@@ -133,6 +133,7 @@ function ProfilSehifesi() {
     return (
       <div className="settings-page-stack profile-settings-redesign">
         <SettingsPageHero
+          variant="profile"
           image={profileHero}
           eyebrow={hero.eyebrow}
           title={t("title")}
@@ -152,6 +153,7 @@ function ProfilSehifesi() {
     return (
       <div className="settings-page-stack profile-settings-redesign">
         <SettingsPageHero
+          variant="profile"
           image={profileHero}
           eyebrow={hero.eyebrow}
           title={t("title")}
@@ -169,6 +171,7 @@ function ProfilSehifesi() {
 
   return <div className="settings-page-stack profile-settings-redesign">
     <SettingsPageHero
+      variant="profile"
       image={profileHero}
       eyebrow={hero.eyebrow}
       title={t("title")}

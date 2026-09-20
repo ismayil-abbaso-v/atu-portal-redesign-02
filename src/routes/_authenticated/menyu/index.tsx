@@ -115,6 +115,7 @@ function MenyuSehifesi() {
   return (
     <div className="menu-reference-page">
       <SettingsPageHero
+        variant="menu"
         image={menuHero}
         eyebrow={t("heroEyebrow")}
         title={t("heroTitle")}

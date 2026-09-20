@@ -83,9 +83,18 @@ for (const asset of heroAssets) {
 const legacyHeroContracts = [
   ["src/student-home.css", ["student-home-hero-in"]],
   ["src/journal-redesign.css", ["journal-hero-in"]],
-  ["src/calendar-exams-redesign.css", ["p5hero", "p5copy", ".calendar-redesign-hero:after", ".exam-reference-hero:after"]],
-  ["src/chat-library-redesign.css", ["p6HeroIn", "p6CopyIn", ".chat-redesign-hero:after", ".library-reference-hero:after"]],
-  ["src/office-notifications-redesign.css", ["p7HeroIn", "p7CopyIn", ".office-reference-hero:after", ".notification-reference-hero:after"]],
+  [
+    "src/calendar-exams-redesign.css",
+    ["p5hero", "p5copy", ".calendar-redesign-hero:after", ".exam-reference-hero:after"],
+  ],
+  [
+    "src/chat-library-redesign.css",
+    ["p6HeroIn", "p6CopyIn", ".chat-redesign-hero:after", ".library-reference-hero:after"],
+  ],
+  [
+    "src/office-notifications-redesign.css",
+    ["p7HeroIn", "p7CopyIn", ".office-reference-hero:after", ".notification-reference-hero:after"],
+  ],
   ["src/settings-redesign.css", ["p8HeroIn", "p8CopyIn", ".settings-page-hero__geometry"]],
 ];
 for (const [relativePath, forbiddenTokens] of legacyHeroContracts) {
@@ -95,6 +104,50 @@ for (const [relativePath, forbiddenTokens] of legacyHeroContracts) {
       failures.push(`${relativePath} — code-split legacy hero token returned: ${token}`);
     }
   }
+}
+
+/* Phone hero visuals must be owned by mounted hero classes/variants. */
+const mobileHeroContractPath = join(sourceRoot, "mobile-hero-stability.css");
+const mobileHeroContract = readFileSync(mobileHeroContractPath, "utf8");
+if (mobileHeroContract.includes("[data-route")) {
+  failures.push(
+    "src/mobile-hero-stability.css — mobile hero visuals depend on mutable shell data-route",
+  );
+}
+if (mobileHeroContract.includes("!important")) {
+  failures.push(
+    "src/mobile-hero-stability.css — mobile stability contract must not use !important",
+  );
+}
+for (const selector of [
+  ".student-home-hero",
+  ".journal-redesign-hero",
+  ".calendar-redesign-hero",
+  ".exam-reference-hero",
+  ".chat-redesign-hero",
+  ".library-reference-hero",
+  ".office-reference-hero",
+  ".notification-reference-hero",
+  ".settings-page-hero",
+  ".transcript-page-header",
+]) {
+  if (!mobileHeroContract.includes(selector)) {
+    failures.push(`src/mobile-hero-stability.css — missing stable selector ${selector}`);
+  }
+}
+if (!/@media\s*\(max-width:\s*767px\)/.test(mobileHeroContract)) {
+  failures.push("src/mobile-hero-stability.css — phone viewport guard is missing");
+}
+if (!/@container\s+portal-content\s*\(max-width:\s*640px\)/.test(mobileHeroContract)) {
+  failures.push("src/mobile-hero-stability.css — portal-content container guard is missing");
+}
+
+const settingsHeroSource = readFileSync(
+  join(sourceRoot, "components", "menu", "SettingsPageHero.tsx"),
+  "utf8",
+);
+if (!settingsHeroSource.includes("data-hero-variant={variant}")) {
+  failures.push("src/components/menu/SettingsPageHero.tsx — stable mounted variant is missing");
 }
 
 if (failures.length) {

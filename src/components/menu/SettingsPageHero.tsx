@@ -3,6 +3,7 @@ import { useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 type SettingsPageHeroProps = {
+  variant: "menu" | "profile" | "security" | "notifications" | "appearance" | "help";
   image: string;
   eyebrow: string;
   title: string;
@@ -14,6 +15,7 @@ type SettingsPageHeroProps = {
 };
 
 export function SettingsPageHero({
+  variant,
   image,
   eyebrow,
   title,
@@ -26,7 +28,11 @@ export function SettingsPageHero({
   const router = useRouter();
 
   return (
-    <header className="settings-page-hero" style={{ backgroundImage: `url(${image})` }}>
+    <header
+      className="settings-page-hero"
+      data-hero-variant={variant}
+      style={{ backgroundImage: `url(${image})` }}
+    >
       <span className="settings-page-hero__shade" aria-hidden />
       {showBack ? (
         <button
@@ -43,7 +49,11 @@ export function SettingsPageHero({
         <h1>{title}</h1>
         <p>{subtitle}</p>
       </div>
-      {icon ? <span className="settings-page-hero__icon" aria-hidden>{icon}</span> : null}
+      {icon ? (
+        <span className="settings-page-hero__icon" aria-hidden>
+          {icon}
+        </span>
+      ) : null}
       {quote ? <blockquote>“{quote}”</blockquote> : null}
     </header>
   );

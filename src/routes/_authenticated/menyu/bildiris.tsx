@@ -182,7 +182,16 @@ function BildirisParametrleri() {
 
   return (
     <div className="notification-settings-page prompt8-notification-settings settings-page-stack">
-      <SettingsPageHero image={notificationSettingsHero} eyebrow={copy.eyebrow} title={copy.title} subtitle={copy.subtitle} quote={copy.quote} icon={<Bell />} backLabel={copy.back} />
+      <SettingsPageHero
+        variant="notifications"
+        image={notificationSettingsHero}
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        subtitle={copy.subtitle}
+        quote={copy.quote}
+        icon={<Bell />}
+        backLabel={copy.back}
+      />
 
       <div className="notification-settings-grid">
         <section className="notification-settings-panel">
