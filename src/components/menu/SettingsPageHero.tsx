@@ -28,7 +28,6 @@ export function SettingsPageHero({
   return (
     <header className="settings-page-hero" style={{ backgroundImage: `url(${image})` }}>
       <span className="settings-page-hero__shade" aria-hidden />
-      <span className="settings-page-hero__geometry" aria-hidden />
       {showBack ? (
         <button
           type="button"

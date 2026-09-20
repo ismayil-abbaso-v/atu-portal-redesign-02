@@ -79,6 +79,24 @@ for (const asset of heroAssets) {
     failures.push(`src/assets/${asset} — contextual hero is missing`);
 }
 
+/* Code-split page CSS must not reintroduce the old hero after navigation. */
+const legacyHeroContracts = [
+  ["src/student-home.css", ["student-home-hero-in"]],
+  ["src/journal-redesign.css", ["journal-hero-in"]],
+  ["src/calendar-exams-redesign.css", ["p5hero", "p5copy", ".calendar-redesign-hero:after", ".exam-reference-hero:after"]],
+  ["src/chat-library-redesign.css", ["p6HeroIn", "p6CopyIn", ".chat-redesign-hero:after", ".library-reference-hero:after"]],
+  ["src/office-notifications-redesign.css", ["p7HeroIn", "p7CopyIn", ".office-reference-hero:after", ".notification-reference-hero:after"]],
+  ["src/settings-redesign.css", ["p8HeroIn", "p8CopyIn", ".settings-page-hero__geometry"]],
+];
+for (const [relativePath, forbiddenTokens] of legacyHeroContracts) {
+  const legacySource = readFileSync(join(root, relativePath), "utf8");
+  for (const token of forbiddenTokens) {
+    if (legacySource.includes(token)) {
+      failures.push(`${relativePath} — code-split legacy hero token returned: ${token}`);
+    }
+  }
+}
+
 if (failures.length) {
   console.error("Prompt 16 responsive/accessibility guard failed:");
   failures.forEach((failure) => console.error(`- ${failure}`));
