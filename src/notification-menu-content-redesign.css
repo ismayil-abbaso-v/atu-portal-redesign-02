@@ -351,122 +351,204 @@
 }
 
 .menu-reference-page .menu-reference-section {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 7%, var(--border));
   border-radius: 22px;
-  padding: clamp(22px, 2.2vw, 32px);
+  padding: clamp(20px, 2vw, 28px);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--card) 98%, var(--primary) 2%),
+    var(--card)
+  );
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 4%, transparent);
 }
 
 .menu-reference-page .menu-reference-heading {
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .menu-reference-page .menu-reference-heading__eyebrow {
-  font-size: 0.8125rem;
+  color: var(--primary);
+  font-size: 0.6875rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .menu-reference-page .menu-reference-heading h2 {
-  margin-top: 5px;
-  font-size: clamp(1.65rem, 2vw, 2rem);
-}
-
-.menu-reference-page .menu-reference-heading p {
-  max-width: 72ch;
-  margin-top: 7px;
-  font-size: 1rem;
-  line-height: 1.55;
+  margin-top: 4px;
+  color: var(--foreground);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.35rem, 1.7vw, 1.65rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
 }
 
 .menu-reference-page .menu-reference-heading__count {
-  min-width: 48px;
-  height: 42px;
-  border-radius: 13px;
-  font-size: 0.875rem;
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding-inline: 12px;
+  background: color-mix(in srgb, var(--muted) 68%, var(--card));
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
 .menu-reference-page .menu-reference-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .menu-reference-page .menu-reference-card {
-  min-height: 210px;
-  grid-template-columns: 62px minmax(0, 1fr) 46px;
-  grid-template-rows: 1fr;
-  gap: 16px;
-  align-items: start;
-  border-radius: 19px;
-  padding: 22px;
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 112px;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 6%, var(--border));
+  border-radius: 18px;
+  padding: 16px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--background) 84%, var(--card)),
+    color-mix(in srgb, var(--card) 97%, var(--primary) 3%)
+  );
+  color: var(--foreground);
+  opacity: 0;
+  transform: translateY(8px) scale(0.995);
+  animation: p8CardIn 300ms cubic-bezier(.22,1,.36,1) forwards;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.menu-reference-page .menu-reference-card__shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in srgb, white 15%, transparent) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: translateX(-120%);
 }
 
 .menu-reference-page .menu-reference-card__icon {
-  width: 62px;
-  height: 62px;
-  grid-row: auto;
-  border-radius: 18px;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
+  color: var(--primary);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .06);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
 .menu-reference-page .menu-reference-card__icon svg {
-  width: 27px;
-  height: 27px;
+  width: 21px;
+  height: 21px;
+}
+
+.menu-reference-page .menu-reference-card__copy {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.menu-reference-page .menu-reference-card__tag {
+  color: var(--primary);
+  font-size: 0.625rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .menu-reference-page .menu-reference-card__copy strong {
-  font-size: clamp(1.25rem, 1.45vw, 1.5rem);
-  line-height: 1.25;
+  display: block;
+  margin-top: 4px;
+  color: var(--foreground);
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.96875rem;
+  font-weight: 760;
+  line-height: 1.35;
 }
 
 .menu-reference-page .menu-reference-card__copy > span {
-  margin-top: 8px;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-.menu-reference-page .menu-reference-card__detail {
-  display: inline-flex;
-  width: fit-content;
-  margin: 18px 0 0;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--primary) 7%, var(--card));
-  padding: 7px 11px;
-  color: var(--primary);
-  font-size: 0.8125rem;
-  font-weight: 750;
-  line-height: 1;
-}
-
-.menu-reference-page .menu-reference-card__arrow {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-}
-
-.menu-reference-page .menu-reference-card__arrow svg {
-  width: 20px;
-}
-
-.menu-reference-page .menu-reference-support-banner {
-  min-height: 132px;
-  border-radius: 22px;
-  padding: 24px 28px;
-}
-
-.menu-reference-page .menu-reference-support-banner h3 {
-  font-size: 1.65rem;
-}
-
-.menu-reference-page .menu-reference-support-banner p {
-  max-width: 58ch;
-  margin-top: 7px;
-  font-size: 0.9375rem;
+  display: block;
+  margin-top: 4px;
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
   line-height: 1.5;
 }
 
-.menu-reference-page .menu-reference-support-banner a {
-  min-height: 48px;
-  border-radius: 13px;
-  padding-inline: 18px;
-  font-size: 0.9375rem;
+.menu-reference-page .menu-reference-card__arrow {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 6%, var(--card));
+  color: var(--muted-foreground);
+  transition: transform 180ms ease, color 180ms ease, background-color 180ms ease;
+}
+
+.menu-reference-page .menu-reference-card__arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .menu-reference-page .menu-reference-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--primary) 7%, transparent);
+  }
+
+  .menu-reference-page .menu-reference-card:hover .menu-reference-card__icon {
+    transform: scale(1.05) rotate(-2deg);
+    background: color-mix(in srgb, var(--primary) 14%, var(--card));
+    box-shadow: 0 8px 16px color-mix(in srgb, var(--primary) 8%, transparent);
+  }
+
+  .menu-reference-page .menu-reference-card:hover .menu-reference-card__arrow {
+    transform: translateX(2px);
+    background: color-mix(in srgb, var(--primary) 9%, var(--card));
+    color: var(--primary);
+  }
+
+  .menu-reference-page .menu-reference-card:hover .menu-reference-card__shine {
+    opacity: 1;
+    animation: menuReferenceCardShine 700ms ease;
+  }
+}
+
+@keyframes menuReferenceCardShine {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
 }
 
 .dark .notification-redesign-page .notification-category-tabs button,
@@ -492,8 +574,7 @@
 .dark .notification-redesign-page .notification-reference-row__meta > span:first-child,
 .dark .notification-redesign-page .notification-settings-card > span,
 .dark .notification-redesign-page .announcement-reference-stats > div,
-.dark .menu-reference-page .menu-reference-card__arrow,
-.dark .menu-reference-page .menu-reference-card__detail {
+.dark .menu-reference-page .menu-reference-card__arrow {
   background: color-mix(in srgb, var(--primary) 11%, var(--card));
 }
 
@@ -505,16 +586,11 @@
 .dark .notification-redesign-page .notification-reference-row__preview,
 .dark .notification-redesign-page .notification-list-toolbar p,
 .dark .notification-redesign-page .notification-settings-card p,
-.dark .menu-reference-page .menu-reference-heading p,
 .dark .menu-reference-page .menu-reference-card__copy > span {
   color: var(--muted-foreground);
 }
 
 @media (min-width: 768px) and (max-width: 1279px) {
-  .menu-reference-page .menu-reference-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .notification-redesign-page .notification-reference-layout {
     grid-template-columns: 1fr;
   }
@@ -666,20 +742,34 @@
     align-items: flex-start;
   }
 
+  .menu-reference-page .menu-reference-heading__count {
+    display: none;
+  }
+
   .menu-reference-page .menu-reference-card {
-    min-height: 190px;
-    grid-template-columns: 54px minmax(0, 1fr) 44px;
-    gap: 13px;
-    padding: 18px;
+    min-height: 0;
+    gap: 12px;
+    padding: 14px;
   }
 
   .menu-reference-page .menu-reference-card__icon {
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
   }
 
-  .menu-reference-page .menu-reference-support-banner {
-    padding: 20px;
+  .menu-reference-page .menu-reference-card__copy strong {
+    font-size: 0.9375rem;
+  }
+
+  .menu-reference-page .menu-reference-card__copy > span {
+    font-size: 0.75rem;
+  }
+
+  .menu-reference-page .menu-reference-card:hover,
+  .menu-reference-page .menu-reference-card:active {
+    transform: none;
+    box-shadow: none;
   }
 }
 
@@ -696,13 +786,14 @@
   }
 
   .menu-reference-page .menu-reference-card {
-    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 10px;
+    padding-inline: 12px;
   }
 
   .menu-reference-page .menu-reference-card__arrow {
-    position: absolute;
-    right: 16px;
-    bottom: 16px;
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
   }
 }
 
@@ -712,14 +803,15 @@
   }
 
   .menu-reference-page .menu-reference-card {
-    min-height: 224px;
+    min-height: 118px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .notification-redesign-page .notification-reference-row,
   .notification-redesign-page .notification-category-tabs button,
-  .menu-reference-page .menu-reference-card {
+  .menu-reference-page .menu-reference-card,
+  .menu-reference-page .menu-reference-card__shine {
     animation: none !important;
     transition: none !important;
   }
