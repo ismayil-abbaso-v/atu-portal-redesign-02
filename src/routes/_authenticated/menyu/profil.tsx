@@ -3,7 +3,6 @@ import { AtSign, BadgeCheck, Building2, CalendarDays, Eye, GraduationCap, HeartH
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { PageHeader } from "@/components/layout/PageHeader";
 import { SettingsPageHero } from "@/components/menu/SettingsPageHero";
 import profileHero from "@/assets/profile-settings-hero.webp";
 import { AvatarCropDialog } from "@/components/profile/AvatarCropDialog";
@@ -68,6 +67,7 @@ function ProfilSehifesi() {
   const [avatarCropFile, setAvatarCropFile] = useState<File | null>(null);
   const faylRef = useRef<HTMLInputElement>(null);
   const admin = useMemo(() => roles.includes("admin"), [roles]);
+  const hero = PROFILE_HERO[lang];
 
   useEffect(() => {
     if (!userId) return;
@@ -129,10 +129,43 @@ function ProfilSehifesi() {
     setYuklenirAvatar(false);
   };
 
-  if (yuklenir) return <><PageHeader baslıq={t("title")} geri /><div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">{t("loading")}</div></>;
-  if (!profil || !forma) return <><PageHeader baslıq={t("title")} geri /><div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">{t("notFound")}</div></>;
+  if (yuklenir) {
+    return (
+      <div className="settings-page-stack profile-settings-redesign">
+        <SettingsPageHero
+          image={profileHero}
+          eyebrow={hero.eyebrow}
+          title={t("title")}
+          subtitle={hero.subtitle}
+          quote={hero.quote}
+          icon={<UserRound />}
+          backLabel={t("cancel")}
+        />
+        <div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">
+          {t("loading")}
+        </div>
+      </div>
+    );
+  }
 
-  const hero = PROFILE_HERO[lang];
+  if (!profil || !forma) {
+    return (
+      <div className="settings-page-stack profile-settings-redesign">
+        <SettingsPageHero
+          image={profileHero}
+          eyebrow={hero.eyebrow}
+          title={t("title")}
+          subtitle={hero.subtitle}
+          quote={hero.quote}
+          icon={<UserRound />}
+          backLabel={t("cancel")}
+        />
+        <div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">
+          {t("notFound")}
+        </div>
+      </div>
+    );
+  }
 
   return <div className="settings-page-stack profile-settings-redesign">
     <SettingsPageHero
