@@ -209,6 +209,14 @@
     line-height: 1.45;
   }
 
+  /* Profile subtitle is slightly longer than the other settings hero copy.
+     Keep the hero geometry unchanged and reduce only this text just enough
+     to prevent the final line from being clipped on phone widths. */
+  [data-route="/menyu/profil"] .settings-page-hero p {
+    font-size: 0.70rem;
+    line-height: 1.4;
+  }
+
   [data-route="/menyu/transkript"] .transcript-page-header {
     min-height: 228px !important;
     background-position: 70% center;
