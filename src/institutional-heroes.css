@@ -117,6 +117,23 @@
   --hero-position-mobile: 76% 53%;
 }
 
+/* SettingsPageHero responsive geometry is owned here, not in
+ * settings-redesign.css. The base component file keeps only the wide visual
+ * primitive and interaction styling. */
+[data-route^="/menyu"] {
+  --hero-min-height-compact: 244px;
+  --hero-min-height-mobile: 244px;
+  --hero-radius-mobile: 17px;
+  --hero-copy-width-compact: min(64%, 35rem);
+  --hero-copy-width-mobile: min(76%, 21rem);
+  --hero-title-size-compact: clamp(2.05rem, 5cqw, 2.8rem);
+  --hero-title-size-mobile: clamp(1.8rem, 8cqw, 2.2rem);
+}
+
+[data-route="/menyu"] {
+  --hero-min-height-compact: 260px;
+}
+
 /* WIDE state: make the route focal point authoritative even when the legacy
  * source stylesheet still declares background-position:center. */
 [data-route="/ev"] .student-home-hero,
@@ -127,8 +144,7 @@
 [data-route="/kitabxana"] .library-reference-hero,
 [data-route="/ofis"] .office-reference-hero,
 [data-route="/bildirisler"] .notification-reference-hero,
-[data-route^="/menyu"] .settings-page-hero,
-[data-route="/menyu/transkript"] .transcript-page-header {
+[data-route^="/menyu"] .settings-page-hero {
   background-position: var(--hero-position-wide, center);
 }
 
@@ -212,8 +228,7 @@
   [data-route="/kitabxana"] .library-reference-hero,
   [data-route="/ofis"] .office-reference-hero,
   [data-route="/bildirisler"] .notification-reference-hero,
-  [data-route^="/menyu"] .settings-page-hero,
-  [data-route="/menyu/transkript"] .transcript-page-header {
+  [data-route^="/menyu"] .settings-page-hero {
     background-position: var(--hero-position-compact, center);
   }
 
@@ -342,7 +357,7 @@
 
   [data-route="/sohbet"] .chat-redesign-hero h1,
   [data-route="/kitabxana"] .library-reference-hero h1 {
-    font-size: clamp(2.05rem, 5cqw, 2.8rem);
+    font-size: var(--hero-title-size-compact);
   }
 
   [data-route="/sohbet"] .chat-redesign-hero blockquote,
@@ -399,12 +414,8 @@
   }
 
   [data-route^="/menyu"] .settings-page-hero {
-    min-height: 244px;
+    min-height: var(--hero-min-height-compact);
     background-position: var(--hero-position-compact, 71% 50%);
-  }
-
-  [data-route="/menyu"] .menu-reference-page .settings-page-hero {
-    min-height: 260px;
   }
 
   [data-route^="/menyu"] .settings-page-hero__shade {
@@ -427,7 +438,7 @@
   [data-route^="/menyu"] .settings-page-hero__back ~ .settings-page-hero__copy,
   [data-route^="/menyu"] .menu-reference-page .settings-page-hero__copy {
     top: 50%;
-    width: min(64%, 35rem);
+    width: var(--hero-copy-width-compact);
     transform: translateY(-50%);
   }
 
@@ -646,7 +657,7 @@
   [data-route="/ofis"] .office-reference-hero h1,
   [data-route="/bildirisler"] .notification-reference-hero h1 {
     overflow-wrap: break-word;
-    font-size: clamp(1.8rem, 8cqw, 2.2rem);
+    font-size: var(--hero-title-size-mobile);
     line-height: 1.02;
     text-wrap: balance;
   }
@@ -704,8 +715,8 @@
 
   [data-route^="/menyu"] .settings-page-hero,
   [data-route^="/menyu"] .menu-reference-page .settings-page-hero {
-    min-height: 244px;
-    border-radius: 17px;
+    min-height: var(--hero-min-height-mobile);
+    border-radius: var(--hero-radius-mobile);
     background-position: var(--hero-position-mobile, 75% 50%);
   }
 
@@ -736,7 +747,7 @@
   [data-route^="/menyu"] .menu-reference-page .settings-page-hero__copy {
     top: 64px;
     left: 16px;
-    width: min(76%, 21rem);
+    width: var(--hero-copy-width-mobile);
     min-width: 0;
     transform: none;
   }
@@ -782,32 +793,6 @@
   [data-route^="/menyu"] .settings-page-hero h1,
   [data-route="/menyu"] .menu-reference-page .settings-page-hero h1 {
     font-size: 1.7rem;
-  }
-}
-
-/* Transcript remains on its dedicated legacy component in this phase. */
-@media (max-width: 767px) {
-  [data-route="/menyu/transkript"] .transcript-page-header {
-    min-height: 228px !important;
-    background-position: var(--hero-position-mobile, 76% 53%);
-  }
-
-  [data-route="/menyu/transkript"] .transcript-page-header::after {
-    background: linear-gradient(
-      90deg,
-      rgb(61 2 22 / 0.96) 0%,
-      rgb(91 6 34 / 0.88) 56%,
-      rgb(61 2 22 / 0.34) 100%
-    );
-  }
-
-  [data-route="/menyu/transkript"] .transcript-page-header__visual {
-    display: none;
-  }
-
-  [data-route="/menyu/transkript"] .transcript-page-header__actions {
-    left: 0;
-    bottom: -92px;
   }
 }
 

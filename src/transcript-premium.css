@@ -3,7 +3,7 @@
 .transcript-page-header {
   isolation: isolate;
   min-height: 142px;
-  border-color: color-mix(in oklch, var(--primary) 13%, var(--border)) !important;
+  border-color: color-mix(in oklch, var(--primary) 13%, var(--border));
   background:
     radial-gradient(
       circle at 88% 12%,
@@ -23,7 +23,7 @@
 
 .transcript-page-header {
   min-height: 250px;
-  background-position: center;
+  background-position: var(--hero-position-wide, 64% 58%);
   background-size: cover;
 }
 
@@ -42,22 +42,21 @@
 }
 
 .transcript-page-header__title {
-  color: #fff !important;
+  color: #fff;
 }
 .transcript-page-header__subtitle {
-  color: rgb(255 255 255 / 0.76) !important;
+  color: rgb(255 255 255 / 0.76);
 }
 .transcript-page-header__eyebrow {
-  color: #f5ccd7 !important;
+  color: #f5ccd7;
 }
 .transcript-page-header__eyebrow-dot {
-  background: #fff !important;
+  background: #fff;
 }
 
 .transcript-page-header__accent,
 .transcript-page-header__grid,
-.transcript-page-header__glow,
-.transcript-page-header__sweep {
+.transcript-page-header__glow {
   position: absolute;
   pointer-events: none;
 }
@@ -97,7 +96,6 @@
     58px 100%,
     100% 58px;
   mask-image: linear-gradient(90deg, transparent 0%, transparent 35%, black 68%, black 100%);
-  animation: transcriptGridDrift 24s linear infinite;
 }
 
 .transcript-page-header__glow {
@@ -112,18 +110,6 @@
     transparent 68%
   );
   transform: translateY(-50%);
-  animation: transcriptGlow 6s ease-in-out infinite;
-}
-
-.transcript-page-header__sweep {
-  top: -70%;
-  bottom: -70%;
-  left: -16%;
-  width: 9%;
-  opacity: 0;
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.1), transparent);
-  transform: skewX(-18deg);
-  animation: transcriptSweep 8.4s ease-in-out 1.2s infinite;
 }
 
 .transcript-page-header__content {
@@ -187,7 +173,6 @@
   border-radius: 999px;
   background: var(--primary);
   box-shadow: 0 0 0 5px color-mix(in oklch, var(--primary) 10%, transparent);
-  animation: transcriptPulse 2.4s ease-in-out infinite;
 }
 
 .transcript-page-header__title {
@@ -226,14 +211,12 @@
 
 .transcript-page-header__orbit--one {
   inset: 2px 8px;
-  animation: transcriptOrbit 9s linear infinite;
 }
 
 .transcript-page-header__orbit--two {
   inset: 18px 28px;
   border-style: dashed;
   opacity: 0.75;
-  animation: transcriptOrbit 6.8s linear infinite reverse;
 }
 
 .transcript-page-header__core {
@@ -250,7 +233,6 @@
   box-shadow:
     0 12px 28px color-mix(in oklch, var(--primary) 13%, transparent),
     inset 0 1px 0 rgb(255 255 255 / 0.08);
-  animation: transcriptCoreFloat 4.7s ease-in-out infinite;
 }
 
 .transcript-page-header__actions {
@@ -692,44 +674,6 @@
     transform: scaleY(1);
   }
 }
-@keyframes transcriptGridDrift {
-  to {
-    background-position:
-      72px 36px,
-      58px 0,
-      0 29px;
-  }
-}
-@keyframes transcriptGlow {
-  0%,
-  100% {
-    transform: translateY(-50%) scale(0.94);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(-50%) scale(1.05);
-    opacity: 1;
-  }
-}
-@keyframes transcriptSweep {
-  0%,
-  24% {
-    transform: translateX(0) skewX(-18deg);
-    opacity: 0;
-  }
-  40% {
-    opacity: 0.1;
-  }
-  62% {
-    transform: translateX(1250%) skewX(-18deg);
-    opacity: 0.07;
-  }
-  76%,
-  100% {
-    transform: translateX(1250%) skewX(-18deg);
-    opacity: 0;
-  }
-}
 @keyframes transcriptContentIn {
   from {
     opacity: 0;
@@ -738,31 +682,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-@keyframes transcriptPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-@keyframes transcriptOrbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes transcriptCoreFloat {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-1deg);
-  }
-  50% {
-    transform: translateY(-4px) rotate(1deg);
   }
 }
 @keyframes transcriptCardIn {
@@ -784,66 +703,7 @@
   }
 }
 
-@media (max-width: 900px) {
-  .transcript-page-header__visual {
-    width: 116px;
-    opacity: 0.58;
-  }
-}
-
 @media (max-width: 767px) {
-  .transcript-page-header {
-    min-height: 136px;
-    border-radius: 24px !important;
-    padding: 18px 16px !important;
-  }
-
-  .transcript-page-header__content {
-    min-height: 98px;
-    gap: 12px;
-  }
-
-  .transcript-page-header__back {
-    width: 43px;
-    height: 43px;
-    border-radius: 14px;
-  }
-
-  .transcript-page-header__title {
-    font-size: 1.62rem;
-  }
-  .transcript-page-header__subtitle {
-    max-width: 27ch;
-    font-size: 10.5px;
-  }
-  .transcript-page-header__visual {
-    position: absolute;
-    right: -20px;
-    width: 114px;
-    opacity: 0.22;
-    z-index: -1;
-  }
-  .transcript-page-header__sweep {
-    display: none;
-  }
-  .transcript-page-header__grid {
-    opacity: 0.12;
-    animation-duration: 32s;
-  }
-  .transcript-page-header__actions {
-    margin-left: auto;
-  }
-  .transcript-page-header__actions button {
-    width: 42px;
-    min-width: 42px;
-    padding-inline: 0;
-    font-size: 0;
-  }
-  .transcript-page-header__actions button svg {
-    width: 17px;
-    height: 17px;
-  }
-
   .transcript-page-header + .space-y-5 > section.surface-card {
     border-radius: 22px;
   }
@@ -1059,9 +919,6 @@
   .transcript-page-header__title {
     font-size: 1.48rem;
   }
-  .transcript-page-header__subtitle {
-    display: none;
-  }
   .transcript-page-header + .space-y-5 > section.surface-card:first-child > div:last-child span {
     display: none !important;
   }
@@ -1075,7 +932,6 @@
   .transcript-page-header__accent,
   .transcript-page-header__grid,
   .transcript-page-header__glow,
-  .transcript-page-header__sweep,
   .transcript-page-header__back,
   .transcript-page-header__copy,
   .transcript-page-header__visual,
@@ -1211,27 +1067,6 @@
 }
 
 @media (max-width: 767px) {
-  .transcript-page-header {
-    min-height: 300px;
-    background-position: 68% center;
-  }
-  .transcript-page-header::after {
-    background: linear-gradient(
-      180deg,
-      rgb(68 2 24 / 0.96),
-      rgb(105 7 36 / 0.8) 58%,
-      rgb(55 2 21 / 0.3)
-    );
-  }
-  .transcript-page-header__content {
-    align-items: flex-start;
-    padding-top: 16px;
-  }
-  .transcript-page-header__actions {
-    position: absolute;
-    left: 0;
-    bottom: -112px;
-  }
   .transcript-dashboard-aside {
     grid-template-columns: 1fr;
   }
@@ -1239,3 +1074,102 @@
     width: 100%;
   }
 }
+
+/* Transcript hero responsive ownership.
+ * Unlike the shared SettingsPageHero, this header carries route actions and
+ * therefore remains a dedicated PageHeader variant. It still consumes the
+ * same portal-content container and focal-point tokens as the institutional
+ * hero system. */
+@container portal-content (min-width: 641px) and (max-width: 1040px) {
+  .transcript-page-header {
+    min-height: 250px;
+    background-position: var(--hero-position-compact, 71% 56%);
+  }
+
+  .transcript-page-header__visual {
+    width: 116px;
+    opacity: 0.58;
+  }
+}
+
+@container portal-content (max-width: 640px) {
+  .transcript-page-header {
+    min-height: 228px;
+    border-radius: 24px;
+    padding: 18px 16px;
+    background-position: var(--hero-position-mobile, 76% 53%);
+  }
+
+  .transcript-page-header::after {
+    background: linear-gradient(
+      90deg,
+      rgb(61 2 22 / 0.96) 0%,
+      rgb(91 6 34 / 0.88) 56%,
+      rgb(61 2 22 / 0.34) 100%
+    );
+  }
+
+  .transcript-page-header__content {
+    min-height: 98px;
+    align-items: flex-start;
+    gap: 12px;
+    padding-top: 16px;
+  }
+
+  .transcript-page-header__back {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+  }
+
+  .transcript-page-header__title {
+    font-size: 1.62rem;
+  }
+
+  .transcript-page-header__subtitle {
+    max-width: 27ch;
+    font-size: 10.5px;
+  }
+
+  .transcript-page-header__visual {
+    display: none;
+  }
+
+  .transcript-page-header__grid {
+    opacity: 0.12;
+  }
+
+  .transcript-page-header__actions {
+    position: absolute;
+    left: 0;
+    bottom: -92px;
+    margin-left: auto;
+  }
+
+  .transcript-page-header__actions button {
+    width: 42px;
+    min-width: 42px;
+    padding-inline: 0;
+    font-size: 0;
+  }
+
+  .transcript-page-header__actions button svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@container portal-content (max-width: 430px) {
+  .transcript-page-header__eyebrow {
+    font-size: 9px;
+  }
+
+  .transcript-page-header__title {
+    font-size: 1.45rem;
+  }
+
+  .transcript-page-header__subtitle {
+    display: none;
+  }
+}
+

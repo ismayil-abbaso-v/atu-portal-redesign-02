@@ -9,7 +9,6 @@ import {
 import { type ReactNode } from "react";
 import transcriptHero from "@/assets/transcript-hero.webp";
 import { useI18n, type Locale } from "@/lib/i18n";
-import "@/transcript-premium.css";
 
 type HeaderCopy = {
   adminEyebrow: string;
@@ -298,7 +297,6 @@ export function PageHeader({
         <span aria-hidden className="transcript-page-header__accent" />
         <span aria-hidden className="transcript-page-header__grid" />
         <span aria-hidden className="transcript-page-header__glow" />
-        <span aria-hidden className="transcript-page-header__sweep" />
 
         <div className="transcript-page-header__content">
           {geri ? (
