@@ -47,6 +47,25 @@
     padding: 0.5rem 0.65rem;
   }
 
+  /* Mobile header contract:
+     - the full desktop search stays hidden;
+     - search is opened only through the dedicated mobile search button;
+     - desktop-only actions (theme toggle) stay hidden.
+     These need explicit overrides because generic .portal-search and
+     .portal-header__icon-button rules are declared later in the base stylesheet. */
+  .portal-header .portal-header__search {
+    display: none !important;
+  }
+
+  .portal-header .portal-header__desktop-action {
+    display: none !important;
+  }
+
+  .portal-header .portal-header__mobile-brand {
+    display: flex !important;
+    min-width: 0;
+  }
+
   .portal-header__inner > div:first-child {
     min-width: 0;
     flex: 1 1 auto;
