@@ -64,6 +64,8 @@
   min-width: 0;
   width: 100%;
   max-width: 1600px;
+  container-type: inline-size;
+  container-name: portal-content;
 }
 
 .portal-desktop-sidebar {
