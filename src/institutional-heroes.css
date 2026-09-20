@@ -5,7 +5,9 @@
   [data-route="/ev"] .student-home-skeleton__hero {
     min-height: 232px !important;
     height: 232px !important;
-    background-position: 70% center;
+    background-image: url("./assets/student-home-hero-mobile.webp") !important;
+    background-position: 50% 24%;
+    background-size: cover;
   }
 
   [data-route="/ev"] .student-home-hero__shade {
