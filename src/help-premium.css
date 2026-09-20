@@ -261,14 +261,6 @@
 @keyframes helpQuestionIn { to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 767px) {
-  .help-hero { border-radius: 24px; }
-  .help-hero__content { grid-template-columns: auto minmax(0,1fr); min-height: 142px; gap: 13px; padding: 19px 17px; }
-  .help-hero__back { width: 43px; height: 43px; border-radius: 14px; }
-  .help-hero__title { font-size: 1.65rem; }
-  .help-hero__subtitle { max-width: 30ch; font-size: 11px; }
-  .help-hero__visual { position: absolute; right: -18px; width: 120px; height: 88px; opacity: .28; z-index: -1; }
-  .help-hero__sweep { display: none; }
-  .help-hero__grid { opacity: .13; animation-duration: 30s; }
   .help-search-panel { border-radius: 22px; padding: 21px 16px; }
   .help-search-panel__title { font-size: 1.55rem; }
   .help-search-panel__desc { font-size: 11px; }
@@ -281,8 +273,6 @@
 }
 
 @media (max-width: 430px) {
-  .help-hero__eyebrow { font-size: 11px; letter-spacing: .11em; }
-  .help-hero__title { font-size: 1.5rem; }
   .help-search-panel__badge { font-size: 11px; }
   .help-section-title { font-size: 14px; }
   .help-section-meta { font-size: 10px; }
@@ -290,15 +280,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .help-hero__accent,
-  .help-hero__grid,
-  .help-hero__glow,
-  .help-hero__sweep,
-  .help-hero__back,
-  .help-hero__copy,
-  .help-hero__visual,
-  .help-hero__orbit,
-  .help-hero__core,
   .help-search-panel,
   .help-section-card,
   .help-question,
@@ -306,7 +287,6 @@
   .help-empty__icon {
     animation: none !important;
   }
-  .help-hero__accent { transform: none; }
   .help-search-panel,
   .help-section-card,
   .help-question { opacity: 1; transform: none; }

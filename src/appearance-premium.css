@@ -195,14 +195,6 @@
 }
 
 @media (max-width: 767px) {
-  .appearance-hero { min-height: 142px; border-radius: 24px; }
-  .appearance-hero__content { min-height: 142px; gap: 13px; padding: 19px 17px; }
-  .appearance-hero__back { width: 43px; height: 43px; border-radius: 14px; }
-  .appearance-hero__title { font-size: 1.65rem; }
-  .appearance-hero__subtitle { max-width: 31ch; font-size: 11px; }
-  .appearance-hero__visual { position: absolute; right: -18px; width: 125px; height: 88px; opacity: .28; z-index: -1; }
-  .appearance-hero__sweep { display: none; }
-  .appearance-hero__grid { opacity: .13; animation-duration: 30s; }
   .appearance-card { padding: 16px; border-radius: 22px; }
   .appearance-preview { padding: 14px; border-radius: 22px; }
   .appearance-theme-grid { grid-template-columns: 1fr; }
@@ -218,8 +210,6 @@
 }
 
 @media (max-width: 430px) {
-  .appearance-hero__eyebrow { font-size: 11px; letter-spacing: .11em; }
-  .appearance-hero__title { font-size: 1.52rem; }
   .appearance-section-head { gap: 10px; }
   .appearance-section-icon { width: 40px; height: 40px; border-radius: 13px; }
   .appearance-palette-swatches { margin-right: -3px; }
@@ -229,15 +219,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .appearance-hero__accent,
-  .appearance-hero__grid,
-  .appearance-hero__glow,
-  .appearance-hero__sweep,
-  .appearance-hero__back,
-  .appearance-hero__copy,
-  .appearance-hero__visual,
-  .appearance-hero__orbit,
-  .appearance-hero__core,
   .appearance-card,
   .appearance-card::before,
   .appearance-preview,
@@ -249,7 +230,6 @@
   .appearance-preview__status-dot {
     animation: none !important;
   }
-  .appearance-hero__accent { transform: none; }
   .appearance-card,
   .appearance-preview,
   .appearance-theme-option,

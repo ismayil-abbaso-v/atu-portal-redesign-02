@@ -234,14 +234,6 @@
 }
 
 @media (max-width: 767px) {
-  .notification-settings-hero { min-height: 142px; border-radius: 24px; }
-  .notification-settings-hero__content { min-height: 142px; padding: 20px 17px; gap: 13px; }
-  .notification-settings-hero__subtitle { max-width: 32ch; font-size: 12px; }
-  .notification-settings-hero__summary { display: none; }
-  .notification-settings-hero__signal { position: absolute; right: 9px; top: 50%; z-index: -1; width: 92px; height: 92px; transform: translateY(-50%); opacity: .32; }
-  .notification-settings-hero__grid { opacity: .14; animation-duration: 28s; }
-  .notification-settings-hero__sweep { display: none; }
-  .notification-settings-hero__glow { right: -70px; width: 180px; height: 180px; }
   .notification-settings-panel { border-radius: 22px; padding: 16px; }
   .notification-settings-panel__head { align-items: flex-start; }
   .notification-settings-panel__count { padding: 5px 8px; }
@@ -252,22 +244,11 @@
 }
 
 @media (max-width: 420px) {
-  .notification-settings-hero__back { width: 42px; height: 42px; border-radius: 14px; }
-  .notification-settings-hero__title { font-size: 1.55rem; }
   .notification-settings-panel__desc { max-width: 24ch; }
   .notification-settings-row__description { max-width: 28ch; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .notification-settings-hero__accent,
-  .notification-settings-hero__grid,
-  .notification-settings-hero__sweep,
-  .notification-settings-hero__glow,
-  .notification-settings-hero__back,
-  .notification-settings-hero__copy,
-  .notification-settings-hero__summary,
-  .notification-settings-hero__eyebrow-dot,
-  .notification-settings-hero__signal-ring,
   .notification-settings-panel,
   .notification-settings-panel::before,
   .notification-settings-panel__icon,
@@ -277,7 +258,6 @@
   .notification-settings-skeleton::after {
     animation: none !important;
   }
-  .notification-settings-hero__accent { transform: none; }
   .notification-settings-panel,
   .notification-settings-row { opacity: 1; transform: none; }
 }
