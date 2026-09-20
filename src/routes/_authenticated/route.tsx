@@ -10,6 +10,7 @@ import { useI18n } from "@/lib/i18n";
 import { useLegacyPageI18nBridge } from "@/lib/legacy-page-i18n";
 import "@/role-workspace-redesign.css";
 import "@/mobile-native.css";
+import "@/institutional-heroes.css";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -69,12 +70,15 @@ function AuthenticatedLayout() {
 
   const genericPageKey = useMemo(() => pageKeyForPath(pathname), [pathname]);
   const roleWorkspaceClass = useMemo(() => {
-    if (pathname === "/admin" || pathname.startsWith("/admin/")) return "role-workspace-page role-workspace-admin";
-    if (pathname === "/qruplar" || pathname.startsWith("/qruplar/")) return "role-workspace-page role-workspace-groups";
+    if (pathname === "/admin" || pathname.startsWith("/admin/"))
+      return "role-workspace-page role-workspace-admin";
+    if (pathname === "/qruplar" || pathname.startsWith("/qruplar/"))
+      return "role-workspace-page role-workspace-groups";
     if (pathname === "/fakulte-icmali") return "role-workspace-page role-workspace-faculty";
     if (pathname.startsWith("/fennler/")) return "role-workspace-page role-workspace-course";
     if (pathname.startsWith("/muellim/")) return "role-workspace-page role-workspace-teacher";
-    if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/")) return "role-workspace-page role-workspace-tutor";
+    if (pathname === "/tyutor-paneli" || pathname.startsWith("/tyutor/"))
+      return "role-workspace-page role-workspace-tutor";
     if (pathname === "/elanlar") return "role-workspace-page role-workspace-announcements";
     return "";
   }, [pathname]);

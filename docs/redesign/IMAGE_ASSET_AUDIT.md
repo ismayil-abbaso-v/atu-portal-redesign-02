@@ -1,75 +1,51 @@
-# ATU Portal Redesign 02 — Image Asset Audit
+# ATU Portal — contextual hero asset audit
 
-## Scope
+Audit date: 2026-09-20
+Scope: authenticated page heroes and dashboard innovation banner. Global `AppHeader`, `Sidebar`, `MobileBottomNav`, authentication shell and chatbot are excluded and unchanged.
 
-- Target baseline: `6a555b741d613cf2e957e9efa2be740fcf4445ad`
-- Scope: presentation assets and their frontend imports only
-- Backend lock: respected; no schema, migration, RLS, Edge Function, auth, query, realtime, storage or business-logic file changed
-- Login illustration: intentionally unchanged (locked UI)
+## Inventory and decision matrix
 
-## Finding
+| Route / placement       | Hero component                                 | Previous image                    | Human imagery | Primary issue                                                                  | Institutional direction                                                   | Desktop focal point | Mobile focal point | Asset / code decision                              |
+| ----------------------- | ---------------------------------------------- | --------------------------------- | ------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------- | ------------------ | -------------------------------------------------- |
+| `/ev`                   | `StudentDashboard` / `student-home-hero`       | `student-home-hero.webp`          | Yes           | AI-looking students dominated the page identity                                | Human-free campus architecture, academic materials and technology network | right-center        | 70% center         | Replaced asset; mobile height/overlay refined      |
+| `/ev` innovation banner | `StudentDashboard` / `student-home-innovation` | `student-innovation-lab.webp`     | Yes           | Repeated staged student imagery                                                | Abstract laboratory glassware and connected research nodes                | center-right        | center             | Replaced asset                                     |
+| `/elektron-jurnal`      | route hero                                     | `electronic-journal-hero.webp`    | No            | Existing contextual visual acceptable; mobile copy density needed control      | Digital gradebook and academic record motif                               | right               | 68% center         | Asset retained; mobile hero refined                |
+| `/imtahanlar`           | `ExamsOverviewHero`                            | `exams-hero.webp`                 | No            | Existing exam still-life is relevant; mobile decorative copy crowded the image | Exam paper, clock and writing materials                                   | right               | 68% center         | Asset retained; decorative mobile elements reduced |
+| `/teqvim`               | route hero                                     | `calendar-hero.webp`              | Yes           | Staged human subject and unstable mobile crop                                  | Premium planner, clock and academic calendar composition                  | right-center        | 69% center         | Replaced asset; CTA retained at 44 px              |
+| `/kitabxana`            | `LibraryHero`                                  | `library-hero.webp`               | Yes           | Reader imagery unnecessary for the function                                    | Book stacks, shelves and digital catalogue motif                          | right-center        | 70% center         | Replaced asset; mobile quote removed               |
+| `/ofis`                 | route hero                                     | `office-hero.webp`                | Yes           | Office workers weakened institutional neutrality                               | Official folders, blank documents, seal and secure transfer motif         | right-center        | 70% center         | Replaced asset; mobile quote removed               |
+| `/sohbet`               | route hero                                     | `chat-hero.webp`                  | Yes           | Human group repeated the same visual language as other routes                  | Secure message cards and university network nodes                         | right-center        | 70% center         | Replaced asset; compact mobile hero                |
+| `/bildirisler`          | route hero                                     | `notifications-hero.webp`         | No            | Existing notification still-life is appropriate; mobile quote was cramped      | Bell, reminder and announcement cards                                     | right               | 70% center         | Asset retained; mobile layout refined              |
+| `/menyu`                | shared settings hero                           | `menu-settings-hero.webp`         | No            | Existing modular still-life is appropriate                                     | Abstract system modules and configuration controls                        | right               | 70% center         | Asset retained; compact mobile composition         |
+| `/menyu/profil`         | shared settings hero                           | `profile-settings-hero.webp`      | Yes           | Portrait-style profile representation unnecessary                              | Blank identity card, shield and institutional identification              | right-center        | 70% center         | Replaced asset; no PII or portrait                 |
+| `/menyu/tehlukesizlik`  | shared settings hero                           | `security-settings-hero.webp`     | Yes           | Person-led security visual was not institutionally appropriate                 | Lock, shield, encrypted network and server architecture                   | right-center        | 70% center         | Replaced asset                                     |
+| `/menyu/bildiris`       | shared settings hero                           | `notification-settings-hero.webp` | Yes           | Person/device composition distracted from controls                             | Bell, priority rings, mute and calendar reminder objects                  | right-center        | 70% center         | Replaced asset                                     |
+| `/menyu/gorunus`        | shared settings hero                           | `appearance-settings-hero.webp`   | Yes           | Human-led creative scene did not describe appearance settings clearly          | Light/dark panels, neutral swatches and contrast motif                    | right-center        | 70% center         | Replaced asset                                     |
+| `/menyu/transkript`     | `PageHeader` / `transcript-page-header`        | `transcript-hero.webp`            | No            | Existing official document still-life is compliant; mobile header was too tall | Formal academic document and seal-inspired composition                    | right               | 70% center         | Asset retained; mobile visual simplified           |
+| `/menyu/yardim`         | shared settings hero                           | `help-settings-hero.webp`         | No            | Existing human-free help still-life is compliant                               | Guide book, wayfinding and question-card motifs                           | right               | 70% center         | Asset retained; shared mobile layout refined       |
 
-The twelve route heroes below previously used small, code-drawn SVG placeholders (approximately 1–3 KB). They satisfied the static asset-name contract but did not satisfy the original requirement for professional, contextual, photorealistic imagery. Each placeholder has been replaced with a distinct generated raster asset.
+## Asset constraints
 
-All new assets:
+- Replacements contain no people, faces, hands, humanoid robots, readable text, personal data, university logos or watermarks.
+- Hero copy remains semantic HTML; images remain decorative CSS backgrounds.
+- Generated images use page-specific still-life or architectural compositions with copy-safe negative space on the left.
+- Images are stripped of metadata, encoded as WebP, and sized near the existing wide hero aspect ratio.
+- Mobile route rules are isolated in `src/institutional-heroes.css`; no broad `header`, `img`, `body` or navigation override is used.
+- Existing data fetching, actions, role visibility, routes and backend contracts are unchanged.
 
-- are WebP, 1600×600;
-- use a wide editorial composition with copy-safe negative space on the left;
-- keep the contextual subject in the center/right for desktop and mobile cropping;
-- contain no readable text, ATU logo, watermark, university building or campus facade;
-- stay below the 250 KB hard limit;
-- are bundled locally through Vite, with no third-party runtime image request.
+## Files replaced
 
-## Replacement matrix
+- `src/assets/student-home-hero.webp`
+- `src/assets/student-innovation-lab.webp`
+- `src/assets/calendar-hero.webp`
+- `src/assets/chat-hero.webp`
+- `src/assets/library-hero.webp`
+- `src/assets/office-hero.webp`
+- `src/assets/profile-settings-hero.webp`
+- `src/assets/security-settings-hero.webp`
+- `src/assets/notification-settings-hero.webp`
+- `src/assets/appearance-settings-hero.webp`
 
-| Route                  | Previous asset/problem                                              | New asset                         |     Size | Desktop composition | Mobile crop safety                                      | Accessibility                                                              |
-| ---------------------- | ------------------------------------------------------------------- | --------------------------------- | -------: | ------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `/teqvim`              | `calendar-hero.svg`; simplified vector desk                         | `calendar-hero.webp`              | 43,034 B | Reviewed            | Subject retained at existing mobile background position | Decorative CSS background; HTML heading remains the accessible name        |
-| `/imtahanlar`          | `exams-hero.svg`; simplified vector desk                            | `exams-hero.webp`                 | 56,624 B | Reviewed            | Main study objects remain center/right                  | Decorative CSS background; HTML copy remains accessible                    |
-| `/sohbet`              | `chat-hero.svg`; did not show real student collaboration            | `chat-hero.webp`                  | 43,850 B | Reviewed            | Three students remain grouped away from the edge        | Decorative CSS background; no text embedded in image                       |
-| `/kitabxana`           | `library-hero.svg`; generic illustration rather than a real library | `library-hero.webp`               | 60,204 B | Reviewed            | Reader and desk remain in safe crop area                | Decorative CSS background; route title is HTML                             |
-| `/ofis`                | `office-hero.svg`; abstract documents only                          | `office-hero.webp`                | 46,368 B | Reviewed            | Student-service interaction stays visible               | Decorative CSS background; no personal data in image                       |
-| `/bildirisler`         | `notifications-hero.svg`; oversized vector bell                     | `notifications-hero.webp`         | 28,786 B | Reviewed            | Devices and notification shapes remain visible          | Decorative CSS background; notification meaning is also present in HTML/UI |
-| `/menyu`               | `menu-settings-hero.svg`; generic laptop/vector panel               | `menu-settings-hero.webp`         | 36,412 B | Reviewed            | Laptop/profile/security objects stay visible            | Decorative CSS background; no generated UI text                            |
-| `/menyu/profil`        | `profile-settings-hero.svg`; generic profile card                   | `profile-settings-hero.webp`      | 36,862 B | Reviewed            | Profile subject remains visible                         | Decorative CSS background; blank badge contains no PII                     |
-| `/menyu/tehlukesizlik` | `security-settings-hero.svg`; generic shield/lock                   | `security-settings-hero.webp`     | 41,362 B | Reviewed            | Security key, lock and laptop remain visible            | Decorative CSS background; security meaning is in HTML copy                |
-| `/menyu/bildiris`      | `notification-settings-hero.svg`; generic bell/toggles              | `notification-settings-hero.webp` | 38,502 B | Reviewed            | Phone and abstract indicators remain visible            | Decorative CSS background; no readable interface text                      |
-| `/menyu/gorunus`       | `appearance-settings-hero.svg`; generic monitor                     | `appearance-settings-hero.webp`   | 37,882 B | Reviewed            | Material/color workspace remains visible                | Decorative CSS background; no embedded labels                              |
-| `/menyu/yardim`        | `help-settings-hero.svg`; generic headset/question mark             | `help-settings-hero.webp`         | 36,588 B | Reviewed            | Headset and help-card objects remain visible            | Decorative CSS background; help content stays semantic HTML                |
+## Runtime validation boundary
 
-## Existing raster heroes retained after review
-
-The following existing WebP assets were not replaced because they already use contextual, professional raster imagery and comply with the no-building rule:
-
-- `student-home-hero.webp`
-- `student-innovation-lab.webp`
-- `electronic-journal-hero.webp`
-- `transcript-hero.webp`
-
-## Visual validation status
-
-- Source assets were reviewed together in a 2×6 contact sheet for composition, subject separation, text-free output and consistent burgundy/neutral art direction.
-- Each asset is exactly 1600×600 and uses the current route hero's existing `background-size: cover` behavior.
-- The left copy-safe region and center/right subject placement were checked at asset level for the existing desktop and mobile background-position rules.
-- A true authenticated 1536×864 / 1440×900 / 390×844 / 412×915 route screenshot run is **not claimed by this change** because the repository contains no committed test credentials and auth/RLS must not be bypassed. That runtime screenshot matrix remains the explicitly scoped work of Prompt 15. This audit does not mark authenticated browser rendering as PASS without evidence.
-
-## Generation specification
-
-The built-in image-generation workflow was used with twelve separate route-specific prompts. Shared constraints were: photorealistic editorial hero, natural materials and daylight, neutral white plus restrained burgundy accents, left-side negative space, center/right subject, mobile-safe crop, no text, no logo, no watermark, no campus/building, and no dominant red background.
-
-## Validation checklist
-
-- [x] Twelve placeholder SVG imports replaced with WebP imports
-- [x] Twelve old SVG assets removed after confirming no remaining references
-- [x] 1600×600 dimensions
-- [x] All new assets below 250 KB
-- [x] No external image URLs
-- [x] No backend files changed
-- [x] Login asset unchanged
-- [ ] Authenticated browser screenshot matrix (deferred to Prompt 15; no credentials are committed)
-
----
-
-## Prompt 17 final image-coverage check — 2026-09-19
-
-The final conformance audit enforces all fifteen primary contextual WebP hero references and rejects reintroduction of the twelve replaced placeholder SVGs. Asset-level coverage is PASS. Authenticated desktop/mobile crop screenshots remain BLOCKED for the reasons documented in `VISUAL_QA.md`; no asset-level inspection is presented as a rendered-route screenshot.
+Authenticated route screenshots require a valid portal session. The project does not contain test credentials and authentication/RLS must not be bypassed. Asset-level visual inspection, automated source checks and build checks are recorded separately; authenticated screenshots are only marked complete when a legitimate session is available.

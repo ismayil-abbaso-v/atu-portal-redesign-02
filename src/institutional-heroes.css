@@ -1,0 +1,206 @@
+/* Route-scoped institutional hero refinements. Global header/navigation are intentionally excluded. */
+
+@media (max-width: 767px) {
+  [data-route="/ev"] .student-home-hero,
+  [data-route="/ev"] .student-home-skeleton__hero {
+    min-height: 232px !important;
+    height: 232px !important;
+    background-position: 70% center;
+  }
+
+  [data-route="/ev"] .student-home-hero__shade {
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.98) 0%,
+      rgb(255 255 255 / 0.92) 50%,
+      rgb(255 255 255 / 0.34) 78%,
+      rgb(105 7 38 / 0.16) 100%
+    );
+  }
+
+  [data-route="/ev"] .student-home-hero__quote,
+  [data-route="/ev"] .student-home-hero__words,
+  [data-route="/elektron-jurnal"] .journal-redesign-hero blockquote,
+  [data-route="/teqvim"] .calendar-redesign-hero__quote,
+  [data-route="/imtahanlar"] .exam-reference-hero__right,
+  [data-route="/imtahanlar"] .exam-reference-hero__words,
+  [data-route="/sohbet"] .chat-redesign-hero blockquote,
+  [data-route="/kitabxana"] .library-reference-hero blockquote,
+  [data-route="/ofis"] .office-reference-hero blockquote,
+  [data-route="/bildirisler"] .notification-reference-hero blockquote,
+  [data-route^="/menyu"] .settings-page-hero blockquote {
+    display: none !important;
+  }
+
+  [data-route="/elektron-jurnal"] .journal-redesign-hero {
+    min-height: 220px !important;
+    background-position: 68% center;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero {
+    min-height: 232px !important;
+    background-position: 69% center;
+  }
+
+  [data-route="/imtahanlar"] .exam-reference-hero {
+    min-height: 214px !important;
+    background-position: 68% center;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero__shade,
+  [data-route="/imtahanlar"] .exam-reference-hero__shade,
+  [data-route="/ofis"] .office-reference-hero__shade,
+  [data-route="/bildirisler"] .notification-reference-hero__shade {
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.98) 0%,
+      rgb(255 255 255 / 0.91) 54%,
+      rgb(255 255 255 / 0.3) 82%,
+      rgb(102 5 37 / 0.2) 100%
+    );
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero::after,
+  [data-route="/imtahanlar"] .exam-reference-hero::after,
+  [data-route="/ofis"] .office-reference-hero::after,
+  [data-route="/bildirisler"] .notification-reference-hero::after {
+    display: none;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero__action {
+    right: auto;
+    left: 18px;
+    bottom: 16px;
+    min-height: 44px;
+  }
+
+  [data-route="/sohbet"] .chat-redesign-hero,
+  [data-route="/kitabxana"] .library-reference-hero,
+  [data-route="/ofis"] .office-reference-hero,
+  [data-route="/bildirisler"] .notification-reference-hero {
+    min-height: 202px !important;
+    background-position: 70% center;
+  }
+
+  [data-route="/sohbet"] .chat-redesign-hero__shade,
+  [data-route="/kitabxana"] .library-reference-hero__shade {
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.98) 0%,
+      rgb(255 255 255 / 0.91) 55%,
+      rgb(255 255 255 / 0.28) 82%,
+      rgb(105 7 38 / 0.18) 100%
+    );
+  }
+
+  [data-route^="/menyu"] .settings-page-hero,
+  [data-route^="/menyu"] .menu-reference-page .settings-page-hero {
+    min-height: 206px !important;
+    background-position: 70% center;
+  }
+
+  [data-route^="/menyu"] .settings-page-hero__shade {
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.98) 0%,
+      rgb(255 255 255 / 0.91) 56%,
+      rgb(255 255 255 / 0.3) 82%,
+      rgb(102 5 37 / 0.2) 100%
+    );
+  }
+
+  [data-route^="/menyu"] .settings-page-hero__geometry {
+    display: none;
+  }
+
+  [data-route^="/menyu"] .settings-page-hero__back {
+    width: 44px;
+    height: 44px;
+  }
+
+  [data-route^="/menyu"] .settings-page-hero__copy,
+  [data-route^="/menyu"] .settings-page-hero__back ~ .settings-page-hero__copy,
+  [data-route^="/menyu"] .menu-reference-page .settings-page-hero__copy {
+    width: min(74%, 34rem);
+  }
+
+  [data-route^="/menyu"] .settings-page-hero h1,
+  [data-route^="/menyu"] .menu-reference-page .settings-page-hero h1 {
+    overflow-wrap: anywhere;
+    font-size: clamp(1.75rem, 8vw, 2.15rem);
+    line-height: 1.04;
+  }
+
+  [data-route^="/menyu"] .settings-page-hero p {
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-page-header {
+    min-height: 228px !important;
+    background-position: 70% center;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-page-header::after {
+    background: linear-gradient(
+      90deg,
+      rgb(61 2 22 / 0.96) 0%,
+      rgb(91 6 34 / 0.88) 56%,
+      rgb(61 2 22 / 0.34) 100%
+    );
+  }
+
+  [data-route="/menyu/transkript"] .transcript-page-header__visual {
+    display: none;
+  }
+
+  [data-route="/menyu/transkript"] .transcript-page-header__actions {
+    left: 0;
+    bottom: -92px;
+  }
+}
+
+@media (max-width: 430px) {
+  [data-route="/ev"] .student-home-hero__copy,
+  [data-route="/elektron-jurnal"] .journal-redesign-hero__copy,
+  [data-route="/teqvim"] .calendar-redesign-hero__copy,
+  [data-route="/imtahanlar"] .exam-reference-hero__copy,
+  [data-route="/sohbet"] .chat-redesign-hero__copy,
+  [data-route="/kitabxana"] .library-reference-hero__copy,
+  [data-route="/ofis"] .office-reference-hero__copy,
+  [data-route="/bildirisler"] .notification-reference-hero__copy {
+    width: min(76%, 20rem);
+  }
+}
+
+@media (max-width: 359px) {
+  [data-route="/ev"] .student-home-hero,
+  [data-route="/ev"] .student-home-skeleton__hero {
+    min-height: 220px !important;
+    height: 220px !important;
+  }
+
+  [data-route="/teqvim"] .calendar-redesign-hero {
+    min-height: 224px !important;
+  }
+
+  [data-route^="/menyu"] .settings-page-hero h1,
+  [data-route^="/menyu"] .menu-reference-page .settings-page-hero h1 {
+    font-size: 1.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-route] .student-home-hero,
+  [data-route] .journal-redesign-hero,
+  [data-route] .calendar-redesign-hero,
+  [data-route] .exam-reference-hero,
+  [data-route] .chat-redesign-hero,
+  [data-route] .library-reference-hero,
+  [data-route] .office-reference-hero,
+  [data-route] .notification-reference-hero,
+  [data-route] .settings-page-hero,
+  [data-route] .transcript-page-header {
+    animation: none !important;
+  }
+}
