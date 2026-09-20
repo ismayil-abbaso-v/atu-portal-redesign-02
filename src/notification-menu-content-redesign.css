@@ -569,24 +569,83 @@
   }
 
   .notification-redesign-page .notification-reference-row__button {
-    grid-template-columns: 20px 48px minmax(0, 1fr);
-    gap: 11px;
-    min-height: 108px;
+    grid-template-columns: 48px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    min-height: 0;
     padding: 16px;
   }
 
+  .notification-redesign-page .notification-reference-row__check {
+    display: none;
+  }
+
   .notification-redesign-page .notification-reference-row__icon {
+    position: static;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
     width: 48px;
     height: 48px;
+    margin: 0;
+    transform: none;
+  }
+
+  .notification-redesign-page .notification-reference-row__body {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    align-self: start;
   }
 
   .notification-redesign-page .notification-reference-row__top {
     display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .notification-redesign-page .notification-reference-row__top strong {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 
   .notification-redesign-page .notification-reference-row__top time {
     display: block;
+    width: max-content;
+    max-width: 100%;
     margin-top: 5px;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  .notification-redesign-page .notification-reference-row__preview {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+
+  .notification-redesign-page .notification-reference-row__meta {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .notification-redesign-page .notification-reference-row__meta > span:first-child {
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
   }
 
   .notification-redesign-page .notification-reference-row__open {
@@ -626,8 +685,8 @@
 
 @media (max-width: 430px) {
   .notification-redesign-page .notification-reference-row__button {
-    grid-template-columns: 20px 44px minmax(0, 1fr);
-    gap: 9px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
     padding-inline: 12px;
   }
 
