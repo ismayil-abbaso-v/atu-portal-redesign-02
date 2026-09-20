@@ -42,7 +42,6 @@ import { notificationCategoryKeys, useNotificationHubI18n } from "@/lib/notifica
 import { bildirisKonfiqurasiyasiniAl } from "@/lib/notification-types";
 import { cn } from "@/lib/utils";
 import "@/announcements-premium.css";
-import "@/notifications-premium.css";
 import "@/notifications-hub-refinement.css";
 import "@/office-notifications-redesign.css";
 import "@/notification-menu-content-redesign.css";
