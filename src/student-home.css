@@ -800,14 +800,24 @@
     grid-column: 1/-1;
   }
   .student-home-innovation {
-    min-height: 330px;
-    background-position: 68% center;
+    min-height: 390px;
+    background-color: #65071f;
+    background-position: center top;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
   }
   .student-home-innovation__copy {
     inset: auto 0 0;
     width: 100%;
-    background: linear-gradient(0deg, #65071f 0%, rgba(122, 11, 40, 0.94) 76%, transparent 100%);
-    padding: 62px 20px 20px;
+    background: linear-gradient(
+      0deg,
+      #65071f 0%,
+      rgba(101, 7, 31, 0.99) 62%,
+      rgba(101, 7, 31, 0.82) 78%,
+      rgba(101, 7, 31, 0.28) 92%,
+      transparent 100%
+    );
+    padding: 52px 20px 20px;
   }
   .student-home-innovation__copy h2 {
     font-size: 27px;
