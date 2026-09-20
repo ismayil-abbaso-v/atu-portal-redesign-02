@@ -454,5 +454,100 @@
       line-height: 1.55;
       text-wrap: wrap;
     }
+
+    /*
+     * Only the menu hub and profile hero still need a phone-specific
+     * composition. Their shared desktop copy width (44–46%) is too narrow on
+     * a phone and forces Azerbaijani words to break mid-word. Keep the other
+     * already-correct settings heroes untouched.
+     */
+    .settings-page-hero[data-hero-variant="menu"] {
+      min-height: 270px;
+      --hero-position-mobile: 72% 50%;
+      background-position: var(--hero-position-mobile);
+    }
+
+    .settings-page-hero[data-hero-variant="menu"] .settings-page-hero__shade {
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.99) 0%,
+        rgba(255, 255, 255, 0.97) 38%,
+        rgba(255, 255, 255, 0.82) 57%,
+        rgba(255, 255, 255, 0.28) 76%,
+        rgba(72, 3, 25, 0.34) 100%
+      );
+    }
+
+    .settings-page-hero[data-hero-variant="menu"] .settings-page-hero__copy {
+      top: 50%;
+      left: 22px;
+      width: min(72%, 19rem);
+      max-width: none;
+      transform: translateY(-50%);
+    }
+
+    .settings-page-hero[data-hero-variant="menu"] .settings-page-hero__copy h1 {
+      max-width: 13ch;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+      font-size: clamp(30px, 9cqw, 34px);
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+
+    .settings-page-hero[data-hero-variant="menu"] .settings-page-hero__copy p {
+      max-width: 31ch;
+      margin-top: 9px;
+      font-size: 12.5px;
+      line-height: 1.48;
+      text-wrap: pretty;
+    }
+
+    .settings-page-hero[data-hero-variant="profile"] {
+      min-height: 260px;
+      --hero-position-mobile: 74% 52%;
+      background-position: var(--hero-position-mobile);
+    }
+
+    .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__shade {
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.99) 0%,
+        rgba(255, 255, 255, 0.96) 42%,
+        rgba(255, 255, 255, 0.78) 59%,
+        rgba(255, 255, 255, 0.24) 78%,
+        rgba(72, 3, 25, 0.3) 100%
+      );
+    }
+
+    .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__copy,
+    .settings-page-hero[data-hero-variant="profile"]
+      .settings-page-hero__back
+      ~ .settings-page-hero__copy {
+      top: 50%;
+      left: 74px;
+      width: min(calc(100% - 92px), 18rem);
+      max-width: none;
+      transform: translateY(-50%);
+    }
+
+    .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__copy h1 {
+      max-width: 12ch;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+      font-size: clamp(29px, 8.6cqw, 33px);
+      line-height: 1.03;
+      text-wrap: balance;
+    }
+
+    .settings-page-hero[data-hero-variant="profile"] .settings-page-hero__copy p {
+      max-width: 30ch;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
   }
 }
