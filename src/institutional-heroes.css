@@ -142,7 +142,7 @@
 [data-route="/ev"] .student-home-skeleton__hero {
   min-height: 340px;
   height: clamp(340px, 28cqw, 460px);
-  background-position: 50% center;
+  background-position: var(--hero-position-wide, 54% 50%);
 }
 
 [data-route="/ev"] .student-home-hero__copy {
