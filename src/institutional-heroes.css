@@ -16,11 +16,6 @@
   max-width: min(34cqw, 33rem);
 }
 
-[data-route="/ev"] .student-home-hero__quote,
-[data-route="/ev"] .student-home-hero__words {
-  display: none;
-}
-
 @media (max-width: 767px) {
   [data-route="/ev"] .student-home-hero,
   [data-route="/ev"] .student-home-skeleton__hero {
