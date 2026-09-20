@@ -4,7 +4,6 @@ import {
   ChevronRight,
   CircleHelp,
   FileText,
-  LifeBuoy,
   Palette,
   Settings2,
   Shield,
@@ -130,9 +129,10 @@ function MenyuSehifesi() {
           <div>
             <p className="menu-reference-heading__eyebrow">{t("sectionEyebrow")}</p>
             <h2 id="menu-settings-title">{t("sectionTitle")}</h2>
-            <p>{t("seoDescription")}</p>
           </div>
-          <span className="menu-reference-heading__count">{visibleCards.length}</span>
+          <span className="menu-reference-heading__count">
+            {t("sectionCount", { count: visibleCards.length })}
+          </span>
         </div>
 
         <div className="menu-reference-grid">
@@ -144,15 +144,16 @@ function MenyuSehifesi() {
                 to={card.to}
                 aria-label={t("openSectionAria", { section: title })}
                 className="menu-reference-card"
-                style={{ animationDelay: `${index * 35}ms` }}
+                style={{ animationDelay: `${90 + index * 65}ms` }}
               >
+                <span className="menu-reference-card__shine" aria-hidden />
                 <span className="menu-reference-card__icon" aria-hidden>
                   <card.icon />
                 </span>
                 <span className="menu-reference-card__copy">
+                  <small className="menu-reference-card__tag">{t(card.tagKey)}</small>
                   <strong>{title}</strong>
                   <span>{t(card.descriptionKey)}</span>
-                  <small className="menu-reference-card__detail">{t(card.tagKey)}</small>
                 </span>
                 <span className="menu-reference-card__arrow" aria-hidden>
                   <ChevronRight />
@@ -161,17 +162,6 @@ function MenyuSehifesi() {
             );
           })}
         </div>
-      </section>
-
-      <section className="menu-reference-support-banner">
-        <div>
-          <h3>{t("helpTitle")}</h3>
-          <p>{t("helpDescription")}</p>
-        </div>
-        <Link to="/menyu/yardim">
-          {t("helpTitle")}
-          <LifeBuoy aria-hidden />
-        </Link>
       </section>
     </div>
   );
