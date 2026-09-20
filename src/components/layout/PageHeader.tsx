@@ -5,13 +5,10 @@ import {
   GraduationCap,
   ShieldCheck,
   Sparkles,
-  UserRound,
 } from "lucide-react";
 import { type ReactNode } from "react";
 import transcriptHero from "@/assets/transcript-hero.webp";
 import { useI18n, type Locale } from "@/lib/i18n";
-import "@/profile-page-header.css";
-import "@/security-premium.css";
 import "@/transcript-premium.css";
 
 type HeaderCopy = {
@@ -153,15 +150,6 @@ export function PageHeader({
   const translatedTitle = t(baslıq, baslıq);
   const isAdminHeader = pathname === "/admin" || pathname.startsWith("/admin/");
   const isCalendarHeader = baslıq === "Təqvim";
-  const isProfileHeader = [
-    "Profil parametrləri",
-    "Profil ayarları",
-    "Profile settings",
-    "Настройки профиля",
-  ].includes(translatedTitle);
-  const isSecurityHeader = ["Təhlükəsizlik", "Güvenlik", "Security", "Безопасность"].includes(
-    translatedTitle,
-  );
   const isTranscriptHeader =
     ["Transkript", "Transcript", "Транскрипт"].includes(translatedTitle) || baslıq === "Transkript";
 
@@ -342,120 +330,6 @@ export function PageHeader({
           </div>
 
           {children ? <div className="transcript-page-header__actions">{children}</div> : null}
-        </div>
-      </header>
-    );
-  }
-
-  if (isSecurityHeader) {
-    return (
-      <header className="security-page-header surface-card relative mb-6 overflow-hidden px-5 py-5 sm:px-7 sm:py-6">
-        <span aria-hidden className="security-page-header__accent" />
-        <span aria-hidden className="security-page-header__mesh" />
-        <span aria-hidden className="security-page-header__halo" />
-        <span aria-hidden className="security-page-header__sweep" />
-
-        <div className="security-page-header__visual" aria-hidden>
-          <span className="security-page-header__orbit security-page-header__orbit--one" />
-          <span className="security-page-header__orbit security-page-header__orbit--two" />
-          <span className="security-page-header__core">
-            <ShieldCheck className="size-7" />
-          </span>
-        </div>
-
-        <div className="security-page-header__content flex min-h-10 items-center gap-3 sm:gap-4">
-          {geri ? (
-            <button
-              type="button"
-              aria-label={t("common.back")}
-              onClick={() => (onGeri ? onGeri() : router.history.back())}
-              className="security-page-header__back relative inline-flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-background text-foreground transition-[background-color,color,transform,box-shadow,border-color] duration-200 hover:-translate-x-0.5 hover:border-primary/25 hover:bg-primary hover:text-primary-foreground hover:shadow-sm"
-            >
-              <ArrowLeft className="relative z-10 size-5" />
-            </button>
-          ) : null}
-
-          <div className="min-w-0">
-            <span className="security-page-header__eyebrow" aria-hidden>
-              <span className="security-page-header__eyebrow-dot" />
-              {copy.securityEyebrow}
-            </span>
-            <h1 className="truncate font-display text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
-              {translatedTitle}
-            </h1>
-          </div>
-
-          {children ? (
-            <div className="ml-auto flex shrink-0 items-center gap-2">{children}</div>
-          ) : null}
-        </div>
-      </header>
-    );
-  }
-
-  if (isProfileHeader) {
-    return (
-      <header className="profile-page-header surface-card relative mb-6 overflow-hidden px-5 py-5 sm:px-7 sm:py-6">
-        <span aria-hidden className="profile-page-header__accent" />
-        <span aria-hidden className="profile-page-header__pattern" />
-        <span aria-hidden className="profile-page-header__halo" />
-        <span aria-hidden className="profile-page-header__sweep" />
-        <span aria-hidden className="profile-page-header__focus" />
-
-        <svg
-          aria-hidden
-          className="profile-page-header__network"
-          viewBox="0 0 520 150"
-          preserveAspectRatio="none"
-        >
-          <path
-            className="profile-page-header__line"
-            d="M16 107 L92 64 L170 93 L247 43 L326 82 L401 37 L500 70"
-          />
-          <path
-            className="profile-page-header__line profile-page-header__line--soft"
-            d="M70 122 L135 103 L212 119 L291 75 L367 108 L446 82"
-          />
-          <path
-            className="profile-page-header__flow"
-            d="M16 107 L92 64 L170 93 L247 43 L326 82 L401 37 L500 70"
-          />
-          <path
-            className="profile-page-header__flow profile-page-header__flow--two"
-            d="M70 122 L135 103 L212 119 L291 75 L367 108 L446 82"
-          />
-          <circle cx="92" cy="64" r="4.5" />
-          <circle cx="247" cy="43" r="4.5" />
-          <circle cx="326" cy="82" r="4.5" />
-          <circle cx="401" cy="37" r="4.5" />
-          <circle cx="367" cy="108" r="4.5" />
-        </svg>
-
-        <div className="profile-page-header__content flex min-h-10 items-center gap-3 sm:gap-4">
-          {geri ? (
-            <button
-              type="button"
-              aria-label={t("common.back")}
-              onClick={() => (onGeri ? onGeri() : router.history.back())}
-              className="profile-page-header__back relative inline-flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-background text-foreground transition-[background-color,color,transform,box-shadow,border-color] duration-200 hover:-translate-x-0.5 hover:border-primary/25 hover:bg-primary hover:text-primary-foreground hover:shadow-sm"
-            >
-              <ArrowLeft className="relative z-10 size-5" />
-            </button>
-          ) : null}
-
-          <div className="profile-page-header__heading min-w-0">
-            <span className="profile-page-header__eyebrow" aria-hidden>
-              <UserRound className="size-3" />
-              {copy.profileEyebrow}
-            </span>
-            <h1 className="profile-page-header__title truncate font-display text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
-              {translatedTitle}
-            </h1>
-          </div>
-
-          {children ? (
-            <div className="ml-auto flex shrink-0 items-center gap-2">{children}</div>
-          ) : null}
         </div>
       </header>
     );
