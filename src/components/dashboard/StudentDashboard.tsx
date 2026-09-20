@@ -661,10 +661,21 @@ function Empty({ icon, label }: { icon: ReactNode; label: string }) {
   );
 }
 
-function StudentHomeSkeleton() {
+export function StudentHomeSkeleton() {
   return (
     <div className="student-home student-home-skeleton" aria-busy="true">
-      <div className="student-home-skeleton__hero" />
+      <div
+        className="student-home-skeleton__hero"
+        style={{ backgroundImage: `url(${studentHero})` }}
+        aria-hidden="true"
+      >
+        <div className="student-home-hero__shade" />
+        <div className="student-home-skeleton__copy">
+          <span className="student-home-skeleton__eyebrow" />
+          <span className="student-home-skeleton__title" />
+          <span className="student-home-skeleton__body" />
+        </div>
+      </div>
       <div className="student-home-skeleton__grid">
         <div />
         <div />

@@ -8,28 +8,36 @@ type AppRole = Database["public"]["Enums"]["app_role"];
 
 export function useUserRoles() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
+
     // Cari istifadəçini əldə et
     void supabase.auth.getUser().then(({ data }) => {
+      if (!active) return;
       setUserId(data.user?.id ?? null);
+      setIsAuthLoading(false);
     });
 
     // Sessiya dəyişikliklərini dinlə
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!active) return;
       setUserId(session?.user?.id ?? null);
+      setIsAuthLoading(false);
     });
 
     return () => {
+      active = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const {
     data: roles = [],
-    isLoading,
+    isLoading: isRolesLoading,
     error,
     refetch,
   } = useQuery({
@@ -46,7 +54,13 @@ export function useUserRoles() {
     enabled: !!userId,
   });
 
-  return { roles, isLoading, error, refetch, userId };
+  return {
+    roles,
+    isLoading: isAuthLoading || isRolesLoading,
+    error,
+    refetch,
+    userId,
+  };
 }
 
 const rolePriorities: Record<AppRole, number> = {

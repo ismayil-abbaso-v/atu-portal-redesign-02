@@ -655,8 +655,8 @@
   font-size: 12px;
   font-weight: 750;
 }
-.student-home-skeleton > * {
-  overflow: hidden;
+.student-home-skeleton__copy > span,
+.student-home-skeleton__grid > div {
   background: linear-gradient(
     100deg,
     var(--surface-muted) 30%,
@@ -667,8 +667,39 @@
   animation: student-home-shimmer 1.4s infinite;
 }
 .student-home-skeleton__hero {
+  position: relative;
   height: 300px;
+  overflow: hidden;
   border-radius: 24px;
+  background-position: center;
+  background-size: cover;
+}
+.student-home-skeleton__copy {
+  position: absolute;
+  top: 50%;
+  left: clamp(24px, 4vw, 60px);
+  z-index: 2;
+  display: grid;
+  width: min(42%, 430px);
+  transform: translateY(-50%);
+}
+.student-home-skeleton__copy > span {
+  display: block;
+  border-radius: 999px;
+}
+.student-home-skeleton__eyebrow {
+  width: 34%;
+  height: 18px;
+}
+.student-home-skeleton__title {
+  width: 88%;
+  height: 48px;
+  margin-top: 9px;
+}
+.student-home-skeleton__body {
+  width: 76%;
+  height: 16px;
+  margin-top: 18px;
 }
 .student-home-skeleton__grid {
   display: grid;
