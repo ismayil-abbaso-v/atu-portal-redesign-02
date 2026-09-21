@@ -96,7 +96,6 @@ function YardimSehifesi() {
         title={tx("page.title")}
         subtitle={tx("page.description")}
         quote={HELP_HERO[locale].quote}
-        icon={<LifeBuoy />}
         backLabel={tx("page.title")}
       />
 
