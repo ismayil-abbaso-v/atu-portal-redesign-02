@@ -1,4 +1,4 @@
-import { BookOpen, Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import libraryHeroImage from "@/assets/library-hero.webp";
@@ -37,7 +37,6 @@ export function LibraryHero({ axtaris, onAxtarisDeyis, onKateqoriyaSec }: { axta
           <p>{copy.subtitle}</p>
           <span>{copy.description}</span>
         </div>
-        <div className="library-reference-hero__mark" aria-hidden><BookOpen /></div>
         <blockquote>“{copy.quote}”</blockquote>
       </section>
 
