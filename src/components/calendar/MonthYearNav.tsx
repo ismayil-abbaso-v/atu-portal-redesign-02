@@ -1,7 +1,12 @@
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { format } from "date-fns";
-import { az, enUS, ru, tr } from "date-fns/locale";
 import { usePageI18n } from "@/lib/i18n-extra";
+
+const MONTH_NAMES = {
+  az: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
+  tr: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  ru: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+} as const;
 
 interface MonthYearNavProps {
   ay: number;
@@ -14,11 +19,10 @@ interface MonthYearNavProps {
 
 export function MonthYearNav({ ay, il, onAySec, onIlSec, axtaris, onAxtarisDeyis }: MonthYearNavProps) {
   const { locale, t } = usePageI18n();
-  const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
   const todayLabel = locale === "az" || locale === "tr" ? "Bu ay" : locale === "ru" ? "Этот месяц" : "This month";
   const previousLabel = locale === "az" ? "Əvvəlki ay" : locale === "tr" ? "Önceki ay" : locale === "ru" ? "Предыдущий месяц" : "Previous month";
   const nextLabel = locale === "az" ? "Növbəti ay" : locale === "tr" ? "Sonraki ay" : locale === "ru" ? "Следующий месяц" : "Next month";
-  const monthLabel = format(new Date(il, ay, 1), "LLLL yyyy", { locale: dateLocale });
+  const monthLabel = `${MONTH_NAMES[locale][ay]} ${il}`;
 
   const moveMonth = (delta: number) => {
     const next = ay + delta;
