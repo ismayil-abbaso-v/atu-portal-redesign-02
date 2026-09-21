@@ -5,7 +5,6 @@ import {
   CircleHelp,
   FileText,
   Palette,
-  Settings2,
   Shield,
   UserRound,
 } from "lucide-react";
@@ -121,7 +120,6 @@ function MenyuSehifesi() {
         title={t("heroTitle")}
         subtitle={t("heroSubtitle")}
         quote={QUOTES[locale]}
-        icon={<Settings2 />}
         showBack={false}
       />
 
