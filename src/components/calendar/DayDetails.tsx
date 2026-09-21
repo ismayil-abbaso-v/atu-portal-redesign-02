@@ -1,4 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
+import { format } from "date-fns";
+import { az, enUS, ru, tr } from "date-fns/locale";
 import { CalendarOff, Clock, Trash2, Edit2, Users, BookOpen, ClipboardCheck, ExternalLink, MapPin, UserRound, PlayCircle } from "lucide-react";
 
 import { EmptyState } from "@/components/layout/EmptyState";
@@ -37,9 +39,9 @@ export function DayDetails({ tarix, events, roles, onEditClick, onDeleteClick }:
   const navigate = useNavigate();
   const { locale, t } = usePageI18n();
   const { t: roleT } = useRoleDashboardI18n();
-  const intlLocale = locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
+  const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
   const formatTime = (timeStr: string) => timeStr ? timeStr.split(":").slice(0, 2).join(":") : "";
-  const formatSecilmisTarix = (d: Date) => d.toLocaleDateString(intlLocale, { day: "numeric", month: "long", year: "numeric" });
+  const formatSecilmisTarix = (d: Date) => format(d, "PPP", { locale: dateLocale });
   const hasWriteAccess = roles.includes("admin") || roles.includes("tyutor");
   const isTeacher = roles.includes("muellim") && !roles.includes("admin") && !roles.includes("dekan") && !roles.includes("tyutor");
   const displayEvents = [...events].sort((a, b) => a.baslangic_saat.localeCompare(b.baslangic_saat));
