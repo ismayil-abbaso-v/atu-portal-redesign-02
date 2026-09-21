@@ -62,6 +62,7 @@ const copy = {
     week: "Bu həftə",
     showAll: "Hamısını göstər",
     noWeek: "Bu həftə üçün dərs planı yoxdur.",
+    noSelectedDay: "Seçilmiş gün üçün dərs planı yoxdur.",
     lesson: "Dərs",
     room: "Otaq",
     finance: "Təhsil haqqı və ödənişlər",
@@ -105,6 +106,7 @@ const copy = {
     week: "Bu hafta",
     showAll: "Tümünü göster",
     noWeek: "Bu hafta için ders planı yok.",
+    noSelectedDay: "Seçilen gün için ders planı yok.",
     lesson: "Ders",
     room: "Oda",
     finance: "Öğrenim ücreti ve ödemeler",
@@ -148,6 +150,7 @@ const copy = {
     week: "This week",
     showAll: "Show all",
     noWeek: "There are no classes planned for this week.",
+    noSelectedDay: "There are no classes planned for the selected day.",
     lesson: "Class",
     room: "Room",
     finance: "Tuition and payments",
@@ -191,6 +194,7 @@ const copy = {
     week: "Эта неделя",
     showAll: "Показать все",
     noWeek: "На эту неделю занятий не запланировано.",
+    noSelectedDay: "На выбранный день занятий не запланировано.",
     lesson: "Занятие",
     room: "Аудитория",
     finance: "Обучение и платежи",
@@ -374,6 +378,17 @@ export function StudentDashboard({ userId }: { userId: string }) {
 
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
   const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 });
+  const todayKey = format(new Date(), "yyyy-MM-dd");
+  const weekStartKey = format(weekStart, "yyyy-MM-dd");
+  const weekEndKey = format(weekEnd, "yyyy-MM-dd");
+  const weekDays = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
+  const [selectedDayKey, setSelectedDayKey] = useState(todayKey);
+
+  useEffect(() => {
+    if (selectedDayKey < weekStartKey || selectedDayKey > weekEndKey) {
+      setSelectedDayKey(todayKey);
+    }
+  }, [selectedDayKey, todayKey, weekEndKey, weekStartKey]);
   const weekQuery = useQuery<WeekLesson[]>({
     queryKey: [
       "student-week-lessons",
@@ -523,6 +538,7 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const studentName =
     [profile?.ad, profile?.soyad].filter(Boolean).join(" ") || profile?.ad || "ATU";
   const weekEvents = weekQuery.data ?? [];
+  const selectedDayEvents = weekEvents.filter((event) => event.tarix === selectedDayKey);
   const messages = chatsQuery.data ?? [];
   const attendanceStatusText = attendanceError
     ? (c.attendanceUnavailable as string)
@@ -599,25 +615,37 @@ export function StudentDashboard({ userId }: { userId: string }) {
             }
           />
           <div className="student-home-week__days" aria-label={c.week as string}>
-            {Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)).map((day) => (
-              <span
-                key={day.toISOString()}
-                className={
-                  format(day, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? "is-today" : ""
-                }
-              >
-                <b>{format(day, "EEE", { locale: dateLocale })}</b>
-                <small>{format(day, "d")}</small>
-              </span>
-            ))}
+            {weekDays.map((day) => {
+              const dayKey = format(day, "yyyy-MM-dd");
+              const isToday = dayKey === todayKey;
+              const isSelected = dayKey === selectedDayKey;
+              return (
+                <button
+                  key={dayKey}
+                  type="button"
+                  className={[
+                    isToday ? "is-today" : "",
+                    isSelected ? "is-selected" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-current={isToday ? "date" : undefined}
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedDayKey(dayKey)}
+                >
+                  <b>{format(day, "EEE", { locale: dateLocale })}</b>
+                  <small>{format(day, "d")}</small>
+                </button>
+              );
+            })}
           </div>
           {weekQuery.isLoading ? (
             <div className="student-home-inline-state">
               <Loader2 className="animate-spin" />
             </div>
-          ) : weekEvents.length ? (
-            <div className="student-home-schedule">
-              {weekEvents.map((event) => (
+          ) : selectedDayEvents.length ? (
+            <div className="student-home-schedule" aria-live="polite">
+              {selectedDayEvents.map((event) => (
                 <div key={event.id} className="student-home-schedule__row">
                   <time dateTime={event.tarix}>
                     <b>
@@ -642,7 +670,10 @@ export function StudentDashboard({ userId }: { userId: string }) {
               ))}
             </div>
           ) : (
-            <Empty icon={<CalendarDays />} label={c.noWeek as string} />
+            <Empty
+              icon={<CalendarDays />}
+              label={(weekEvents.length ? c.noSelectedDay : c.noWeek) as string}
+            />
           )}
         </section>
 
