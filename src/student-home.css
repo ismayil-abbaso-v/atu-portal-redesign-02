@@ -279,16 +279,26 @@
   padding: 0 0 12px;
   scrollbar-width: none;
 }
-.student-home-week__days span {
+.student-home-week__days button {
   display: flex;
   min-width: 38px;
+  min-height: 52px;
   flex: 1;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  border: 0;
   border-radius: 10px;
   background: var(--surface-muted);
   padding: 6px 4px;
   color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast),
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
 }
 .student-home-week__days b {
   font-size: 11px;
@@ -300,9 +310,19 @@
   font-size: 13px;
   font-weight: 650;
 }
-.student-home-week__days .is-today {
+.student-home-week__days button.is-selected {
   background: var(--primary);
   color: #fff;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.student-home-week__days button.is-today:not(.is-selected) {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.student-home-week__days button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 .student-home-schedule {
   display: grid;
@@ -716,6 +736,9 @@
   background: var(--surface-muted);
 }
 @media (hover: hover) and (pointer: fine) {
+  .student-home-week__days button:hover {
+    transform: translateY(-1px);
+  }
   .student-home-service:hover {
     transform: translateY(-2px);
     border-color: color-mix(in srgb, var(--primary) 30%, var(--border-subtle));
