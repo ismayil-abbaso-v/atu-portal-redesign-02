@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { az, enUS, ru, tr } from "date-fns/locale";
 
 import type { EventWithDetails } from "./DayDetails";
 import { usePageI18n } from "@/lib/i18n-extra";
@@ -13,7 +14,7 @@ interface CalendarGridProps {
 
 export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: CalendarGridProps) {
   const { locale, t } = usePageI18n();
-  const intlLocale = locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
+  const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
   const firstDayOfMonth = new Date(il, ay, 1);
   const firstDayIndex = (firstDayOfMonth.getDay() + 6) % 7;
   const daysInMonth = new Date(il, ay + 1, 0).getDate();
@@ -34,14 +35,25 @@ export function CalendarGrid({ ay, il, events, secilmisTarix, onTarixSec }: Cale
   const secilmisStr = format(secilmisTarix, "yyyy-MM-dd");
   const hefteninGunleri = Array.from({ length: 7 }, (_, idx) => {
     const date = new Date(2024, 0, 1 + idx);
-    return new Intl.DateTimeFormat(intlLocale, { weekday: "short" }).format(date).replace(/\.$/, "");
+    return {
+      qisa: format(date, "EEE", { locale: dateLocale }),
+      tam: format(date, "EEEE", { locale: dateLocale }),
+    };
   });
 
   return (
     <div className="calendar-redesign-grid overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
       <div className="calendar-redesign-grid__weekdays grid grid-cols-7 border-b border-border/70 bg-muted/25 text-center text-[11px] font-bold uppercase tracking-wide text-muted-foreground sm:text-xs">
-        {hefteninGunleri.map((gun) => (
-          <div key={gun} className="border-r border-border/60 px-1 py-3 last:border-r-0">{gun}</div>
+        {hefteninGunleri.map((gun, idx) => (
+          <div
+            key={idx}
+            className="border-r border-border/60 px-1 py-3 last:border-r-0"
+            title={gun.tam}
+            aria-label={gun.tam}
+            lang={locale}
+          >
+            {gun.qisa}
+          </div>
         ))}
       </div>
 
