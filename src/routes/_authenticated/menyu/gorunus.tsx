@@ -248,7 +248,6 @@ function GorunusSehifesi() {
         title={t("settings.appearance")}
         subtitle={`${t("settings.themeDescription")} ${t("settings.paletteDescription")}`}
         quote={APPEARANCE_HERO[locale].quote}
-        icon={<PaletteIcon />}
         backLabel={t("common.back")}
       />
 
