@@ -189,7 +189,6 @@ function BildirisParametrleri() {
         title={copy.title}
         subtitle={copy.subtitle}
         quote={copy.quote}
-        icon={<Bell />}
         backLabel={copy.back}
       />
 
