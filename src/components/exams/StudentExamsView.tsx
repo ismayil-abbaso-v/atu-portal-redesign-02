@@ -45,7 +45,7 @@ export function StudentExamsView({ userId }: { userId: string }) {
 
   return (
     <div className="exam-redesign flex flex-1 flex-col">
-      <ExamsOverviewHero title={t.title} subtitle={t.subtitle} rightSlot={<div className="exam-redesign-hero-status"><div><small>{t.preparation}</small><strong>{prepStatusLabel}</strong></div></div>} />
+      <ExamsOverviewHero title={t.title} subtitle={t.subtitle} />
       <Tabs defaultValue="upcoming" className="exam-redesign-tabs">
         <TabsList className="exam-redesign-tabs__list">
           <TabsTrigger value="upcoming"><Calendar aria-hidden />{ui.upcomingTab}</TabsTrigger>
