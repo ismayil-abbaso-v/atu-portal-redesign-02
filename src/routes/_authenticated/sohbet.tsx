@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { MessageCircleMore } from "lucide-react";
 import { toast } from "sonner";
 
 import { GroupList } from "@/components/chat/GroupList";
@@ -103,7 +102,6 @@ function SohbetSehifesi() {
           <h1>{hero.title}</h1>
           <p>{hero.subtitle}</p>
         </div>
-        <div className="chat-redesign-hero__bubble" aria-hidden><MessageCircleMore /></div>
         <blockquote>“{hero.quote}”</blockquote>
       </section>
 
