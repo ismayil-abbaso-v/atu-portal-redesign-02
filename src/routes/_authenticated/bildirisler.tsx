@@ -293,9 +293,6 @@ function BildirislerSehifesi() {
           <p>{copy.subtitle}</p>
         </div>
         <blockquote>“{copy.quote}”</blockquote>
-        <span className="notification-reference-hero__mark" aria-hidden>
-          <Bell />
-        </span>
       </section>
 
       <div className="notification-category-tabs" role="tablist" aria-label={t("hub.sectionsAria")}>
