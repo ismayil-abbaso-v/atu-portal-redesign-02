@@ -23,12 +23,22 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useI18n } from "@/lib/i18n";
 import { resolveSemesterNumber, summarizeStudentHomeAttendance } from "@/lib/student-home-attendance";
+import {
+  fetchTeacherSessionRoomMaps,
+  resolveTeacherSessionRoom,
+  type TeacherLessonSession,
+} from "@/lib/teacher-sessions";
 import "@/student-home.css";
 
-type Course = Database["public"]["Tables"]["courses"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
-type CalendarEvent = Database["public"]["Tables"]["calendar_events"]["Row"] & {
-  courses: Pick<Course, "ad" | "otaq"> | null;
+
+type WeekLesson = {
+  id: string;
+  tarix: string;
+  baslangic_saat: string;
+  bitme_saat: string;
+  courseName: string;
+  room: string | null;
 };
 
 type Locale = "az" | "tr" | "en" | "ru";
@@ -216,6 +226,15 @@ function prefersReducedMotion() {
   );
 }
 
+function formatBakuClock(timestamp: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Baku",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(timestamp));
+}
+
 function useCountUp(target: number, ready: boolean) {
   const [value, setValue] = useState(ready ? 0 : target);
   const ran = useRef(false);
@@ -286,30 +305,6 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const currentAcademicYear = settingsQuery.data?.cari_tedris_ili ?? null;
   const currentSemester = resolveSemesterNumber(settingsQuery.data?.cari_semestr);
 
-  const coursesQuery = useQuery({
-    queryKey: ["student-courses", groupIds, userId],
-    enabled: !groupsQuery.isLoading,
-    queryFn: async () => {
-      const groupCourses = groupIds.length
-        ? await supabase.from("courses").select("*").in("group_id", groupIds)
-        : { data: [] as Course[], error: null };
-      if (groupCourses.error) throw groupCourses.error;
-      const { data: scoreRows, error } = await supabase
-        .from("exam_scores")
-        .select("course_id, courses(*)")
-        .eq("user_id", userId);
-      if (error) throw error;
-      const all = [...((groupCourses.data ?? []) as Course[])];
-      for (const item of scoreRows ?? []) {
-        const course = item.courses as Course | null;
-        if (course && !all.some((entry) => entry.id === course.id)) all.push(course);
-      }
-      return all;
-    },
-  });
-  const courses = coursesQuery.data ?? [];
-  const courseIds = courses.map((course) => course.id);
-
   const attendanceEnabled = Boolean(
     currentAcademicYear && currentSemester && !groupsQuery.isLoading && !groupsQuery.isError,
   );
@@ -379,24 +374,66 @@ export function StudentDashboard({ userId }: { userId: string }) {
 
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
   const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 });
-  const weekQuery = useQuery({
-    queryKey: ["student-week-events", groupIds, courseIds, format(weekStart, "yyyy-MM-dd")],
-    enabled: !groupsQuery.isLoading && !coursesQuery.isLoading,
+  const weekQuery = useQuery<WeekLesson[]>({
+    queryKey: [
+      "student-week-lessons",
+      groupIds.join(","),
+      currentAcademicYear,
+      currentSemester,
+      format(weekStart, "yyyy-MM-dd"),
+    ],
+    enabled: !groupsQuery.isLoading && !settingsQuery.isLoading && groupIds.length > 0,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
     queryFn: async () => {
-      const filters: string[] = [];
-      if (groupIds.length) filters.push(`group_id.in.(${groupIds.join(",")})`);
-      if (courseIds.length) filters.push(`course_id.in.(${courseIds.join(",")})`);
-      if (!filters.length) return [];
-      const { data, error } = await supabase
-        .from("calendar_events")
-        .select("*, courses(ad, otaq)")
-        .gte("tarix", format(weekStart, "yyyy-MM-dd"))
-        .lte("tarix", format(weekEnd, "yyyy-MM-dd"))
-        .or(filters.join(","))
-        .order("tarix")
-        .order("baslangic_saat");
-      if (error) throw error;
-      return (data ?? []) as CalendarEvent[];
+      if (!currentAcademicYear || !currentSemester || groupIds.length === 0) return [];
+
+      const { data: links, error: linkError } = await supabase
+        .from("course_groups")
+        .select("course_id")
+        .in("group_id", groupIds)
+        .eq("tedris_ili", currentAcademicYear)
+        .eq("semestr", currentSemester);
+      if (linkError) throw linkError;
+
+      const currentCourseIds = [
+        ...new Set((links ?? []).map((row) => row.course_id).filter((id): id is string => Boolean(id))),
+      ];
+      if (currentCourseIds.length === 0) return [];
+
+      const { data: sessionRows, error: sessionError } = await supabase
+        .from("course_lesson_sessions")
+        .select("*")
+        .in("group_id", groupIds)
+        .in("course_id", currentCourseIds)
+        .gte("lesson_date", format(weekStart, "yyyy-MM-dd"))
+        .lte("lesson_date", format(weekEnd, "yyyy-MM-dd"))
+        .order("lesson_date")
+        .order("starts_at");
+      if (sessionError) throw sessionError;
+
+      const sessions = (sessionRows ?? []) as unknown as TeacherLessonSession[];
+      if (sessions.length === 0) return [];
+
+      const visibleCourseIds = [...new Set(sessions.map((session) => session.course_id))];
+      const [courseResult, roomMaps] = await Promise.all([
+        supabase.from("courses").select("id, ad").in("id", visibleCourseIds),
+        fetchTeacherSessionRoomMaps(sessions),
+      ]);
+      if (courseResult.error) throw courseResult.error;
+
+      const courseNames = new Map(
+        (courseResult.data ?? []).map((course) => [course.id, course.ad]),
+      );
+
+      return sessions.map((session) => ({
+        id: session.id,
+        tarix: session.lesson_date,
+        baslangic_saat: formatBakuClock(session.starts_at),
+        bitme_saat: formatBakuClock(session.ends_at),
+        courseName: courseNames.get(session.course_id) ?? "",
+        room: resolveTeacherSessionRoom(session, roomMaps),
+      }));
     },
   });
 
@@ -451,11 +488,10 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const attendanceResolved = Boolean(attendance) && !attendanceLoading && !attendanceError;
   const attendanceHasData = Boolean(attendance && attendance.classes > 0 && !attendanceError);
   const attendancePercent = attendance?.percent ?? 0;
-  const isLoading = profileQuery.isLoading || groupsQuery.isLoading || coursesQuery.isLoading;
+  const isLoading = profileQuery.isLoading || groupsQuery.isLoading;
   const hasError =
     profileQuery.isError ||
     groupsQuery.isError ||
-    coursesQuery.isError ||
     weekQuery.isError ||
     chatsQuery.isError;
   const animatedAttendance = useCountUp(
@@ -476,7 +512,6 @@ export function StudentDashboard({ userId }: { userId: string }) {
           void Promise.all([
             profileQuery.refetch(),
             groupsQuery.refetch(),
-            coursesQuery.refetch(),
             weekQuery.refetch(),
             chatsQuery.refetch(),
           ])
@@ -592,12 +627,12 @@ export function StudentDashboard({ userId }: { userId: string }) {
                   </time>
                   <span className="student-home-schedule__line" />
                   <div>
-                    <strong>{event.courses?.ad ?? event.baslıq}</strong>
+                    <strong>{event.courseName || (c.lesson as string)}</strong>
                     <span>
                       {[
                         c.lesson,
-                        `${event.baslangic_saat.slice(0, 5)}–${event.bitme_saat.slice(0, 5)}`,
-                        event.courses?.otaq ? `${c.room} ${event.courses.otaq}` : null,
+                        `${event.baslangic_saat}–${event.bitme_saat}`,
+                        event.room ? `${c.room} ${event.room}` : null,
                       ]
                         .filter(Boolean)
                         .join(" · ")}
