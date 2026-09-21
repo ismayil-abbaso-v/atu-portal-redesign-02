@@ -177,7 +177,7 @@
 
 .transcript-page-header__title {
   margin: 0;
-  color: var(--foreground);
+  color: #fff;
   font-family: var(--font-display, inherit);
   font-size: clamp(1.8rem, 2.55vw, 2.6rem);
   font-weight: 650;
