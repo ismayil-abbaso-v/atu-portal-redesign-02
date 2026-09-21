@@ -617,7 +617,7 @@ export function StudentDashboard({ userId }: { userId: string }) {
             </div>
           ) : weekEvents.length ? (
             <div className="student-home-schedule">
-              {weekEvents.slice(0, 5).map((event) => (
+              {weekEvents.map((event) => (
                 <div key={event.id} className="student-home-schedule__row">
                   <time dateTime={event.tarix}>
                     <b>
