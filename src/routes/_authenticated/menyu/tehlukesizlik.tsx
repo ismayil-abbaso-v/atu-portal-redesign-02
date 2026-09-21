@@ -220,7 +220,6 @@ function TehlukesizlikSehifesi() {
       title={t("title")}
       subtitle={hero.subtitle}
       quote={hero.quote}
-      icon={<ShieldCheck />}
       backLabel={t("cancel")}
     />
     <div className="grid gap-4 xl:grid-cols-[38%_62%]">
