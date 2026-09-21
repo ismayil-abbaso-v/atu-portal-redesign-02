@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  FileArchive,
   FileSearch,
   FileText,
   FileX,
@@ -245,9 +244,6 @@ function OfisSehifesi() {
           <p>{copy.subtitle}</p>
         </div>
         <blockquote>“{copy.quote}”</blockquote>
-        <span className="office-reference-hero__mark" aria-hidden>
-          <FileArchive />
-        </span>
       </section>
 
       <section className="office-services">
