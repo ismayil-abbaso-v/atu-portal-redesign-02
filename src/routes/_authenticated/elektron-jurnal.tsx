@@ -124,14 +124,14 @@ function JournalHero() {
     <section className="journal-redesign-hero" style={{ backgroundImage: `url(${journalHero})` }}>
       <div className="journal-redesign-hero__overlay" />
       <div className="journal-redesign-hero__copy">
-        <span>ATU · 1969</span>
+        <span>ATU · 1970</span>
         <h1>{copy.title}</h1>
         <p>{copy.subtitle}</p>
         <blockquote>“{copy.quote}”</blockquote>
       </div>
       <div className="journal-redesign-hero__facts" aria-label="ATU">
         <span>
-          <strong>1969</strong>
+          <strong>1970</strong>
           <small>ATU</small>
         </span>
       </div>
