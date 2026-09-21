@@ -458,7 +458,6 @@ function TeqvimSehifesi() {
           <span>{copy.description}</span>
         </div>
         <blockquote className="calendar-redesign-hero__quote">“{copy.quote}”</blockquote>
-        <div className="calendar-redesign-hero__mark" aria-hidden><CalendarDays /></div>
         {canManage ? <button type="button" className="calendar-redesign-hero__action" onClick={openCreate}><Plus aria-hidden /> {copy.addEvent}</button> : null}
       </section>
 
