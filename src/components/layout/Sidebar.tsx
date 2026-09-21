@@ -275,9 +275,9 @@ export function Sidebar({
         style={
           {
             ...olculer,
-            "--sb-icon-left": "10px",
-            "--sb-logo-left": "calc((var(--sb-icon) + 20px - var(--sb-logo)) / 2)",
-            "--sb-label-left": "58px",
+            "--sb-icon-left": "15px",
+            "--sb-logo-left": "calc((var(--sb-icon) + 20px - var(--sb-logo)) / 2 + 5px)",
+            "--sb-label-left": "63px",
           } as CSSProperties
         }
         className="portal-desktop-sidebar"
