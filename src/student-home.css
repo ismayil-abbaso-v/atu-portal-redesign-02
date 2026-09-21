@@ -367,17 +367,20 @@
 .student-home-schedule__row strong,
 .student-home-schedule__row span {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .student-home-schedule__row strong {
+  overflow-wrap: anywhere;
+  white-space: normal;
   font-size: 12px;
+  line-height: 1.3;
 }
 .student-home-schedule__row span {
+  overflow: hidden;
   margin-top: 2px;
   color: var(--text-muted);
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .student-home-side {
   display: grid;
