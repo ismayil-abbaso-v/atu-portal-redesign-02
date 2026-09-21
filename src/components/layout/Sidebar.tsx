@@ -275,8 +275,12 @@ export function Sidebar({
         style={
           {
             ...olculer,
-            "--sb-icon-left": "10px",
-            "--sb-logo-left": "calc((var(--sb-icon) + 20px - var(--sb-logo)) / 2)",
+            "--sb-icon-left": acıq
+              ? "10px"
+              : "calc((100% - var(--sb-icon)) / 2)",
+            "--sb-logo-left": acıq
+              ? "calc((var(--sb-icon) + 20px - var(--sb-logo)) / 2)"
+              : "calc((100% - var(--sb-logo)) / 2)",
             "--sb-label-left": "58px",
           } as CSSProperties
         }
