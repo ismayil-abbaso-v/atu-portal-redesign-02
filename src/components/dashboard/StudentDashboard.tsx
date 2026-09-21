@@ -22,6 +22,7 @@ import innovationLab from "@/assets/student-innovation-lab.webp";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { useI18n } from "@/lib/i18n";
+import { resolveSemesterNumber, summarizeStudentHomeAttendance } from "@/lib/student-home-attendance";
 import "@/student-home.css";
 
 type Course = Database["public"]["Tables"]["courses"]["Row"];
@@ -38,13 +39,16 @@ const copy = {
     future: "Azərbaycan Texnologiya Universitetində hər gün daha parlaq bir gələcəyə!",
     quote: "Texnologiya daha yaxşı bir gələcək yaradır.",
     words: ["TƏHSİL", "TEXNOLOGİYA", "İNKİŞAF", "SƏN"],
-    progress: "Akademik irəliləyiş",
+    attendance: "Davamiyyət",
     semester: "Cari semestr",
-    completed: "Tamamlandı",
-    ongoing: "Davam edir",
-    remaining: "Qalıb",
-    subjects: "Fənn",
-    smallSteps: "Kiçik addımlar böyük nəticələr yaradır.",
+    coursesLabel: "Fənn",
+    classes: "Dərs",
+    present: "İştirak",
+    absent: "Qayıb",
+    attendanceLabel: "Davamiyyət",
+    attendanceSummary: "Cari semestrdə iştirak: {present} / {total} dərs.",
+    attendanceEmpty: "Davamiyyət məlumatı hələ yoxdur.",
+    attendanceUnavailable: "Davamiyyət məlumatı hazırda əlçatan deyil.",
     week: "Bu həftə",
     showAll: "Hamısını göstər",
     noWeek: "Bu həftə üçün dərs planı yoxdur.",
@@ -78,13 +82,16 @@ const copy = {
     future: "Azerbaycan Teknoloji Üniversitesinde her gün daha parlak bir geleceğe!",
     quote: "Teknoloji daha iyi bir gelecek yaratır.",
     words: ["EĞİTİM", "TEKNOLOJİ", "GELİŞİM", "SEN"],
-    progress: "Akademik ilerleme",
+    attendance: "Devam durumu",
     semester: "Güncel dönem",
-    completed: "Tamamlandı",
-    ongoing: "Devam ediyor",
-    remaining: "Kaldı",
-    subjects: "Ders",
-    smallSteps: "Küçük adımlar büyük sonuçlar yaratır.",
+    coursesLabel: "Ders",
+    classes: "Ders oturumu",
+    present: "Katılım",
+    absent: "Devamsız",
+    attendanceLabel: "Devam durumu",
+    attendanceSummary: "Güncel dönem katılımı: {present} / {total} ders.",
+    attendanceEmpty: "Devam bilgisi henüz mevcut değil.",
+    attendanceUnavailable: "Devam bilgisi şu anda kullanılamıyor.",
     week: "Bu hafta",
     showAll: "Tümünü göster",
     noWeek: "Bu hafta için ders planı yok.",
@@ -118,13 +125,16 @@ const copy = {
     future: "A brighter future every day at Azerbaijan Technological University!",
     quote: "Technology creates a better future.",
     words: ["EDUCATION", "TECHNOLOGY", "GROWTH", "YOU"],
-    progress: "Academic progress",
+    attendance: "Attendance",
     semester: "Current semester",
-    completed: "Completed",
-    ongoing: "In progress",
-    remaining: "Remaining",
-    subjects: "Courses",
-    smallSteps: "Small steps create great results.",
+    coursesLabel: "Courses",
+    classes: "Classes",
+    present: "Present",
+    absent: "Absent",
+    attendanceLabel: "Attendance",
+    attendanceSummary: "Current semester attendance: {present} / {total} classes.",
+    attendanceEmpty: "Attendance data is not available yet.",
+    attendanceUnavailable: "Attendance data is currently unavailable.",
     week: "This week",
     showAll: "Show all",
     noWeek: "There are no classes planned for this week.",
@@ -158,13 +168,16 @@ const copy = {
     future: "Каждый день к более светлому будущему в Азербайджанском технологическом университете!",
     quote: "Технологии создают лучшее будущее.",
     words: ["ОБРАЗОВАНИЕ", "ТЕХНОЛОГИИ", "РАЗВИТИЕ", "ТЫ"],
-    progress: "Академический прогресс",
+    attendance: "Посещаемость",
     semester: "Текущий семестр",
-    completed: "Завершено",
-    ongoing: "Продолжается",
-    remaining: "Осталось",
-    subjects: "Предметы",
-    smallSteps: "Маленькие шаги приводят к большим результатам.",
+    coursesLabel: "Предметы",
+    classes: "Занятия",
+    present: "Присутствовал",
+    absent: "Пропуски",
+    attendanceLabel: "Посещаемость",
+    attendanceSummary: "Посещаемость за семестр: {present} / {total} занятий.",
+    attendanceEmpty: "Данные о посещаемости пока отсутствуют.",
+    attendanceUnavailable: "Данные о посещаемости сейчас недоступны.",
     week: "Эта неделя",
     showAll: "Показать все",
     noWeek: "На эту неделю занятий не запланировано.",
@@ -255,7 +268,23 @@ export function StudentDashboard({ userId }: { userId: string }) {
       return data ?? [];
     },
   });
-  const groupIds = groupsQuery.data?.map((item) => item.group_id) ?? [];
+  const groupIds = [...new Set(groupsQuery.data?.map((item) => item.group_id) ?? [])];
+
+  const settingsQuery = useQuery({
+    queryKey: ["student-home-settings"],
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("system_settings")
+        .select("cari_semestr, cari_tedris_ili")
+        .eq("singleton", true)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const currentAcademicYear = settingsQuery.data?.cari_tedris_ili ?? null;
+  const currentSemester = resolveSemesterNumber(settingsQuery.data?.cari_semestr);
 
   const coursesQuery = useQuery({
     queryKey: ["student-courses", groupIds, userId],
@@ -281,15 +310,70 @@ export function StudentDashboard({ userId }: { userId: string }) {
   const courses = coursesQuery.data ?? [];
   const courseIds = courses.map((course) => course.id);
 
-  const scoresQuery = useQuery({
-    queryKey: ["student-all-exam-scores", userId],
+  const attendanceEnabled = Boolean(
+    currentAcademicYear && currentSemester && !groupsQuery.isLoading && !groupsQuery.isError,
+  );
+  const attendanceQuery = useQuery({
+    queryKey: [
+      "student-home-attendance",
+      userId,
+      currentAcademicYear,
+      currentSemester,
+      groupIds.join(","),
+    ],
+    enabled: attendanceEnabled,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("exam_scores")
-        .select("course_id, yekun_qiymet")
-        .eq("user_id", userId);
-      if (error) throw error;
-      return data ?? [];
+      if (!currentAcademicYear || !currentSemester || groupIds.length === 0) {
+        return summarizeStudentHomeAttendance([], [], []);
+      }
+
+      const { data: links, error: linkError } = await supabase
+        .from("course_groups")
+        .select("course_id")
+        .in("group_id", groupIds)
+        .eq("tedris_ili", currentAcademicYear)
+        .eq("semestr", currentSemester);
+      if (linkError) throw linkError;
+
+      const currentCourseIds = [
+        ...new Set((links ?? []).map((row) => row.course_id).filter((id): id is string => Boolean(id))),
+      ];
+      if (currentCourseIds.length === 0) {
+        return summarizeStudentHomeAttendance([], [], []);
+      }
+
+      const { data: records, error: recordError } = await supabase
+        .from("lesson_student_records")
+        .select("course_id, lesson_session_id, attendance_status")
+        .eq("student_id", userId)
+        .in("course_id", currentCourseIds);
+      if (recordError) throw recordError;
+
+      const sessionIds = [
+        ...new Set(
+          (records ?? [])
+            .map((record) => record.lesson_session_id)
+            .filter((id): id is string => Boolean(id)),
+        ),
+      ];
+      if (sessionIds.length === 0) {
+        return summarizeStudentHomeAttendance(currentCourseIds, records ?? [], []);
+      }
+
+      const { data: sessions, error: sessionError } = await supabase
+        .from("course_lesson_sessions")
+        .select("id")
+        .in("id", sessionIds)
+        .eq("is_confirmed", true);
+      if (sessionError) throw sessionError;
+
+      return summarizeStudentHomeAttendance(
+        currentCourseIds,
+        records ?? [],
+        (sessions ?? []).map((session) => session.id),
+      );
     },
   });
 
@@ -360,29 +444,28 @@ export function StudentDashboard({ userId }: { userId: string }) {
     },
   });
 
-  const scores = scoresQuery.data ?? [];
-  const completedIds = new Set(
-    scores.filter((score) => score.yekun_qiymet != null).map((score) => score.course_id),
-  );
-  const completed = courses.filter((course) => completedIds.has(course.id)).length;
-  const ongoing = Math.max(0, courses.length - completed);
-  const remaining = Math.max(0, courses.length - completed - ongoing);
-  const progress = courses.length ? Math.round((completed / courses.length) * 100) : 0;
-  const isLoading =
-    profileQuery.isLoading ||
-    groupsQuery.isLoading ||
-    coursesQuery.isLoading ||
-    scoresQuery.isLoading;
+  const attendance = attendanceQuery.data;
+  const attendanceLoading =
+    settingsQuery.isLoading || (attendanceEnabled && attendanceQuery.isLoading);
+  const attendanceError = settingsQuery.isError || attendanceQuery.isError;
+  const attendanceResolved = Boolean(attendance) && !attendanceLoading && !attendanceError;
+  const attendanceHasData = Boolean(attendance && attendance.classes > 0 && !attendanceError);
+  const attendancePercent = attendance?.percent ?? 0;
+  const isLoading = profileQuery.isLoading || groupsQuery.isLoading || coursesQuery.isLoading;
   const hasError =
     profileQuery.isError ||
     groupsQuery.isError ||
     coursesQuery.isError ||
-    scoresQuery.isError ||
     weekQuery.isError ||
     chatsQuery.isError;
-  const animatedProgress = useCountUp(progress, !isLoading);
-  const animatedCompleted = useCountUp(completed, !isLoading);
-  const animatedOngoing = useCountUp(ongoing, !isLoading);
+  const animatedAttendance = useCountUp(
+    attendancePercent,
+    attendanceHasData && !attendanceLoading,
+  );
+  const animatedCourseCount = useCountUp(attendance?.courseCount ?? 0, attendanceResolved);
+  const animatedClasses = useCountUp(attendance?.classes ?? 0, attendanceResolved);
+  const animatedPresent = useCountUp(attendance?.present ?? 0, attendanceResolved);
+  const animatedAbsent = useCountUp(attendance?.absent ?? 0, attendanceResolved);
   if (isLoading) return <StudentHomeSkeleton />;
   if (hasError)
     return (
@@ -394,7 +477,6 @@ export function StudentDashboard({ userId }: { userId: string }) {
             profileQuery.refetch(),
             groupsQuery.refetch(),
             coursesQuery.refetch(),
-            scoresQuery.refetch(),
             weekQuery.refetch(),
             chatsQuery.refetch(),
           ])
@@ -407,6 +489,15 @@ export function StudentDashboard({ userId }: { userId: string }) {
     [profile?.ad, profile?.soyad].filter(Boolean).join(" ") || profile?.ad || "ATU";
   const weekEvents = weekQuery.data ?? [];
   const messages = chatsQuery.data ?? [];
+  const attendanceStatusText = attendanceError
+    ? (c.attendanceUnavailable as string)
+    : attendanceHasData
+      ? (c.attendanceSummary as string)
+          .replace("{present}", String(attendance?.present ?? 0))
+          .replace("{total}", String(attendance?.classes ?? 0))
+      : (c.attendanceEmpty as string);
+  const metricValue = (value: number) =>
+    attendanceLoading || attendanceError ? "—" : value;
 
   return (
     <div className="student-home">
@@ -428,34 +519,37 @@ export function StudentDashboard({ userId }: { userId: string }) {
       <div className="student-home-grid">
         <section className="student-home-card student-home-progress">
           <CardHeading
-            title={c.progress as string}
+            title={c.attendance as string}
             action={<span className="student-home-pill">{c.semester as string}</span>}
           />
           <div className="student-home-progress__body">
             <div
               className="student-home-ring"
-              style={{ "--progress": `${progress * 3.6}deg` } as CSSProperties}
+              style={{
+                "--progress": `${attendanceHasData ? attendancePercent * 3.6 : 0}deg`,
+              } as CSSProperties}
               role="progressbar"
-              aria-label={c.progress as string}
+              aria-label={c.attendance as string}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={progress}
+              aria-valuenow={attendanceHasData ? attendancePercent : undefined}
+              aria-valuetext={attendanceHasData ? undefined : attendanceStatusText}
             >
               <div>
-                <strong>{animatedProgress}%</strong>
-                <span>{c.completed as string}</span>
+                <strong>{attendanceHasData ? `${animatedAttendance}%` : "—"}</strong>
+                <span>{c.attendanceLabel as string}</span>
               </div>
             </div>
             <div className="student-home-progress__metrics">
-              <Metric value={courses.length} label={c.subjects as string} />
-              <Metric value={animatedCompleted} label={c.completed as string} tone="positive" />
-              <Metric value={animatedOngoing} label={c.ongoing as string} tone="warning" />
-              <Metric value={remaining} label={c.remaining as string} />
+              <Metric value={metricValue(animatedCourseCount)} label={c.coursesLabel as string} />
+              <Metric value={metricValue(animatedClasses)} label={c.classes as string} />
+              <Metric value={metricValue(animatedPresent)} label={c.present as string} tone="positive" />
+              <Metric value={metricValue(animatedAbsent)} label={c.absent as string} tone="warning" />
             </div>
           </div>
-          <blockquote className="student-home-progress__quote">
-            “{c.smallSteps as string}”
-          </blockquote>
+          <p className="student-home-progress__status" aria-live="polite">
+            {attendanceLoading ? "…" : attendanceStatusText}
+          </p>
         </section>
 
         <section className="student-home-card student-home-week">
@@ -625,7 +719,7 @@ function CardHeading({
   );
 }
 
-function Metric({ value, label, tone }: { value: number; label: string; tone?: string }) {
+function Metric({ value, label, tone }: { value: number | string; label: string; tone?: string }) {
   return (
     <div className={tone ? `is-${tone}` : ""}>
       <strong>{value}</strong>

@@ -258,15 +258,15 @@
   color: rgba(255, 255, 255, 0.68);
   font-size: 11px;
 }
-.student-home-progress__quote {
-  width: min(45%, 220px);
+.student-home-progress__status {
+  width: min(45%, 240px);
   margin: 10px 0 0 auto;
   border-top: 2px solid rgba(255, 255, 255, 0.82);
   padding-top: 10px;
   color: rgba(255, 255, 255, 0.88);
-  font-family: "Fraunces", Georgia, serif;
-  font-size: 14px;
-  font-style: italic;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
 }
 .student-home-week {
   min-height: 300px;
@@ -785,7 +785,7 @@
   .student-home-progress__metrics {
     width: 100%;
   }
-  .student-home-progress__quote {
+  .student-home-progress__status {
     width: 100%;
     margin-left: 0;
   }
