@@ -1,6 +1,5 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 
 type SettingsPageHeroProps = {
   variant: "menu" | "profile" | "security" | "notifications" | "appearance" | "help";
@@ -9,7 +8,6 @@ type SettingsPageHeroProps = {
   title: string;
   subtitle: string;
   quote?: string;
-  icon?: ReactNode;
   backLabel?: string;
   showBack?: boolean;
 };
@@ -21,7 +19,6 @@ export function SettingsPageHero({
   title,
   subtitle,
   quote,
-  icon,
   backLabel = "Geri",
   showBack = true,
 }: SettingsPageHeroProps) {
@@ -49,11 +46,6 @@ export function SettingsPageHero({
         <h1>{title}</h1>
         <p>{subtitle}</p>
       </div>
-      {icon ? (
-        <span className="settings-page-hero__icon" aria-hidden>
-          {icon}
-        </span>
-      ) : null}
       {quote ? <blockquote>“{quote}”</blockquote> : null}
     </header>
   );
