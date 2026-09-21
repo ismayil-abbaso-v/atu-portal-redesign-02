@@ -75,7 +75,7 @@
   left: 1.25rem;
   z-index: 45;
   display: none;
-  width: 84px;
+  width: calc(var(--sb-icon) + 36px);
   min-width: 0;
   flex-direction: column;
   overflow: hidden;
