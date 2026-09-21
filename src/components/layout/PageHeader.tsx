@@ -2,7 +2,6 @@ import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
   ArrowLeft,
   CalendarDays,
-  GraduationCap,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -317,14 +316,6 @@ export function PageHeader({
             </div>
             <h1 className="transcript-page-header__title">{translatedTitle}</h1>
             <p className="transcript-page-header__subtitle">{copy.transcriptDescription}</p>
-          </div>
-
-          <div className="transcript-page-header__visual" aria-hidden>
-            <span className="transcript-page-header__orbit transcript-page-header__orbit--one" />
-            <span className="transcript-page-header__orbit transcript-page-header__orbit--two" />
-            <span className="transcript-page-header__core">
-              <GraduationCap className="size-6" />
-            </span>
           </div>
 
           {children ? <div className="transcript-page-header__actions">{children}</div> : null}
