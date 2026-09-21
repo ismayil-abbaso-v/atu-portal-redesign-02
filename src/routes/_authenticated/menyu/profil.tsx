@@ -139,7 +139,6 @@ function ProfilSehifesi() {
           title={t("title")}
           subtitle={hero.subtitle}
           quote={hero.quote}
-          icon={<UserRound />}
           backLabel={t("cancel")}
         />
         <div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">
@@ -159,7 +158,6 @@ function ProfilSehifesi() {
           title={t("title")}
           subtitle={hero.subtitle}
           quote={hero.quote}
-          icon={<UserRound />}
           backLabel={t("cancel")}
         />
         <div className="rounded-3xl bg-card p-8 text-center text-muted-foreground">
@@ -177,7 +175,6 @@ function ProfilSehifesi() {
       title={t("title")}
       subtitle={hero.subtitle}
       quote={hero.quote}
-      icon={<UserRound />}
       backLabel={t("cancel")}
     />
     <div className="profile-premium-grid">
