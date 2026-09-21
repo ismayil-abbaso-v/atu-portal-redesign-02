@@ -1,4 +1,6 @@
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { format } from "date-fns";
+import { az, enUS, ru, tr } from "date-fns/locale";
 import { usePageI18n } from "@/lib/i18n-extra";
 
 interface MonthYearNavProps {
@@ -12,11 +14,11 @@ interface MonthYearNavProps {
 
 export function MonthYearNav({ ay, il, onAySec, onIlSec, axtaris, onAxtarisDeyis }: MonthYearNavProps) {
   const { locale, t } = usePageI18n();
-  const intlLocale = locale === "az" ? "az-AZ" : locale === "tr" ? "tr-TR" : locale === "ru" ? "ru-RU" : "en-US";
+  const dateLocale = locale === "az" ? az : locale === "tr" ? tr : locale === "ru" ? ru : enUS;
   const todayLabel = locale === "az" || locale === "tr" ? "Bu ay" : locale === "ru" ? "Этот месяц" : "This month";
   const previousLabel = locale === "az" ? "Əvvəlki ay" : locale === "tr" ? "Önceki ay" : locale === "ru" ? "Предыдущий месяц" : "Previous month";
   const nextLabel = locale === "az" ? "Növbəti ay" : locale === "tr" ? "Sonraki ay" : locale === "ru" ? "Следующий месяц" : "Next month";
-  const monthLabel = new Intl.DateTimeFormat(intlLocale, { month: "long", year: "numeric" }).format(new Date(il, ay, 1));
+  const monthLabel = format(new Date(il, ay, 1), "LLLL yyyy", { locale: dateLocale });
 
   const moveMonth = (delta: number) => {
     const next = ay + delta;
